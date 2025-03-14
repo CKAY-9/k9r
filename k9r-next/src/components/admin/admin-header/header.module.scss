@@ -1,0 +1,12 @@
+.admin_header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: var(--foreground);
+    border-radius: 1rem;
+    box-shadow: var(--shdw1);
+}
+
+.link {
+    padding: 1rem 2rem;
+}

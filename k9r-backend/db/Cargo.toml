@@ -1,0 +1,17 @@
+[package]
+name = "k9r_db"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "k9r_db"
+path = "src/lib.rs"
+doctest = false
+
+[dependencies]
+diesel = { workspace = true }
+dotenvy = { workspace = true }
+serde = { workspace = true }
+k9r_utils = { workspace = true }

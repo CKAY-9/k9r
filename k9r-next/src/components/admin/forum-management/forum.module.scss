@@ -1,0 +1,49 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    border-radius: 1rem;
+    background-color: var(--foreground);
+    box-shadow: var(--shdw1);
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--text);
+
+        button {
+            text-align: left;
+        }
+    }
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+    flex: 1;
+}
+
+.sections, .topics {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.edit {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 1rem;
+    gap: 1rem;
+    border: 1px solid var(--text);
+    box-shadow: var(--shdw1);
+    
+    .field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

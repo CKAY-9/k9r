@@ -1,0 +1,25 @@
+.footer {
+    padding: 5rem 10rem;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--foreground);
+    gap: 2rem;
+}
+
+.community {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.footer_nav {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+
+    section {
+        display: flex;
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,20 @@
+.search_container {
+    border: 1px solid var(--text);
+    border-radius: 1rem;
+    background-color: var(--foreground);
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.search_bar {
+    flex: 1;
+    border-bottom: none;
+}
+
+.search_button {
+    padding: 0 1rem;
+    border-radius: 0;
+}

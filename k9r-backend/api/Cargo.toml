@@ -1,0 +1,24 @@
+[package]
+name = "k9r_api"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "k9r_api"
+path = "src/lib.rs"
+doctest = false
+
+[dependencies]
+actix-web = { workspace = true }
+rand = { workspace = true }
+iso8601 = { workspace = true }
+chrono = { workspace = true }
+diesel = { workspace = true }
+serde_json = { workspace = true }
+serde = { workspace = true }
+sha2 = { workspace = true }
+reqwest = { workspace = true }
+k9r_db = { workspace = true }
+k9r_utils = { workspace = true }
