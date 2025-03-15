@@ -52,7 +52,7 @@ pub async fn update_all_topics(
 
     for forum_topic in updated_topics.iter() {
         let update =
-            serde_json::from_str::<NewForumTopic>(serde_json::to_string(&forum_topic).unwrap().as_str())
+            serde_json::from_str::<NewForumTopic>(serde_json::to_string(forum_topic).unwrap().as_str())
                 .unwrap();
 
         if forum_topic.id <= 0 {
@@ -72,6 +72,8 @@ pub async fn update_all_topics(
             }
         }
     }
+
+    println!("{:?}", finished_topics);
 
     Ok(HttpResponse::Ok().json(finished_topics))
 }

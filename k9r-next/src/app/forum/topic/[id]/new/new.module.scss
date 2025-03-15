@@ -1,0 +1,15 @@
+.new_thread {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--foreground);
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

@@ -25,8 +25,15 @@
     border-radius: 1rem;
     box-shadow: var(--shdw1);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     gap: 1rem;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
 }
 
 .stats {
@@ -39,5 +46,25 @@
         flex-direction: row;
         gap: 0.5rem;
         align-items: center;
+    }
+}
+
+.option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.threads {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    & > a {
+        border: none;
+
+        &:hover {
+            border: none;
+        }
     }
 }

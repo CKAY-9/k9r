@@ -9,7 +9,7 @@
 use actix_web::{middleware::from_fn, web};
 use community::get::get_community_details;
 use forum::{
-    get::{all_forum_sections, all_section_topics, all_topics, get_section, get_topic},
+    get::{all_forum_sections, all_section_topics, all_topics, get_section, get_thread, get_topic, get_topic_threads, get_total_thread_count},
     post::{new_forum_post, new_forum_section, new_forum_thread, new_forum_topic},
     put::{update_all_sections, update_all_topics},
 };
@@ -44,25 +44,28 @@ fn configure_community_routes(cfg: &mut web::ServiceConfig) {
 fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/forum")
+            .service(get_total_thread_count)
             .service(all_forum_sections)
             .service(get_section)
             .service(all_section_topics)
             .service(get_topic)
             .service(all_topics)
+            .service(get_thread)
+            .service(get_topic_threads)
             .service(
-                web::scope("/")
+                web::scope("")
                     .wrap(from_fn(valid_user))
                     .service(new_forum_thread)
-                    .service(new_forum_post),
+                    .service(new_forum_post)
+                    .service(
+                        web::scope("/admin")
+                            .wrap(from_fn(forum_management))
+                            .service(new_forum_section)
+                            .service(update_all_sections)
+                            .service(new_forum_topic)
+                            .service(update_all_topics),
+                    ),
             )
-            .service(
-                web::scope("/admin")
-                    .wrap(from_fn(forum_management))
-                    .service(new_forum_section)
-                    .service(update_all_sections)
-                    .service(new_forum_topic)
-                    .service(update_all_topics),
-            ),
     );
 }
 

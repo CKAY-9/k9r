@@ -48,6 +48,18 @@ export const getUserUserGroupsFromID = async (id: number, token?: string): Promi
     }
 }
 
+export const getUserCount = async (): Promise<number> => {
+    try {
+        const request = await axios({
+            url: `${K9R_API}/user/count`,
+            method: "GET"
+        });
+        return request.data.users;
+    } catch {
+        return 0;
+    }
+}
+
 export const searchUsers = async (search: string, page?: number): Promise<User[]> => {
     try {
         const request = await axios({

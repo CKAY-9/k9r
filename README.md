@@ -14,8 +14,12 @@ K9R is ultimately my first major revision of one of projects, with more likely t
 
 ## So, What's Different?
 
-Compared to K9-Forums, K9R is more than just a forum.
+Compared to K9-Forums, K9R is more than just a forum. K9R does offer an improved version of K9-Forums within it; however
+it also contains game integration, a simple discord bot, real-time chat, store functionality for usergroups, and more.  
+
+While maintaining the general design of K9-Forums, K9R
+attempts to 
 
 ## Attribution
 
-Default details banner: idk, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons
+Default details banner: https://commons.wikimedia.org/wiki/File:Backgorund.gif#, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons

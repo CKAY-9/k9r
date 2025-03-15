@@ -1,13 +1,31 @@
+"use client";
+
 import { CommunityDetails } from "@/api/community-details/models";
 import style from "./info.module.scss";
 import CommunityIcon from "@/components/community-icon/community-icon";
 import MaterialIcon from "@/components/material-icon/material-icon";
+import { useEffect, useState } from "react";
+import { getUserCount } from "@/api/users/api";
+import { getForumThreadCount } from "@/api/forum/api";
 
 type ForumInfoProps = {
     community_details: CommunityDetails;
 };
 
 const ForumInfo = (props: ForumInfoProps) => {
+    const [total_users, setTotalUsers] = useState<number>(0);
+    const [total_threads, setTotalThreads] = useState<number>(0);
+
+    useEffect(() => {
+        (async () => {
+            const us = await getUserCount();
+            setTotalUsers(us);
+
+            const ts = await getForumThreadCount();
+            setTotalThreads(ts);
+        })();
+    }, []);
+    
     return (
         <div className={style.forum_info}>
             <section className={style.info}>
@@ -21,7 +39,7 @@ const ForumInfo = (props: ForumInfoProps) => {
                 </div>
                 <div className={style.stat}>
                     <MaterialIcon src="/icons/groups.svg" size_rems={2} alt="Total Users" />
-                    <span>0</span>
+                    <span>{total_users}</span>
                 </div>
                 <div className={style.stat}>
                     <MaterialIcon src="/icons/internet.svg" size_rems={2} alt="Online Users" />
@@ -29,7 +47,7 @@ const ForumInfo = (props: ForumInfoProps) => {
                 </div>
                 <div className={style.stat}>
                     <MaterialIcon src="/icons/thread.svg" size_rems={2} alt="Forum Posts" />
-                    <span>0</span>
+                    <span>{total_threads}</span>
                 </div>
                 <div className={style.stat}>
                     <MaterialIcon src="/icons/forum.svg" size_rems={2} alt="Forum Comments" />

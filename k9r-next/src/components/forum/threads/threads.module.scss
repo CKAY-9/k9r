@@ -1,0 +1,9 @@
+.thread_preview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: var(--foreground);
+    border-radius: 1rem;
+    box-shadow: var(--shdw1);
+}

@@ -9,7 +9,7 @@ export const createNewForumThread = async (
 ): Promise<ForumThread | null> => {
 	try {
 		const request = await axios({
-			url: `${K9R_API}/forum/new/thread`,
+			url: `${K9R_API}/forum/thread`,
 			method: "POST",
 			headers: {	
 				Authorization: token,
@@ -120,5 +120,41 @@ export const updateAllTopics = async (topics: ForumTopic[], token: string): Prom
 		return request.data;
 	} catch {
 		return [];
+	}
+}
+
+export const getForumThreadCount = async (): Promise<number> => {
+    try {
+        const request = await axios({
+            url: `${K9R_API}/forum/thread/count`,
+            method: "GET"
+        });
+        return request.data.threads;
+    } catch {
+        return 0;
+    }
+}
+
+export const getForumThreadsInForumTopicFromID = async (topic_id: number): Promise<ForumThread[]> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/topic/${topic_id}/threads`,
+			method: "GET"
+		});
+		return request.data;
+	} catch {
+		return [];
+	}
+}
+
+export const getForumThreadFromID = async (id: number): Promise<ForumThread | null> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/thread/${id}`,
+			method: "GET"
+		});
+		return request.data;
+	} catch {
+		return null;
 	}
 }
