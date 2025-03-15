@@ -3,8 +3,10 @@
     display: grid;
     place-content: center;
 
-    background-attachment: fixed;
+    background-color: var(--background);
+
     background-position: center;
+    background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: cover;
 }

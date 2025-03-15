@@ -9,7 +9,7 @@
 use actix_web::{middleware::from_fn, web};
 use community::get::get_community_details;
 use forum::{
-    get::{all_forum_sections, all_section_topics, all_topics, get_section, get_thread, get_topic, get_topic_threads, get_total_thread_count},
+    get::{all_forum_sections, all_section_topics, all_topics, get_post, get_posts_in_thread, get_section, get_thread, get_topic, get_topic_threads, get_total_thread_count},
     post::{new_forum_post, new_forum_section, new_forum_thread, new_forum_topic},
     put::{update_all_sections, update_all_topics},
 };
@@ -51,6 +51,8 @@ fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
             .service(get_topic)
             .service(all_topics)
             .service(get_thread)
+            .service(get_post)
+            .service(get_posts_in_thread)
             .service(get_topic_threads)
             .service(
                 web::scope("")

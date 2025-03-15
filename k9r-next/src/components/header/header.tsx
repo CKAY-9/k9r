@@ -11,6 +11,7 @@ import { Usergroup } from "@/api/usergroups/models";
 import { getUserUserGroupsFromID } from "@/api/users/api";
 import { SITE_SETTINGS, usergroupsPermissionFlagCheck } from "@/api/permissions";
 import MaterialIcon from "../material-icon/material-icon";
+import UserTab from "../user/user-tab/user-tab";
 
 type HeaderProps = {
     community_details: CommunityDetails;
@@ -67,8 +68,7 @@ const Header = (props: HeaderProps) => {
                             />
                         </Link>
                         <Link href={`/user/${props.personal_user.id}`} className={style.user}>
-                            <UserIcon size_rems={2} user={props.personal_user} />
-                            <span>{props.personal_user.username}</span>
+                            <UserTab user={props.personal_user} />
                         </Link>
                     </>
                 ) : (

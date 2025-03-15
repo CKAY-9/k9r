@@ -1,6 +1,6 @@
 use actix_web::{get, web, HttpRequest, HttpResponse, Responder};
 use k9r_db::crud::{
-    forum_sections::{get_all_forum_sections, get_forum_section_from_id}, forum_threads::{get_all_forum_threads, get_forum_thread_from_id, get_threads_in_forum_topic}, forum_topics::{get_all_forum_topics, get_forum_topic_from_id, get_forum_topics_from_section}
+    forum_posts::{get_forum_post_from_id, get_forum_posts_in_forum_thread}, forum_sections::{get_all_forum_sections, get_forum_section_from_id}, forum_threads::{get_all_forum_threads, get_forum_thread_from_id, get_threads_in_forum_topic}, forum_topics::{get_all_forum_topics, get_forum_topic_from_id, get_forum_topics_from_section}
 };
 
 use crate::{forum::models::ThreadCount, models::Message};
@@ -85,6 +85,30 @@ pub async fn get_thread(
         None => {
             Ok(HttpResponse::NotFound().json(Message {
                 message: "Failed to get thread".to_string()
+            }))
+        }
+    }
+}
+
+#[get("/thread/{id}/posts")]
+pub async fn get_posts_in_thread(
+    path: web::Path<(i32, )>
+) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let posts = get_forum_posts_in_forum_thread(path.into_inner().0);
+    Ok(HttpResponse::Ok().json(posts))
+}
+
+#[get("/post/{id}")]
+pub async fn get_post(
+    path: web::Path<(i32, )>
+) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    match get_forum_post_from_id(path.into_inner().0) {
+        Some(post) => {
+            Ok(HttpResponse::Ok().json(post))
+        }
+        None => {
+            Ok(HttpResponse::NotFound().json(Message {
+                message: "Failed to get post".to_string()
             }))
         }
     }

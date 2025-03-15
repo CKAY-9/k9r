@@ -20,8 +20,8 @@ const UserIcon = (props: UserIconProps) => {
                 sizes="100%"
                 className={style.icon}
                 style={{
-                    "width": props.size_rems ? `${props.size_rems}rem !important` : "2rem",
-                    "height": props.size_rems ? `${props.size_rems}rem !important` : "2rem"
+                    "width": props.size_rems ? `${props.size_rems}rem` : "2rem",
+                    "height": props.size_rems ? `${props.size_rems}rem` : "2rem"
                 }}
             />
         </>

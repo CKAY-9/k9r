@@ -22,3 +22,10 @@
 .username {
     opacity: 0.5;
 }
+
+.usergroups {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+}

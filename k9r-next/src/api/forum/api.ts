@@ -25,6 +25,25 @@ export const createNewForumThread = async (
 	}
 };
 
+export const createNewForumPost = async (
+	new_post: ForumPost,
+	token: string
+): Promise<ForumPost | null> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/post`,
+			method: "POST",
+			headers: {
+				Authorization: token
+			},
+			data: new_post
+		});
+		return request.data;
+	} catch {
+		return null;
+	}
+}
+
 export const getAllForumSections = async (): Promise<ForumSection[]> => {
 	try {
 		const request = await axios({
@@ -151,6 +170,30 @@ export const getForumThreadFromID = async (id: number): Promise<ForumThread | nu
 	try {
 		const request = await axios({
 			url: `${K9R_API}/forum/thread/${id}`,
+			method: "GET"
+		});
+		return request.data;
+	} catch {
+		return null;
+	}
+}
+
+export const getForumPostsFromForumThreadID = async (thread_id: number): Promise<ForumPost[]> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/thread/${thread_id}/posts`,
+			method: "GET"
+		});
+		return request.data;
+	} catch {
+		return [];
+	}
+}
+
+export const getForumPostFromID = async (id: number): Promise<ForumPost | null> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/post/${id}`,
 			method: "GET"
 		});
 		return request.data;

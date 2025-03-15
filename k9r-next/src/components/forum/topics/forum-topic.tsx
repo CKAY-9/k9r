@@ -45,7 +45,7 @@ const Topic = (props: TopicProps) => {
 								size_rems={2}
 								src="/icons/thread.svg"
 							/>
-							<span>0</span>
+							<span>{threads.length}</span>
 						</section>
 						<section className={style.stat}>
 							<MaterialIcon
