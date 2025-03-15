@@ -11,3 +11,8 @@ pub struct NewThread {
 pub struct ThreadCount {
     pub threads: usize
 }
+
+#[derive(Serialize)]
+pub struct PostCount {
+    pub posts: usize
+}

@@ -1,3 +1,5 @@
+use std::vec;
+
 use diesel::{
     query_dsl::methods::{FilterDsl, FindDsl},
     ExpressionMethods, RunQueryDsl,
@@ -28,6 +30,14 @@ pub fn get_forum_post_from_id(id: i32) -> Option<ForumPost> {
     match find {
         Ok(result) => Some(result),
         Err(_e) => None,
+    }
+}
+
+pub fn get_all_forum_posts() -> Vec<ForumPost> {
+    let connection = &mut create_connection();
+    match forum_posts::table.load(connection) {
+        Ok(posts) => posts,
+        Err(_e) => vec![]
     }
 }
 

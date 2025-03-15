@@ -73,7 +73,5 @@ pub async fn update_all_topics(
         }
     }
 
-    println!("{:?}", finished_topics);
-
     Ok(HttpResponse::Ok().json(finished_topics))
 }

@@ -1,9 +1,9 @@
 use actix_web::{get, web, HttpRequest, HttpResponse, Responder};
 use k9r_db::crud::{
-    forum_posts::{get_forum_post_from_id, get_forum_posts_in_forum_thread}, forum_sections::{get_all_forum_sections, get_forum_section_from_id}, forum_threads::{get_all_forum_threads, get_forum_thread_from_id, get_threads_in_forum_topic}, forum_topics::{get_all_forum_topics, get_forum_topic_from_id, get_forum_topics_from_section}
+    forum_posts::{get_all_forum_posts, get_forum_post_from_id, get_forum_posts_in_forum_thread}, forum_sections::{get_all_forum_sections, get_forum_section_from_id}, forum_threads::{get_all_forum_threads, get_forum_thread_from_id, get_threads_in_forum_topic}, forum_topics::{get_all_forum_topics, get_forum_topic_from_id, get_forum_topics_from_section}
 };
 
-use crate::{forum::models::ThreadCount, models::Message};
+use crate::{forum::models::{PostCount, ThreadCount}, models::Message};
 
 #[get("/section")]
 pub async fn all_forum_sections(
@@ -112,4 +112,12 @@ pub async fn get_post(
             }))
         }
     }
+}
+
+#[get("/post/count")]
+pub async fn get_total_post_count() -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let posts = get_all_forum_posts();
+    Ok(HttpResponse::Ok().json(PostCount {
+        posts: posts.len()
+    }))
 }

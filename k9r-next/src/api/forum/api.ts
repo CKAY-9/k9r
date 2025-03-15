@@ -154,6 +154,18 @@ export const getForumThreadCount = async (): Promise<number> => {
     }
 }
 
+export const getForumPostCount = async (): Promise<number> => {
+    try {
+        const request = await axios({
+            url: `${K9R_API}/forum/post/count`,
+            method: "GET"
+        });
+        return request.data.posts;
+    } catch {
+        return 0;
+    }
+}
+
 export const getForumThreadsInForumTopicFromID = async (topic_id: number): Promise<ForumThread[]> => {
 	try {
 		const request = await axios({

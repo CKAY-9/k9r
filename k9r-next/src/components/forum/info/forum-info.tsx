@@ -6,7 +6,7 @@ import CommunityIcon from "@/components/community-icon/community-icon";
 import MaterialIcon from "@/components/material-icon/material-icon";
 import { useEffect, useState } from "react";
 import { getUserCount } from "@/api/users/api";
-import { getForumThreadCount } from "@/api/forum/api";
+import { getForumPostCount, getForumThreadCount } from "@/api/forum/api";
 
 type ForumInfoProps = {
     community_details: CommunityDetails;
@@ -15,6 +15,7 @@ type ForumInfoProps = {
 const ForumInfo = (props: ForumInfoProps) => {
     const [total_users, setTotalUsers] = useState<number>(0);
     const [total_threads, setTotalThreads] = useState<number>(0);
+    const [total_posts, setTotalPosts] = useState<number>(0);
 
     useEffect(() => {
         (async () => {
@@ -23,6 +24,9 @@ const ForumInfo = (props: ForumInfoProps) => {
 
             const ts = await getForumThreadCount();
             setTotalThreads(ts);
+
+            const ps = await getForumPostCount();
+            setTotalPosts(ps);
         })();
     }, []);
     
@@ -51,7 +55,7 @@ const ForumInfo = (props: ForumInfoProps) => {
                 </div>
                 <div className={style.stat}>
                     <MaterialIcon src="/icons/forum.svg" size_rems={2} alt="Forum Comments" />
-                    <span>0</span>
+                    <span>{total_posts}</span>
                 </div>
             </section>
         </div>
