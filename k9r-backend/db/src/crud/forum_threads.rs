@@ -31,6 +31,17 @@ pub fn get_all_forum_threads() -> Vec<ForumThread> {
     }
 }
 
+pub fn get_forum_threads_from_user_id(user_id: i32) -> Vec<ForumThread> {
+    let connection = &mut create_connection();
+    match forum_threads::table
+        .filter(forum_threads::author.eq(user_id))
+        .load::<ForumThread>(connection)
+    {
+        Ok(ts) => ts,
+        Err(_e) => vec![],
+    }
+}
+
 pub fn get_threads_in_forum_topic(topic_id: i32) -> Vec<ForumThread> {
     let connection = &mut create_connection();
     match forum_threads::table

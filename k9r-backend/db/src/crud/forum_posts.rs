@@ -41,6 +41,17 @@ pub fn get_all_forum_posts() -> Vec<ForumPost> {
     }
 }
 
+pub fn get_forum_posts_from_user_id(user_id: i32) -> Vec<ForumPost> {
+    let connection = &mut create_connection();
+    match forum_posts::table
+        .filter(forum_posts::author.eq(user_id))
+        .load::<ForumPost>(connection)
+    {
+        Ok(ps) => ps,
+        Err(_e) => vec![],
+    }
+}
+
 pub fn get_forum_posts_in_forum_thread(id: i32) -> Vec<ForumPost> {
     let connection = &mut create_connection();
     match forum_posts::table

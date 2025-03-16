@@ -1,0 +1,27 @@
+.activity_container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+
+    .nav {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .preview {
+        border-bottom: none;
+        &:hover {
+            border-bottom: none;
+        }
+    }
+}

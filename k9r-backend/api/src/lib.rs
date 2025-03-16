@@ -13,8 +13,7 @@ use forum::{
 };
 use middleware::permissions::{forum_management, valid_user};
 use user::get::{
-    get_personal_user, get_user_by_id, get_user_count, get_user_usergroups_by_id,
-    login_with_discord, login_with_github, user_search,
+    get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id, get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github, user_search
 };
 
 pub mod community;
@@ -78,6 +77,8 @@ fn configure_user_routes(cfg: &mut web::ServiceConfig) {
             .service(login_with_discord)
             .service(login_with_github)
             .service(get_user_count)
+            .service(get_posts_posted_by_user)
+            .service(get_threads_posted_by_user)
             .service(user_search)
             .service(get_user_by_id)
             .service(get_personal_user)

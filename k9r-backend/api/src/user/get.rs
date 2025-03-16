@@ -7,10 +7,10 @@ use actix_web::{
 };
 use k9r_db::{
     crud::{
-        usergroups::get_usergroup_from_id,
-        users::{
-            create_user, get_all_users, get_user_from_id, get_user_from_oauth_id, get_user_from_token, search_users_with_page, update_user_from_id
-        },
+        forum_posts::get_forum_posts_from_user_id, forum_threads::get_forum_threads_from_user_id, usergroups::get_usergroup_from_id, users::{
+            create_user, get_all_users, get_user_from_id, get_user_from_oauth_id,
+            get_user_from_token, search_users_with_page, update_user_from_id,
+        }
     },
     models::{NewUser, User, Usergroup},
 };
@@ -20,7 +20,9 @@ use sha2::{Digest, Sha256};
 
 use crate::{
     models::Message,
-    user::models::{DiscordInitial, DiscordUser, GithubInitial, GithubUser, SearchUser, UserCount, UserOAuth},
+    user::models::{
+        DiscordInitial, DiscordUser, GithubInitial, GithubUser, SearchUser, UserCount, UserOAuth,
+    },
 };
 
 #[get("/discord")]
@@ -278,15 +280,29 @@ pub async fn get_user_usergroups_by_id(
 #[get("/count")]
 pub async fn get_user_count() -> Result<impl Responder, Box<dyn std::error::Error>> {
     let users = get_all_users();
-    Ok(HttpResponse::Ok().json(UserCount {
-        users: users.len()
-    }))
+    Ok(HttpResponse::Ok().json(UserCount { users: users.len() }))
 }
 
 #[get("/search")]
 pub async fn user_search(
-    query: web::Query<SearchUser>
+    query: web::Query<SearchUser>,
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let query_results = search_users_with_page(query.search.clone(), query.page as i64);
     Ok(HttpResponse::Ok().json(query_results))
+}
+
+#[get("/{id}/threads")]
+pub async fn get_threads_posted_by_user(
+    path: web::Path<(i32,)>,
+) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let threads = get_forum_threads_from_user_id(path.into_inner().0);
+    Ok(HttpResponse::Ok().json(threads))
+}
+
+#[get("/{id}/posts")]
+pub async fn get_posts_posted_by_user(
+    path: web::Path<(i32,)>,
+) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let posts = get_forum_posts_from_user_id(path.into_inner().0);
+    Ok(HttpResponse::Ok().json(posts))
 }

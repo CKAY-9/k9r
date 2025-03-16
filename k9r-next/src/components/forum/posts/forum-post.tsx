@@ -70,7 +70,7 @@ const Post = (props: ForumPostProps) => {
 	};
 
 	return (
-		<div className={style.forum_post}>
+		<div className={style.forum_post} id={`post-${props.forum_post.id}`}>
 			{author !== null && <UserInfo user={author} />}
 			<div className={style.content}>
 				{editing ? (
