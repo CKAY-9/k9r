@@ -9,6 +9,8 @@ import { User } from "@/api/users/models";
 import { getUserFromID } from "@/api/users/api";
 import MaterialIcon from "@/components/material-icon/material-icon";
 import MDEditor from "@uiw/react-md-editor";
+import { updateForumPostFromID } from "@/api/forum/api";
+import { getCookie } from "@/utils/cookies";
 
 type ForumPostProps = {
 	forum_post: ForumPost;
@@ -17,7 +19,9 @@ type ForumPostProps = {
 
 const Post = (props: ForumPostProps) => {
 	const [post, setPost] = useState<ForumPost>(props.forum_post);
-    const [post_content_edit, setPostContentEdit] = useState<string>(props.forum_post.content || "");
+	const [post_content_edit, setPostContentEdit] = useState<string>(
+		props.forum_post.content || ""
+	);
 	const [author, setAuthor] = useState<User | null>(null);
 	const [is_author, setIsAuthor] = useState<boolean>(false);
 	const [editing, setEditing] = useState<boolean>(false);
@@ -33,12 +37,20 @@ const Post = (props: ForumPostProps) => {
 		})();
 	}, [props.forum_post.author]);
 
-	const toggleEdit = (e: BaseSyntheticEvent) => {
+	const toggleEdit = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
 
-        if (editing) {
-            // Update content            
-        }
+		if (editing) {
+			// Update content
+			post.content = post_content_edit;
+			post.updated = new Date().toISOString();
+
+			const update = await updateForumPostFromID(
+				props.forum_post.id,
+				post,
+				getCookie("token") || ""
+			);
+		}
 
 		setEditing(!editing);
 	};
@@ -53,7 +65,7 @@ const Post = (props: ForumPostProps) => {
 							height="25rem"
 							style={{
 								width: "100%",
-								fontSize: "1rem !important"
+								fontSize: "1rem !important",
 							}}
 							value={post_content_edit}
 							onChange={(value: string | undefined) =>
@@ -67,14 +79,14 @@ const Post = (props: ForumPostProps) => {
 						source={post.content || ""}
 					/>
 				)}
-				<section>
+				<section className={style.times}>
 					<span className={style.time}>
 						Posted:{" "}
 						{new Date(props.forum_post.created).toLocaleString()}
 					</span>
 					{new Date(props.forum_post.created).getTime() !==
 						new Date(props.forum_post.updated).getTime() && (
-						<span>
+						<span className={style.time}>
 							Updated:{" "}
 							{new Date(
 								props.forum_post.updated

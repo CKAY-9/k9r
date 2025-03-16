@@ -11,7 +11,7 @@ use community::get::get_community_details;
 use forum::{
     get::{all_forum_sections, all_section_topics, all_topics, get_post, get_posts_in_thread, get_section, get_thread, get_topic, get_topic_threads, get_total_post_count, get_total_thread_count},
     post::{new_forum_post, new_forum_section, new_forum_thread, new_forum_topic},
-    put::{update_all_sections, update_all_topics},
+    put::{update_all_sections, update_all_topics, update_post},
 };
 use middleware::permissions::{forum_management, valid_user};
 use user::get::{
@@ -60,6 +60,7 @@ fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
                     .wrap(from_fn(valid_user))
                     .service(new_forum_thread)
                     .service(new_forum_post)
+                    .service(update_post)
                     .service(
                         web::scope("/admin")
                             .wrap(from_fn(forum_management))
