@@ -28,7 +28,7 @@ const ForumHeader = (props: ForumHeaderProps) => {
                 </DropdownTab>
                 <DropdownTab title="Threads">
                     <Link href="/forum/thread/search">Search Threads</Link>
-                    <Link href="/forum/thread/new">New Thread</Link>
+                    <Link href="/forum/topic/0/new">New Thread</Link>
                 </DropdownTab>
                 <DropdownTab title="Users">
                     <Link href="/user/search">Search Users</Link>

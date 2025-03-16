@@ -26,9 +26,7 @@ const Footer = (props: FooterProps) => {
                 <section>
                     <strong>Forum</strong>
                     <Link href={"/forum"}>Home</Link>
-                    <Link href={"/forum/thread"}>View Threads</Link>
                     <Link href={"/forum/thread/search"}>Search Threads</Link>
-                    <Link href={"/forum/thread/new"}>New Thread</Link>
                 </section>
                 <section>
                     <strong>Store</strong>
@@ -39,6 +37,7 @@ const Footer = (props: FooterProps) => {
                 <section>
                     <strong>Users</strong>
                     <Link href={"/user/login"}>Login/Register</Link>
+                    <Link href={"/user/search"}>Search Users</Link>
                 </section>
             </nav>
             <section>

@@ -4,3 +4,9 @@ use serde::{Deserialize, Serialize};
 pub struct Message {
     pub message: String,
 }
+
+#[derive(Deserialize, Debug)]
+pub struct SearchModel {
+    pub search: String,
+    pub page: usize
+}

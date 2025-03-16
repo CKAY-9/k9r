@@ -36,9 +36,3 @@ pub struct GithubUser {
 pub struct UserCount {
     pub users: usize
 }
-
-#[derive(Deserialize, Debug)]
-pub struct SearchUser {
-    pub search: String,
-    pub page: usize
-}

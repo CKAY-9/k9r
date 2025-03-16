@@ -7,10 +7,13 @@ use actix_web::{
 };
 use k9r_db::{
     crud::{
-        forum_posts::get_forum_posts_from_user_id, forum_threads::get_forum_threads_from_user_id, usergroups::get_usergroup_from_id, users::{
+        forum_posts::get_forum_posts_from_user_id,
+        forum_threads::get_forum_threads_from_user_id,
+        usergroups::get_usergroup_from_id,
+        users::{
             create_user, get_all_users, get_user_from_id, get_user_from_oauth_id,
             get_user_from_token, search_users_with_page, update_user_from_id,
-        }
+        },
     },
     models::{NewUser, User, Usergroup},
 };
@@ -19,9 +22,9 @@ use rand::Rng;
 use sha2::{Digest, Sha256};
 
 use crate::{
-    models::Message,
+    models::{Message, SearchModel},
     user::models::{
-        DiscordInitial, DiscordUser, GithubInitial, GithubUser, SearchUser, UserCount, UserOAuth,
+        DiscordInitial, DiscordUser, GithubInitial, GithubUser, UserCount, UserOAuth,
     },
 };
 
@@ -285,7 +288,7 @@ pub async fn get_user_count() -> Result<impl Responder, Box<dyn std::error::Erro
 
 #[get("/search")]
 pub async fn user_search(
-    query: web::Query<SearchUser>,
+    query: web::Query<SearchModel>,
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let query_results = search_users_with_page(query.search.clone(), query.page as i64);
     Ok(HttpResponse::Ok().json(query_results))

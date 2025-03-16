@@ -265,3 +265,22 @@ export const deleteForumPostFromID = async (
 		return false;
 	}
 }
+
+export const searchThreads = async (
+	search: string,
+	page?: number
+): Promise<ForumThread[]> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/thread/search`,
+			method: "GET",
+			params: {
+				search: search,
+				page: page ? page : 1,
+			},
+		});
+		return request.data;
+	} catch {
+		return [];
+	}
+};

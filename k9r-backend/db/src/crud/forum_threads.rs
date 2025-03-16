@@ -1,6 +1,5 @@
 use diesel::{
-    query_dsl::methods::{FilterDsl, FindDsl},
-    ExpressionMethods, RunQueryDsl,
+    query_dsl::methods::{FilterDsl, FindDsl, LimitDsl, OffsetDsl}, ExpressionMethods, PgTextExpressionMethods, RunQueryDsl
 };
 
 use crate::{
@@ -87,5 +86,27 @@ pub fn delete_forum_thread_from_id(id: i32) -> bool {
     match delete {
         Ok(_result) => true,
         Err(_e) => false,
+    }
+}
+
+pub fn search_threads_with_page(search: String, page: i64) -> Vec<ForumThread> {
+    let connection = &mut create_connection();
+
+    let per_page = 20;
+    let offset = (page - 1) * 20;
+
+    let threads = forum_threads::table
+        .filter(forum_threads::title.ilike(format!("%{}%", search)))
+        .limit(per_page)
+        .offset(offset as i64)
+        .load::<ForumThread>(connection);
+    
+    match threads {
+        Ok(ts) => {
+            ts
+        }
+        Err(_e) => {
+            vec![]
+        }
     }
 }
