@@ -50,6 +50,10 @@ const Thread = (props: ThreadProps) => {
 		})();
 	}, []);
 
+	const onPostDelete = async (post_id: number) => {
+		setPosts(posts.filter((post, index) => post.id !== post_id));
+	}
+
 	return (
 		<>
 			<header className={style.header}>
@@ -96,6 +100,7 @@ const Thread = (props: ThreadProps) => {
 							personal_user={props.personal_user}
 							forum_post={post}
 							key={index}
+							on_post_delete={onPostDelete}
 						/>
 					);
 				})}

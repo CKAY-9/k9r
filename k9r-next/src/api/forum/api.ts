@@ -247,3 +247,21 @@ export const updateForumPostFromID = async (
 		return null;
 	}
 };
+
+export const deleteForumPostFromID = async (
+	id: number,
+	token: string
+): Promise<boolean> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/post/${id}`,
+			method: "DELETE",
+			headers: {
+				Authorization: token
+			}
+		});
+		return true;
+	} catch {
+		return false;
+	}
+}

@@ -27,6 +27,13 @@
         opacity: 0.5;
     }
 
+    .options {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
+
     .option {
         padding: 0;
         background-color: var(--foreground);

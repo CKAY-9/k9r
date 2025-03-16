@@ -9,12 +9,13 @@ import { User } from "@/api/users/models";
 import { getUserFromID } from "@/api/users/api";
 import MaterialIcon from "@/components/material-icon/material-icon";
 import MDEditor from "@uiw/react-md-editor";
-import { updateForumPostFromID } from "@/api/forum/api";
+import { deleteForumPostFromID, updateForumPostFromID } from "@/api/forum/api";
 import { getCookie } from "@/utils/cookies";
 
 type ForumPostProps = {
 	forum_post: ForumPost;
 	personal_user: User | null;
+	on_post_delete?: Function;
 };
 
 const Post = (props: ForumPostProps) => {
@@ -53,6 +54,19 @@ const Post = (props: ForumPostProps) => {
 		}
 
 		setEditing(!editing);
+	};
+
+	const deletePost = async (e: BaseSyntheticEvent) => {
+		e.preventDefault();
+
+		const delete_response = await deleteForumPostFromID(
+			props.forum_post.id,
+			getCookie("token") || ""
+		);
+
+		if (props.on_post_delete !== undefined) {
+			props.on_post_delete(props.forum_post.id);
+		}
 	};
 
 	return (
@@ -95,13 +109,26 @@ const Post = (props: ForumPostProps) => {
 					)}
 				</section>
 				{is_author && (
-					<section>
+					<section className={style.options}>
 						<button onClick={toggleEdit} className={style.option}>
 							<MaterialIcon
 								src={`/icons/edit.svg`}
+								alt="Edit Post"
 								size_rems={2}
 							/>
 						</button>
+						{props.on_post_delete !== undefined && (
+							<button
+								onClick={deletePost}
+								className={style.option}
+							>
+								<MaterialIcon
+									src={`/icons/delete.svg`}
+									alt="Delete Post"
+									size_rems={2}
+								/>
+							</button>
+						)}
 					</section>
 				)}
 			</div>
