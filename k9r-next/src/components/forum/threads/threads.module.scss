@@ -46,6 +46,28 @@
     gap: 1rem;
 }
 
-.time {
-    opacity: 0.5;
+.times {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+
+    .time {
+        opacity: 0.5;
+    }
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: flex-start;
+
+    .option {
+        padding: 0;
+        background-color: var(--foreground);
+    
+        &:hover {
+            background-color: var(--foreground);
+        }
+    }
 }

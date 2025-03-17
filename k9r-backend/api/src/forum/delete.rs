@@ -1,5 +1,5 @@
 use actix_web::{delete, web, HttpMessage, HttpRequest, HttpResponse, Responder};
-use k9r_db::{crud::{forum_posts::{delete_forum_post_from_id, get_forum_post_from_id}, forum_threads::{get_forum_thread_from_id, update_forum_thread_from_id}}, models::User};
+use k9r_db::{crud::{forum_posts::{delete_forum_post_from_id, get_forum_post_from_id, get_forum_posts_in_forum_thread}, forum_threads::{delete_forum_thread_from_id, get_forum_thread_from_id, update_forum_thread_from_id}}, models::User};
 
 use crate::models::Message;
 
@@ -61,6 +61,58 @@ pub async fn delete_post(
         None => {
             Ok(HttpResponse::NotFound().json(Message {
                 message: "Failed to get forum post".to_string()
+            }))
+        }
+    }
+}
+
+#[delete("/thread/{id}")]
+pub async fn delete_thread(
+    request: HttpRequest,
+    path: web::Path<(i32, )>
+) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let user = match request.extensions().get::<User>().cloned() {
+        Some(user) => user,
+        None => {
+            return Ok(HttpResponse::Unauthorized().json(Message {
+                message: "Failed to get user".to_string(),
+            }))
+        }
+    };
+
+    let thread_id = path.into_inner().0;
+    match get_forum_thread_from_id(thread_id) {
+        Some(thread) => {
+            match thread.author == user.id {
+                true => {
+                    match delete_forum_thread_from_id(thread.id) {
+                        true => {
+                            let posts = get_forum_posts_in_forum_thread(thread_id);
+                            for post in posts.iter() {
+                                delete_forum_post_from_id(post.id);
+                            }
+
+                            Ok(HttpResponse::Ok().json(Message {
+                                message: "Deleted forum thread".to_string()
+                            }))
+                        },
+                        false => {
+                            Ok(HttpResponse::BadRequest().json(Message {
+                                message: "Failed to delete forum thread".to_string()
+                            }))
+                        }
+                    }
+                }
+                false => {
+                    Ok(HttpResponse::Unauthorized().json(Message {
+                        message: "Invalid user".to_string()
+                    }))
+                }
+            }
+        }
+        None => {
+            Ok(HttpResponse::NotFound().json(Message {
+                message: "Failed to get forum thread".to_string()
             }))
         }
     }

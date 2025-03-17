@@ -248,6 +248,26 @@ export const updateForumPostFromID = async (
 	}
 };
 
+export const updateForumThreadFromID = async (
+	id: number,
+	forum_thread: ForumThread,
+	token: string
+): Promise<ForumPost | null> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/thread`,
+			method: "PUT",
+			headers: {
+				Authorization: token
+			},
+			data: forum_thread
+		});
+		return request.data;
+	} catch {
+		return null;
+	}
+};
+
 export const deleteForumPostFromID = async (
 	id: number,
 	token: string
@@ -255,6 +275,24 @@ export const deleteForumPostFromID = async (
 	try {
 		const request = await axios({
 			url: `${K9R_API}/forum/post/${id}`,
+			method: "DELETE",
+			headers: {
+				Authorization: token
+			}
+		});
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+export const deleteForumThreadFromID = async (
+	id: number,
+	token: string
+): Promise<boolean> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/thread/${id}`,
 			method: "DELETE",
 			headers: {
 				Authorization: token

@@ -3,11 +3,9 @@ use std::time::SystemTime;
 use actix_web::{put, web, HttpMessage, HttpRequest, HttpResponse, Responder};
 use k9r_db::{
     crud::{
-        forum_posts::{get_forum_post_from_id, update_forum_post_from_id},
-        forum_sections::{create_forum_section, update_forum_section_from_id},
-        forum_topics::{create_forum_topic, update_forum_topic_from_id},
+        forum_posts::{get_forum_post_from_id, update_forum_post_from_id}, forum_sections::{create_forum_section, update_forum_section_from_id}, forum_threads::{get_forum_thread_from_id, update_forum_thread_from_id}, forum_topics::{create_forum_topic, update_forum_topic_from_id}
     },
-    models::{ForumPost, ForumSection, ForumTopic, NewForumSection, NewForumTopic, User},
+    models::{ForumPost, ForumSection, ForumThread, ForumTopic, NewForumSection, NewForumTopic, User},
 };
 use k9r_utils::iso8601;
 
@@ -120,6 +118,47 @@ pub async fn update_post(
         Some(post) => Ok(HttpResponse::Ok().json(post)),
         None => Ok(HttpResponse::BadRequest().json(Message {
             message: "Failed to update forum post".to_string(),
+        })),
+    }
+}
+
+#[put("/thread")]
+pub async fn update_thread(
+    request: HttpRequest,
+    mut body: web::Json<ForumThread>,
+) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    let user = match request.extensions().get::<User>().cloned() {
+        Some(user) => user,
+        None => {
+            return Ok(HttpResponse::Unauthorized().json(Message {
+                message: "Failed to get user".to_string(),
+            }))
+        }
+    };
+
+    let thread_id = body.id.clone();
+    let existing_thread_option = get_forum_thread_from_id(thread_id);
+    if existing_thread_option.is_none() {
+        return Ok(HttpResponse::NotFound().json(Message {
+            message: "Failed to get thread".to_string()
+        }));
+    }
+
+    let existing_thread = existing_thread_option.unwrap();
+    if user.id != existing_thread.author {
+        return Ok(HttpResponse::Unauthorized().json(Message {
+            message: "Invalid user".to_string(),
+        }));
+    }
+
+    body.updated = iso8601(&SystemTime::now());
+    let update =
+        serde_json::from_str(serde_json::to_string(&body.into_inner()).unwrap().as_str()).unwrap();
+
+    match update_forum_thread_from_id(existing_thread.id, update) {
+        Some(thread) => Ok(HttpResponse::Ok().json(thread)),
+        None => Ok(HttpResponse::BadRequest().json(Message {
+            message: "Failed to update forum thread".to_string(),
         })),
     }
 }
