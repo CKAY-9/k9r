@@ -17,3 +17,19 @@ export const getCommunityDetails = async (): Promise<CommunityDetails> => {
         }
     }
 }
+
+export const updateCommunityDetails = async (token: string, community_details: CommunityDetails): Promise<CommunityDetails | null> => {
+    try {
+        const request = await axios({
+            url: `${K9R_API}/community/details`,
+            method: "PUT",
+            headers: {
+                Authorization: token
+            },
+            data: community_details
+        });
+        return request.data;
+    } catch {
+        return null;
+    }
+}

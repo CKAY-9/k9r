@@ -252,7 +252,7 @@ const Topics = (props: TopicsProps) => {
 	);
 };
 
-const ForumManagement = () => {
+const ForumManagementAdmin = () => {
 	const [sections, setSections] = useState<ForumSection[]>([]);
 	const [topics, setTopics] = useState<ForumTopic[]>([]);
 	const [view, setView] = useState<number>(0);
@@ -308,4 +308,4 @@ const ForumManagement = () => {
 	);
 };
 
-export default ForumManagement;
+export default ForumManagementAdmin;

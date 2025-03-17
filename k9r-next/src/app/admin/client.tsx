@@ -3,9 +3,10 @@
 import { Usergroup } from "@/api/usergroups/models";
 import { User } from "@/api/users/models";
 import AdminHeader from "@/components/admin/admin-header/admin-header";
-import ForumManagement from "@/components/admin/forum-management/forum-management";
 import { useState } from "react";
 import style from "./admin.module.scss";
+import ForumManagementAdmin from "@/components/admin/forum-management/forum-management";
+import CommunityDetailsAdmin from "@/components/admin/community-details/community-details";
 
 type AdminHomeClientProps = {
 	personal_user: User;
@@ -24,9 +25,11 @@ const AdminHomeClient = (props: AdminHomeClientProps) => {
 					usergroups={props.usergroups}
 				/>
 				<div style={{ display: view === 0 ? "block" : "none" }}>
-					<ForumManagement />
+					<ForumManagementAdmin />
 				</div>
-				<div style={{ display: view === 0 ? "block" : "none" }}></div>
+				<div style={{ display: view === 1 ? "block" : "none" }}>
+					<CommunityDetailsAdmin />
+				</div>
 			</div>
 		</>
 	);

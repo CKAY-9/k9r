@@ -7,13 +7,21 @@
 */
 
 use actix_web::{middleware::from_fn, web};
-use community::get::get_community_details;
+use community::{get::get_community_details, put::update_community_details};
 use forum::{
-    delete::{delete_post, delete_thread}, get::{all_forum_sections, all_section_topics, all_topics, get_post, get_posts_in_thread, get_section, get_thread, get_topic, get_topic_threads, get_total_post_count, get_total_thread_count, thread_search}, post::{new_forum_post, new_forum_section, new_forum_thread, new_forum_topic}, put::{update_all_sections, update_all_topics, update_post, update_thread}
+    delete::{delete_post, delete_thread},
+    get::{
+        all_forum_sections, all_section_topics, all_topics, get_post, get_posts_in_thread,
+        get_section, get_thread, get_topic, get_topic_threads, get_total_post_count,
+        get_total_thread_count, thread_search,
+    },
+    post::{new_forum_post, new_forum_section, new_forum_thread, new_forum_topic},
+    put::{update_all_sections, update_all_topics, update_post, update_thread},
 };
-use middleware::permissions::{forum_management, valid_user};
+use middleware::permissions::{details_management, forum_management, valid_user};
 use user::get::{
-    get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id, get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github, user_search
+    get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
+    get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github, user_search,
 };
 
 pub mod community;
@@ -35,7 +43,15 @@ pub fn configure_api(cfg: &mut web::ServiceConfig) {
 }
 
 fn configure_community_routes(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::scope("/community").service(get_community_details));
+    cfg.service(
+        web::scope("/community")
+            .service(get_community_details)
+            .service(
+                web::scope("")
+                    .wrap(from_fn(details_management))
+                    .service(update_community_details),
+            ),
+    );
 }
 
 fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
@@ -70,7 +86,7 @@ fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
                             .service(new_forum_topic)
                             .service(update_all_topics),
                     ),
-            )
+            ),
     );
 }
 

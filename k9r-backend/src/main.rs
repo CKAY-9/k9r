@@ -3,13 +3,7 @@ use std::time::SystemTime;
 use actix_cors::Cors;
 use actix_web::{App, HttpServer};
 use dotenvy::dotenv;
-use k9r_api::{
-    configure_api,
-    permissions::{
-        CREATE_NEW_POSTS_FLAG, DEFAULT_COMMUNITY_ACCESS_FLAG, EDIT_POSTS_REPLIES_FLAG,
-        EDIT_PROFILE_FLAG, REPLY_POSTS_FLAG, ROOT_ACCESS_FLAG,
-    },
-};
+use k9r_api::{configure_api, permissions::{CREATE_NEW_POSTS, DEFAULT_COMMUNITY_ACCESS, EDIT_POSTS_REPLIES, EDIT_PROFILE, REPLY_POSTS, ROOT_ACCESS}};
 use k9r_db::{
     crud::{
         community_details::{create_community_details, get_community_details_from_id},
@@ -66,11 +60,11 @@ fn generate_user_usergroup() {
                 name: "User".to_string(),
                 color: "#fff".to_string(),
                 icon: "".to_string(),
-                permissions: CREATE_NEW_POSTS_FLAG
-                    | REPLY_POSTS_FLAG
-                    | EDIT_POSTS_REPLIES_FLAG
-                    | EDIT_PROFILE_FLAG
-                    | DEFAULT_COMMUNITY_ACCESS_FLAG,
+                permissions: CREATE_NEW_POSTS
+                    | REPLY_POSTS
+                    | EDIT_POSTS_REPLIES
+                    | EDIT_PROFILE
+                    | DEFAULT_COMMUNITY_ACCESS,
             };
 
             let insert = create_usergroup(new_user_usergroup);
@@ -97,7 +91,7 @@ fn generate_root_usergroup() {
                 name: "Root".to_string(),
                 color: "#ff0000".to_string(),
                 icon: "".to_string(),
-                permissions: ROOT_ACCESS_FLAG,
+                permissions: ROOT_ACCESS,
             };
 
             let insert = create_usergroup(new_root_usergroup);

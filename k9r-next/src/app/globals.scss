@@ -81,6 +81,10 @@ button {
 	}
 }
 
+textarea {
+	resize: none;
+}
+
 input, textarea {
 	background-color: var(--transparent);
 	border: none;
