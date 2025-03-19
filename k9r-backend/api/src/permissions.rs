@@ -1,8 +1,9 @@
-pub const CREATE_NEW_POSTS: i32 = 0x1;
-pub const REPLY_POSTS: i32 = 0x2;
-pub const EDIT_POSTS_REPLIES: i32 = 0x4;
+pub const CREATE_NEW_THREADS: i32 = 0x1;
+pub const CREATE_NEW_POSTS: i32 = 0x2;
+pub const EDIT_POSTS: i32 = 0x4;
 pub const EDIT_PROFILE: i32 = 0x8;
 pub const DEFAULT_COMMUNITY_ACCESS: i32 = 0x10;
+pub const EDIT_THREADS: i32 = 0x20;
 pub const SITE_SETTINGS: i32 = 0x10000;
 pub const MANAGE_USERS: i32 = 0x20000;
 pub const MANAGE_POSTS: i32 = 0x40000;

@@ -1,9 +1,5 @@
 use std::{net::{TcpListener, TcpStream}, thread::spawn};
-use room::Room;
 use tungstenite::{accept, Message, WebSocket};
-
-pub mod room;
-pub mod user;
 
 fn handle_message(websocket: &WebSocket<TcpStream>, msg: Message) {
     let into_text = msg.into_text();
@@ -11,12 +7,12 @@ fn handle_message(websocket: &WebSocket<TcpStream>, msg: Message) {
         return;
     }
 
-    let text = into_text.unwrap();
+    let text = into_text.unwrap().to_string();
+
 }
 
 fn main() {
     let server = TcpListener::bind("0.0.0.0:8081").unwrap();
-    let rooms: Vec<Room> = vec![];
 
     for stream in server.incoming() {
         spawn (move || {

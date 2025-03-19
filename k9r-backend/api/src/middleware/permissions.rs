@@ -9,10 +9,29 @@ use k9r_utils::extract_header_value;
 
 use crate::{
     models::Message,
-    permissions::{MANAGE_DETAILS, MANAGE_FORUMS, ROOT_ACCESS},
+    permissions::{
+        CREATE_NEW_POSTS, CREATE_NEW_THREADS, EDIT_POSTS, EDIT_THREADS, MANAGE_DETAILS,
+        MANAGE_FORUMS, ROOT_ACCESS,
+    },
 };
 
-pub async fn valid_user(
+fn usergroups_match_permission(usergroup_ids: Vec<i32>, permission: i32) -> bool {
+    for usergroup_id in usergroup_ids.iter() {
+        let usergroup_opt = get_usergroup_from_id(usergroup_id.to_owned());
+        if usergroup_opt.is_none() {
+            continue;
+        }
+
+        let usergroup = usergroup_opt.unwrap();
+        if (usergroup.permissions & permission != 0) || (usergroup.permissions & ROOT_ACCESS != 0) {
+            return true;
+        }
+    }
+
+    false
+}
+
+pub async fn valid_user_middleware(
     req: ServiceRequest,
     next: Next<impl MessageBody + 'static>,
 ) -> Result<ServiceResponse<impl MessageBody + 'static>, Error> {
@@ -39,7 +58,73 @@ pub async fn valid_user(
     }
 }
 
-pub async fn forum_management(
+pub async fn forum_management_middleware(
+    req: ServiceRequest,
+    next: Next<impl MessageBody + 'static>,
+) -> Result<ServiceResponse<impl MessageBody + 'static>, Error> {
+    let user_token_opt = extract_header_value(&req.request(), "Authorization");
+    if user_token_opt.is_none() {
+        return Ok(req.into_response(HttpResponse::BadRequest().json(Message {
+            message: "No user token".to_string(),
+        })));
+    }
+
+    let user_token = user_token_opt.unwrap();
+    match get_user_from_token(user_token) {
+        Some(user) => match usergroups_match_permission(user.clone().usergroups, MANAGE_FORUMS) {
+            true => {
+                req.extensions_mut().insert(user);
+                let res = next.call(req).await?;
+                return Ok(res.map_into_boxed_body());
+            }
+            false => Ok(
+                req.into_response(HttpResponse::Unauthorized().json(Message {
+                    message: "Invalid permissions".to_string(),
+                })),
+            ),
+        },
+        None => {
+            return Ok(req.into_response(HttpResponse::NotFound().json(Message {
+                message: "Failed to get user".to_string(),
+            })))
+        }
+    }
+}
+
+pub async fn details_management_middleware(
+    req: ServiceRequest,
+    next: Next<impl MessageBody + 'static>,
+) -> Result<ServiceResponse<impl MessageBody + 'static>, Error> {
+    let user_token_opt = extract_header_value(&req.request(), "Authorization");
+    if user_token_opt.is_none() {
+        return Ok(req.into_response(HttpResponse::BadRequest().json(Message {
+            message: "No user token".to_string(),
+        })));
+    }
+
+    let user_token = user_token_opt.unwrap();
+    match get_user_from_token(user_token) {
+        Some(user) => match usergroups_match_permission(user.clone().usergroups, MANAGE_DETAILS) {
+            true => {
+                req.extensions_mut().insert(user);
+                let res = next.call(req).await?;
+                return Ok(res.map_into_boxed_body());
+            }
+            false => Ok(
+                req.into_response(HttpResponse::Unauthorized().json(Message {
+                    message: "Invalid permissions".to_string(),
+                })),
+            ),
+        },
+        None => {
+            return Ok(req.into_response(HttpResponse::NotFound().json(Message {
+                message: "Failed to get user".to_string(),
+            })))
+        }
+    }
+}
+
+pub async fn create_new_thread_middleware(
     req: ServiceRequest,
     next: Next<impl MessageBody + 'static>,
 ) -> Result<ServiceResponse<impl MessageBody + 'static>, Error> {
@@ -53,27 +138,18 @@ pub async fn forum_management(
     let user_token = user_token_opt.unwrap();
     match get_user_from_token(user_token) {
         Some(user) => {
-            for usergroup_id in user.usergroups.iter() {
-                let usergroup_opt = get_usergroup_from_id(usergroup_id.to_owned());
-                if usergroup_opt.is_none() {
-                    continue;
-                }
-
-                let usergroup = usergroup_opt.unwrap();
-                if (usergroup.permissions & MANAGE_FORUMS != 0)
-                    || (usergroup.permissions & ROOT_ACCESS != 0)
-                {
+            match usergroups_match_permission(user.clone().usergroups, CREATE_NEW_THREADS) {
+                true => {
                     req.extensions_mut().insert(user);
                     let res = next.call(req).await?;
                     return Ok(res.map_into_boxed_body());
                 }
+                false => Ok(
+                    req.into_response(HttpResponse::Unauthorized().json(Message {
+                        message: "Invalid permissions".to_string(),
+                    })),
+                ),
             }
-
-            Ok(
-                req.into_response(HttpResponse::Unauthorized().json(Message {
-                    message: "Invalid permissions".to_string(),
-                })),
-            )
         }
         None => {
             return Ok(req.into_response(HttpResponse::NotFound().json(Message {
@@ -83,7 +159,7 @@ pub async fn forum_management(
     }
 }
 
-pub async fn details_management(
+pub async fn create_new_post_middleware(
     req: ServiceRequest,
     next: Next<impl MessageBody + 'static>,
 ) -> Result<ServiceResponse<impl MessageBody + 'static>, Error> {
@@ -97,28 +173,85 @@ pub async fn details_management(
     let user_token = user_token_opt.unwrap();
     match get_user_from_token(user_token) {
         Some(user) => {
-            for usergroup_id in user.usergroups.iter() {
-                let usergroup_opt = get_usergroup_from_id(usergroup_id.to_owned());
-                if usergroup_opt.is_none() {
-                    continue;
-                }
-
-                let usergroup = usergroup_opt.unwrap();
-                if (usergroup.permissions & MANAGE_DETAILS != 0)
-                    || (usergroup.permissions & ROOT_ACCESS != 0)
-                {
+            match usergroups_match_permission(user.clone().usergroups, CREATE_NEW_POSTS) {
+                true => {
                     req.extensions_mut().insert(user);
                     let res = next.call(req).await?;
                     return Ok(res.map_into_boxed_body());
                 }
+                false => Ok(
+                    req.into_response(HttpResponse::Unauthorized().json(Message {
+                        message: "Invalid permissions".to_string(),
+                    })),
+                ),
             }
+        }
+        None => {
+            return Ok(req.into_response(HttpResponse::NotFound().json(Message {
+                message: "Failed to get user".to_string(),
+            })))
+        }
+    }
+}
 
-            Ok(
+pub async fn edit_thread_middleware(
+    req: ServiceRequest,
+    next: Next<impl MessageBody + 'static>,
+) -> Result<ServiceResponse<impl MessageBody + 'static>, Error> {
+    let user_token_opt = extract_header_value(&req.request(), "Authorization");
+    if user_token_opt.is_none() {
+        return Ok(req.into_response(HttpResponse::BadRequest().json(Message {
+            message: "No user token".to_string(),
+        })));
+    }
+
+    let user_token = user_token_opt.unwrap();
+    match get_user_from_token(user_token) {
+        Some(user) => match usergroups_match_permission(user.clone().usergroups, EDIT_THREADS) {
+            true => {
+                req.extensions_mut().insert(user);
+                let res = next.call(req).await?;
+                return Ok(res.map_into_boxed_body());
+            }
+            false => Ok(
                 req.into_response(HttpResponse::Unauthorized().json(Message {
                     message: "Invalid permissions".to_string(),
                 })),
-            )
+            ),
+        },
+        None => {
+            return Ok(req.into_response(HttpResponse::NotFound().json(Message {
+                message: "Failed to get user".to_string(),
+            })))
         }
+    }
+}
+
+pub async fn edit_post_middleware(
+    req: ServiceRequest,
+    next: Next<impl MessageBody + 'static>,
+) -> Result<ServiceResponse<impl MessageBody + 'static>, Error> {
+    let user_token_opt = extract_header_value(&req.request(), "Authorization");
+    if user_token_opt.is_none() {
+        return Ok(req.into_response(HttpResponse::BadRequest().json(Message {
+            message: "No user token".to_string(),
+        })));
+    }
+
+    let user_token = user_token_opt.unwrap();
+    match get_user_from_token(user_token) {
+        Some(user) => match usergroups_match_permission(user.clone().usergroups, EDIT_POSTS) {
+            true => {
+                req.extensions_mut().insert(user);
+                let res = next.call(req).await?;
+                return Ok(res.map_into_boxed_body());
+            }
+            false => Ok(
+                req.into_response(HttpResponse::Unauthorized().json(Message {
+                    message: "Invalid permissions".to_string(),
+                })),
+            ),
+        },
         None => {
             return Ok(req.into_response(HttpResponse::NotFound().json(Message {
                 message: "Failed to get user".to_string(),

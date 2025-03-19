@@ -6,7 +6,7 @@
     Additionally, for routes like user, /{id} routes should be called last when possible
 */
 
-use actix_web::{middleware::from_fn, web};
+use actix_web::{guard, middleware::from_fn, web};
 use community::{get::get_community_details, put::update_community_details};
 use forum::{
     delete::{delete_post, delete_thread},
@@ -18,7 +18,7 @@ use forum::{
     post::{new_forum_post, new_forum_section, new_forum_thread, new_forum_topic},
     put::{update_all_sections, update_all_topics, update_post, update_thread},
 };
-use middleware::permissions::{details_management, forum_management, valid_user};
+use middleware::permissions::{create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_thread_middleware, forum_management_middleware, valid_user_middleware};
 use user::get::{
     get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
     get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github, user_search,
@@ -48,8 +48,9 @@ fn configure_community_routes(cfg: &mut web::ServiceConfig) {
             .service(get_community_details)
             .service(
                 web::scope("")
-                    .wrap(from_fn(details_management))
-                    .service(update_community_details),
+                    .wrap(from_fn(details_management_middleware))
+                    .service(update_community_details)
+                    .guard(guard::Get()),
             ),
     );
 }
@@ -71,20 +72,41 @@ fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
             .service(get_topic_threads)
             .service(
                 web::scope("")
-                    .wrap(from_fn(valid_user))
-                    .service(new_forum_thread)
-                    .service(new_forum_post)
-                    .service(update_post)
-                    .service(update_thread)
-                    .service(delete_post)
-                    .service(delete_thread)
+                    .wrap(from_fn(valid_user_middleware))
+                    .service(
+                        web::scope("")
+                            .wrap(from_fn(create_new_thread_middleware))
+                            .service(new_forum_thread)
+                            .guard(guard::Get())   
+                    )
+                    .service(
+                        web::scope("")
+                            .wrap(from_fn(create_new_post_middleware))
+                            .service(new_forum_post)
+                            .guard(guard::Get())   
+                    )
+                    .service(
+                        web::scope("")
+                            .wrap(from_fn(edit_thread_middleware))
+                            .service(update_thread)
+                            .service(delete_thread)
+                            .guard(guard::Get())   
+                    )
+                    .service(
+                        web::scope("")
+                            .wrap(from_fn(edit_post_middleware))
+                            .service(update_post)
+                            .service(delete_post)
+                            .guard(guard::Get())
+                    )
                     .service(
                         web::scope("/admin")
-                            .wrap(from_fn(forum_management))
+                            .wrap(from_fn(forum_management_middleware))
                             .service(new_forum_section)
                             .service(update_all_sections)
                             .service(new_forum_topic)
-                            .service(update_all_topics),
+                            .service(update_all_topics)
+                            .guard(guard::Get()),
                     ),
             ),
     );

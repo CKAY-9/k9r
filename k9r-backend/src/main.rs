@@ -3,7 +3,7 @@ use std::time::SystemTime;
 use actix_cors::Cors;
 use actix_web::{App, HttpServer};
 use dotenvy::dotenv;
-use k9r_api::{configure_api, permissions::{CREATE_NEW_POSTS, DEFAULT_COMMUNITY_ACCESS, EDIT_POSTS_REPLIES, EDIT_PROFILE, REPLY_POSTS, ROOT_ACCESS}};
+use k9r_api::{configure_api, permissions::{CREATE_NEW_POSTS, CREATE_NEW_THREADS, DEFAULT_COMMUNITY_ACCESS, EDIT_POSTS, EDIT_PROFILE, EDIT_THREADS, ROOT_ACCESS}};
 use k9r_db::{
     crud::{
         community_details::{create_community_details, get_community_details_from_id},
@@ -60,9 +60,10 @@ fn generate_user_usergroup() {
                 name: "User".to_string(),
                 color: "#fff".to_string(),
                 icon: "".to_string(),
-                permissions: CREATE_NEW_POSTS
-                    | REPLY_POSTS
-                    | EDIT_POSTS_REPLIES
+                permissions: CREATE_NEW_THREADS
+                    | CREATE_NEW_POSTS
+                    | EDIT_POSTS
+                    | EDIT_THREADS
                     | EDIT_PROFILE
                     | DEFAULT_COMMUNITY_ACCESS,
             };
