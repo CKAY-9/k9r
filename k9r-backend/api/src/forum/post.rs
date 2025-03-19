@@ -1,6 +1,6 @@
 use std::time::SystemTime;
 
-use actix_web::{http::StatusCode, post, web, HttpMessage, HttpRequest, HttpResponse, Responder};
+use actix_web::{http::StatusCode, post, web, HttpMessage, HttpRequest, HttpResponse};
 use k9r_db::{
     crud::{
         forum_posts::{create_forum_post, update_forum_post_from_id},
@@ -41,21 +41,21 @@ pub async fn new_forum_section(
 pub async fn new_forum_topic(
     _request: HttpRequest,
     body: web::Json<NewForumTopic>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+) -> HttpResponse {
     let new_topic = body.into_inner();
     let parent_section_opt = get_forum_section_from_id(new_topic.section);
     if parent_section_opt.is_none() {
-        return Ok(HttpResponse::NotFound().json(Message {
+        return HttpResponse::NotFound().json(Message {
             message: "Failed to get parent section".to_string(),
-        }));
+        });
     }
 
     let mut parent_section = parent_section_opt.unwrap();
     let insert_topic_opt = create_forum_topic(new_topic);
     if insert_topic_opt.is_none() {
-        return Ok(HttpResponse::BadRequest().json(Message {
+        return HttpResponse::BadRequest().json(Message {
             message: "Failed to create forum topic".to_string(),
-        }));
+        });
     }
 
     let topic = insert_topic_opt.unwrap();
@@ -70,27 +70,25 @@ pub async fn new_forum_topic(
 
     let update = update_forum_section_from_id(parent_section.id, update_section);
     match update {
-        Some(_section) => Ok(HttpResponse::Ok().json(topic)),
+        Some(_section) => HttpResponse::Ok().json(topic),
         None => {
             delete_forum_topic_from_id(topic.id);
-            Ok(HttpResponse::BadRequest().json(Message {
+            HttpResponse::BadRequest().json(Message {
                 message: "Failed to update forum section".to_string(),
-            }))
+            })
         }
     }
 }
 
-#[post("/thread")]
 pub async fn new_forum_thread(
-    request: HttpRequest,
-    body: web::Json<NewThread>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    (request, body): (HttpRequest, web::Json<NewThread>),
+) -> HttpResponse {
     let user = match request.extensions().get::<User>().cloned() {
         Some(user) => user,
         None => {
-            return Ok(HttpResponse::Unauthorized().json(Message {
+            return HttpResponse::Unauthorized().json(Message {
                 message: "Failed to get user".to_string(),
-            }))
+            });
         }
     };
 
@@ -119,11 +117,11 @@ pub async fn new_forum_thread(
     // Inserts and updates
     let thread_insert = create_forum_thread(new_thread);
     if thread_insert.is_none() {
-        return Ok(HttpResponse::Ok()
+        return HttpResponse::Ok()
             .status(StatusCode::BAD_REQUEST)
             .json(Message {
                 message: "Failed to insert forum thread".to_string(),
-            }));
+            });
     }
 
     let mut thread = thread_insert.unwrap();
@@ -131,11 +129,11 @@ pub async fn new_forum_thread(
     let post_insert = create_forum_post(new_post);
     if post_insert.is_none() {
         delete_forum_thread_from_id(thread.id);
-        return Ok(HttpResponse::Ok()
+        return HttpResponse::Ok()
             .status(StatusCode::BAD_REQUEST)
             .json(Message {
                 message: "Failed to insert forum post".to_string(),
-            }));
+            });
     }
 
     let mut post: ForumPost = post_insert.unwrap();
@@ -152,11 +150,11 @@ pub async fn new_forum_thread(
 
     if thread_update.is_none() {
         // TODO: Handle post
-        return Ok(HttpResponse::Ok()
+        return HttpResponse::Ok()
             .status(StatusCode::BAD_REQUEST)
             .json(Message {
                 message: "Failed to update forum thread".to_string(),
-            }));
+            });
     }
 
     let updated_post: NewForumPost = serde_json::from_str(
@@ -166,27 +164,25 @@ pub async fn new_forum_thread(
 
     if post_update.is_none() {
         // TODO: Handle thread
-        return Ok(HttpResponse::Ok()
+        return HttpResponse::Ok()
             .status(StatusCode::BAD_REQUEST)
             .json(Message {
                 message: "Failed to update forum post".to_string(),
-            }));
+            });
     }
 
-    Ok(HttpResponse::Ok().json(thread_update.unwrap()))
+    HttpResponse::Ok().json(thread_update.unwrap())
 }
 
-#[post("/post")]
 pub async fn new_forum_post(
-    request: HttpRequest,
-    body: web::Json<NewForumPost>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    (request, body): (HttpRequest, web::Json<NewForumPost>),
+) -> HttpResponse {
     let user = match request.extensions().get::<User>().cloned() {
         Some(user) => user,
         None => {
-            return Ok(HttpResponse::Unauthorized().json(Message {
+            return HttpResponse::Unauthorized().json(Message {
                 message: "Failed to get user".to_string(),
-            }))
+            })
         }
     };
 
@@ -194,9 +190,9 @@ pub async fn new_forum_post(
 
     let thread_opt = get_forum_thread_from_id(new_post.thread);
     if thread_opt.is_none() {
-        return Ok(HttpResponse::NotFound().json(Message {
+        return HttpResponse::NotFound().json(Message {
             message: "Failed to get forum thread".to_string(),
-        }))
+        })
     }
 
     let mut thread = thread_opt.unwrap();
@@ -216,20 +212,20 @@ pub async fn new_forum_post(
             ).unwrap();
             match update_forum_thread_from_id(thread.id, updated_thread) {
                 Some(_t) => {
-                    Ok(HttpResponse::Ok().json(post))
+                    HttpResponse::Ok().json(post)
                 },
                 None => {
                     // TODO: Cleanup post
-                    Ok(HttpResponse::BadRequest().json(Message {
+                    HttpResponse::BadRequest().json(Message {
                         message: "Failed to update forum thread".to_string(),
-                    }))
+                    })
                 }
             }
         },
         None => {
-            Ok(HttpResponse::BadRequest().json(Message {
+            HttpResponse::BadRequest().json(Message {
                 message: "Failed to create forum post".to_string(),
-            }))
+            })
         }
     }
 }

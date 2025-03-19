@@ -18,7 +18,10 @@ use forum::{
     post::{new_forum_post, new_forum_section, new_forum_thread, new_forum_topic},
     put::{update_all_sections, update_all_topics, update_post, update_thread},
 };
-use middleware::permissions::{create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_thread_middleware, forum_management_middleware, valid_user_middleware};
+use middleware::permissions::{
+    create_new_post_middleware, create_new_thread_middleware, details_management_middleware,
+    edit_post_middleware, edit_thread_middleware, forum_management_middleware,
+};
 use user::get::{
     get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
     get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github, user_search,
@@ -47,10 +50,10 @@ fn configure_community_routes(cfg: &mut web::ServiceConfig) {
         web::scope("/community")
             .service(get_community_details)
             .service(
-                web::scope("")
+                web::resource("/details")
                     .wrap(from_fn(details_management_middleware))
-                    .service(update_community_details)
-                    .guard(guard::Get()),
+                    .route(web::put().to(update_community_details))
+                    .guard(guard::Put()),
             ),
     );
 }
@@ -72,32 +75,41 @@ fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
             .service(get_topic_threads)
             .service(
                 web::scope("")
-                    .wrap(from_fn(valid_user_middleware))
                     .service(
-                        web::scope("")
+                        web::resource("/thread")
                             .wrap(from_fn(create_new_thread_middleware))
-                            .service(new_forum_thread)
-                            .guard(guard::Get())   
+                            .route(web::post().to(new_forum_thread))
+                            .guard(guard::Post()),
                     )
                     .service(
-                        web::scope("")
+                        web::resource("/post")
                             .wrap(from_fn(create_new_post_middleware))
-                            .service(new_forum_post)
-                            .guard(guard::Get())   
+                            .route(web::post().to(new_forum_post))
+                            .guard(guard::Post()),
                     )
                     .service(
-                        web::scope("")
+                        web::resource("/thread")
                             .wrap(from_fn(edit_thread_middleware))
-                            .service(update_thread)
-                            .service(delete_thread)
-                            .guard(guard::Get())   
+                            .route(web::put().to(update_thread))
+                            .guard(guard::Put()),
                     )
                     .service(
-                        web::scope("")
+                        web::resource("/thread/{id}")
+                            .wrap(from_fn(edit_thread_middleware))
+                            .route(web::delete().to(delete_thread))
+                            .guard(guard::Delete()),
+                    )
+                    .service(
+                        web::resource("/post")
                             .wrap(from_fn(edit_post_middleware))
-                            .service(update_post)
-                            .service(delete_post)
-                            .guard(guard::Get())
+                            .route(web::put().to(update_post))
+                            .guard(guard::Put()),
+                    )
+                    .service(
+                        web::resource("/post/{id}")
+                            .wrap(from_fn(edit_post_middleware))
+                            .route(web::delete().to(delete_post))
+                            .guard(guard::Delete()),
                     )
                     .service(
                         web::scope("/admin")
@@ -105,8 +117,7 @@ fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
                             .service(new_forum_section)
                             .service(update_all_sections)
                             .service(new_forum_topic)
-                            .service(update_all_topics)
-                            .guard(guard::Get()),
+                            .service(update_all_topics),
                     ),
             ),
     );

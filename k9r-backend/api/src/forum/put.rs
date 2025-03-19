@@ -81,10 +81,8 @@ pub async fn update_all_topics(
     Ok(HttpResponse::Ok().json(finished_topics))
 }
 
-#[put("/post")]
 pub async fn update_post(
-    request: HttpRequest,
-    mut body: web::Json<ForumPost>,
+    (request, mut body): (HttpRequest, web::Json<ForumPost>),
 ) -> Result<impl Responder, Box<dyn std::error::Error>> {
     let user = match request.extensions().get::<User>().cloned() {
         Some(user) => user,
@@ -122,33 +120,31 @@ pub async fn update_post(
     }
 }
 
-#[put("/thread")]
 pub async fn update_thread(
-    request: HttpRequest,
-    mut body: web::Json<ForumThread>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+    (request, mut body): (HttpRequest, web::Json<ForumThread>)
+) -> HttpResponse {
     let user = match request.extensions().get::<User>().cloned() {
         Some(user) => user,
         None => {
-            return Ok(HttpResponse::Unauthorized().json(Message {
+            return HttpResponse::Unauthorized().json(Message {
                 message: "Failed to get user".to_string(),
-            }))
+            })
         }
     };
 
     let thread_id = body.id.clone();
     let existing_thread_option = get_forum_thread_from_id(thread_id);
     if existing_thread_option.is_none() {
-        return Ok(HttpResponse::NotFound().json(Message {
+        return HttpResponse::NotFound().json(Message {
             message: "Failed to get thread".to_string()
-        }));
+        });
     }
 
     let existing_thread = existing_thread_option.unwrap();
     if user.id != existing_thread.author {
-        return Ok(HttpResponse::Unauthorized().json(Message {
+        return HttpResponse::Unauthorized().json(Message {
             message: "Invalid user".to_string(),
-        }));
+        });
     }
 
     body.updated = iso8601(&SystemTime::now());
@@ -156,9 +152,9 @@ pub async fn update_thread(
         serde_json::from_str(serde_json::to_string(&body.into_inner()).unwrap().as_str()).unwrap();
 
     match update_forum_thread_from_id(existing_thread.id, update) {
-        Some(thread) => Ok(HttpResponse::Ok().json(thread)),
-        None => Ok(HttpResponse::BadRequest().json(Message {
+        Some(thread) => HttpResponse::Ok().json(thread),
+        None => HttpResponse::BadRequest().json(Message {
             message: "Failed to update forum thread".to_string(),
-        })),
+        }),
     }
 }
