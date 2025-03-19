@@ -8,9 +8,11 @@ import style from "./admin.module.scss";
 import ForumManagementAdmin from "@/components/admin/forum-management/forum-management";
 import CommunityDetailsAdmin from "@/components/admin/community-details/community-details";
 import UsergroupsAdmin from "@/components/admin/usergroups/usergroups";
+import { CommunityDetails } from "@/api/community-details/models";
 
 type AdminHomeClientProps = {
 	personal_user: User;
+	community_details: CommunityDetails;
 	usergroups: Usergroup[];
 };
 
@@ -21,6 +23,7 @@ const AdminHomeClient = (props: AdminHomeClientProps) => {
 		<>
 			<div className={style.container}>
 				<AdminHeader
+					community_details={props.community_details}
 					set_view={setView}
 					personal_user={props.personal_user}
 					usergroups={props.usergroups}

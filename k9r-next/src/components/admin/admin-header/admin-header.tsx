@@ -1,31 +1,100 @@
 import { Usergroup } from "@/api/usergroups/models";
 import { User } from "@/api/users/models";
 import style from "./header.module.scss";
-import Link from "next/link";
-import { MANAGE_DETAILS, MANAGE_FORUMS, MANAGE_USERGROUPS, usergroupsPermissionFlagCheck } from "@/api/permissions";
+import {
+	MANAGE_DETAILS,
+	MANAGE_FORUMS,
+	MANAGE_USERGROUPS,
+	usergroupsPermissionFlagCheck,
+} from "@/api/permissions";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { CommunityDetails } from "@/api/community-details/models";
 
 type AdminHeaderProps = {
-    personal_user: User;
-    usergroups: Usergroup[];
-    set_view: Function;
+	community_details: CommunityDetails;
+	personal_user: User;
+	usergroups: Usergroup[];
+	set_view: Function;
 };
 
 const AdminHeader = (props: AdminHeaderProps) => {
-    return (
-        <>
-            <nav className={style.admin_header}>
-                {(usergroupsPermissionFlagCheck(props.usergroups, MANAGE_FORUMS)) && (
-                    <button className={style.link} onClick={() => props.set_view(0)}>Manage Forum</button>
-                )}
-                {(usergroupsPermissionFlagCheck(props.usergroups, MANAGE_DETAILS)) && (
-                    <button className={style.link} onClick={() => props.set_view(1)}>Manage Details</button>
-                )}
-                {(usergroupsPermissionFlagCheck(props.usergroups, MANAGE_USERGROUPS)) && (
-                    <button className={style.link} onClick={() => props.set_view(2)}>Usergroups</button>
-                )}
-            </nav>
-        </>
-    );
-}
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const tab = searchParams.get("tab");
+
+	const changeView = (view: number) => {
+		switch (view) {
+			case 0:
+				router.push(pathname + "?" + "tab=forum");
+				document.title = `Manage Forum - ${props.community_details.name}`;
+				break;
+			case 1:
+				router.push(pathname + "?" + "tab=details");
+				document.title = `Manage Details - ${props.community_details.name}`;
+				break;
+			case 2:
+				router.push(pathname + "?" + "tab=usergroups");
+				document.title = `Manage Usergroups - ${props.community_details.name}`;
+				break;
+		}
+        props.set_view(view);
+	};
+
+	useEffect(() => {
+		switch (tab) {
+			case "forum":
+				changeView(0);
+				break;
+			case "details":
+				changeView(1);
+				break;
+			case "usergroups":
+				changeView(2);
+				break;
+		}
+	}, []);
+
+	return (
+		<>
+			<nav className={style.admin_header}>
+				{usergroupsPermissionFlagCheck(
+					props.usergroups,
+					MANAGE_FORUMS
+				) && (
+					<button
+						className={style.link}
+						onClick={() => changeView(0)}
+					>
+						Manage Forum
+					</button>
+				)}
+				{usergroupsPermissionFlagCheck(
+					props.usergroups,
+					MANAGE_DETAILS
+				) && (
+					<button
+						className={style.link}
+						onClick={() => changeView(1)}
+					>
+						Manage Details
+					</button>
+				)}
+				{usergroupsPermissionFlagCheck(
+					props.usergroups,
+					MANAGE_USERGROUPS
+				) && (
+					<button
+						className={style.link}
+						onClick={() => changeView(2)}
+					>
+						Usergroups
+					</button>
+				)}
+			</nav>
+		</>
+	);
+};
 
 export default AdminHeader;
