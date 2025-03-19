@@ -1,13 +1,13 @@
 use std::{net::{TcpListener, TcpStream}, thread::spawn};
 use tungstenite::{accept, Message, WebSocket};
 
-fn handle_message(websocket: &WebSocket<TcpStream>, msg: Message) {
+fn handle_message(_websocket: &WebSocket<TcpStream>, msg: Message) {
     let into_text = msg.into_text();
     if into_text.is_err() {
         return;
     }
 
-    let text = into_text.unwrap().to_string();
+    let _text = into_text.unwrap().to_string();
 
 }
 

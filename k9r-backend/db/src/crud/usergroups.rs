@@ -1,6 +1,10 @@
 use diesel::{query_dsl::methods::FindDsl, ExpressionMethods, RunQueryDsl};
 
-use crate::{create_connection, models::{Usergroup, NewUsergroup}, schema::usergroups};
+use crate::{
+    create_connection,
+    models::{NewUsergroup, Usergroup},
+    schema::usergroups,
+};
 
 pub fn create_usergroup(usergroup: NewUsergroup) -> Option<Usergroup> {
     let connection = &mut create_connection();
@@ -9,28 +13,26 @@ pub fn create_usergroup(usergroup: NewUsergroup) -> Option<Usergroup> {
         .get_result::<Usergroup>(connection);
 
     match insert {
-        Ok(result) => {
-            Some(result)
-        }
-        Err(_e) => {
-            None
-        }
+        Ok(result) => Some(result),
+        Err(_e) => None,
     }
 }
 
 pub fn get_usergroup_from_id(id: i32) -> Option<Usergroup> {
     let connection = &mut create_connection();
-    let find = usergroups::table
-        .find(id)
-        .first(connection);
+    let find = usergroups::table.find(id).first(connection);
 
     match find {
-        Ok(result) => {
-            Some(result)
-        }
-        Err(_e) => {
-            None
-        }
+        Ok(result) => Some(result),
+        Err(_e) => None,
+    }
+}
+
+pub fn get_all_usergroups() -> Vec<Usergroup> {
+    let connection = &mut create_connection();
+    match usergroups::table.load(connection) {
+        Ok(u) => u,
+        Err(_e) => vec![]
     }
 }
 
@@ -42,12 +44,8 @@ pub fn update_usergroup_from_id(id: i32, usergroup: NewUsergroup) -> Option<User
         .get_result::<Usergroup>(connection);
 
     match update {
-        Ok(result) => {
-            Some(result)
-        }
-        Err(_e) => {
-            None
-        }
+        Ok(result) => Some(result),
+        Err(_e) => None,
     }
 }
 
@@ -58,11 +56,7 @@ pub fn delete_usergroup_from_id(id: i32) -> bool {
         .execute(connection);
 
     match delete {
-        Ok(_result) => {
-            true
-        }
-        Err(_e) => {
-            false
-        }
+        Ok(_result) => true,
+        Err(_e) => false,
     }
 }

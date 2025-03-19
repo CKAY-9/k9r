@@ -7,6 +7,7 @@ import { useState } from "react";
 import style from "./admin.module.scss";
 import ForumManagementAdmin from "@/components/admin/forum-management/forum-management";
 import CommunityDetailsAdmin from "@/components/admin/community-details/community-details";
+import UsergroupsAdmin from "@/components/admin/usergroups/usergroups";
 
 type AdminHomeClientProps = {
 	personal_user: User;
@@ -29,6 +30,9 @@ const AdminHomeClient = (props: AdminHomeClientProps) => {
 				</div>
 				<div style={{ display: view === 1 ? "block" : "none" }}>
 					<CommunityDetailsAdmin />
+				</div>
+				<div style={{ display: view === 2 ? "block" : "none" }}>
+					<UsergroupsAdmin />
 				</div>
 			</div>
 		</>

@@ -20,12 +20,13 @@ use forum::{
 };
 use middleware::permissions::{
     create_new_post_middleware, create_new_thread_middleware, details_management_middleware,
-    edit_post_middleware, edit_thread_middleware, forum_management_middleware,
+    edit_post_middleware, edit_thread_middleware, forum_management_middleware, usergroup_management_middleware,
 };
 use user::get::{
     get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
     get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github, user_search,
 };
+use usergroup::{delete::delete_usergroup_by_id, get::{get_usergroup_by_id, get_usergroups}, post::new_usergroup, put::update_usergroup_by_id};
 
 pub mod community;
 pub mod forum;
@@ -139,5 +140,27 @@ fn configure_user_routes(cfg: &mut web::ServiceConfig) {
 }
 
 fn configure_usergroup_routes(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::scope("/usergroups"));
+    cfg.service(
+        web::scope("/usergroup")
+            .service(get_usergroups)
+            .service(get_usergroup_by_id)
+            .service(
+                web::resource("")
+                    .wrap(from_fn(usergroup_management_middleware))
+                    .route(web::post().to(new_usergroup)) 
+                    .guard(guard::Post())  
+            )
+            .service(
+                web::resource("/{id}")
+                    .wrap(from_fn(usergroup_management_middleware))
+                    .route(web::put().to(update_usergroup_by_id)) 
+                    .guard(guard::Put())  
+            )
+            .service(
+                web::resource("/{id}")
+                    .wrap(from_fn(usergroup_management_middleware))
+                    .route(web::delete().to(delete_usergroup_by_id))
+                    .guard(guard::Delete())
+            )
+    );
 }
