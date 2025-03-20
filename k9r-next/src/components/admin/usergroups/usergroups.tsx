@@ -128,6 +128,12 @@ const UsergroupsAdmin = () => {
 				<button onClick={generateNewUsergroup}>Create New</button>
 			</nav>
 			<div className={style.content}>
+				{usergroup_index === -1 && (
+					<>
+						<h2>Usergroups</h2>
+						<span>Select a usergroup to edit it, or create a new one.</span>
+					</>
+				)}
 				{usergroups
 					.filter((v, i) => i === usergroup_index)
 					.map((usergroup, index) => {
