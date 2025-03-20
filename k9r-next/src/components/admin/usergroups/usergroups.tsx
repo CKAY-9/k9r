@@ -3,7 +3,11 @@
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./usergroups.module.scss";
 import { Usergroup } from "@/api/usergroups/models";
-import { deleteUsergroupFromID, getAllUsergroups, updateUsergroupFromID } from "@/api/usergroups/api";
+import {
+	deleteUsergroupFromID,
+	getAllUsergroups,
+	updateUsergroupFromID,
+} from "@/api/usergroups/api";
 import LoadingAlert from "@/components/loading/loading-alert";
 import {
 	CREATE_NEW_POSTS,
@@ -65,7 +69,11 @@ const UsergroupsAdmin = () => {
 			return;
 		}
 
-		const update = await updateUsergroupFromID(current.id, current, getCookie("token") || "");
+		const update = await updateUsergroupFromID(
+			current.id,
+			current,
+			getCookie("token") || ""
+		);
 		if (update !== null) {
 			setUsergroups(usergroups.filter((v, i) => v.id !== update.id));
 			setLoadingUsergroups(true);
@@ -87,7 +95,10 @@ const UsergroupsAdmin = () => {
 			return;
 		}
 
-		const del = await deleteUsergroupFromID(current.id, getCookie("token") || "");
+		const del = await deleteUsergroupFromID(
+			current.id,
+			getCookie("token") || ""
+		);
 	};
 
 	if (loading_usergroups) {
@@ -121,7 +132,10 @@ const UsergroupsAdmin = () => {
 					.filter((v, i) => i === usergroup_index)
 					.map((usergroup, index) => {
 						return (
-							<div className={style.usergroup} key={usergroup_index}>
+							<div
+								className={style.usergroup}
+								key={usergroup_index}
+							>
 								<section>
 									<h2
 										style={{
@@ -429,9 +443,12 @@ const UsergroupsAdmin = () => {
 								<button onClick={updateUsergroup}>
 									Update
 								</button>
-								<button onClick={deleteUsergroup}>
-									Delete
-								</button>
+								{usergroups[usergroup_index].id !== 1 &&
+									usergroups[usergroup_index].id !== 2 && (
+										<button onClick={deleteUsergroup}>
+											Delete
+										</button>
+								)}
 							</div>
 						);
 					})}
