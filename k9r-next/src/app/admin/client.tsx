@@ -9,6 +9,7 @@ import ForumManagementAdmin from "@/components/admin/forum-management/forum-mana
 import CommunityDetailsAdmin from "@/components/admin/community-details/community-details";
 import UsergroupsAdmin from "@/components/admin/usergroups/usergroups";
 import { CommunityDetails } from "@/api/community-details/models";
+import UsersAdmin from "@/components/admin/users/users";
 
 type AdminHomeClientProps = {
 	personal_user: User;
@@ -36,6 +37,9 @@ const AdminHomeClient = (props: AdminHomeClientProps) => {
 				</div>
 				<div style={{ display: view === 2 ? "block" : "none" }}>
 					<UsergroupsAdmin />
+				</div>
+				<div style={{ display: view === 3 ? "block" : "none" }}>
+					<UsersAdmin />
 				</div>
 			</div>
 		</>

@@ -66,6 +66,13 @@ const UsergroupsAdmin = () => {
 		}
 
 		const update = await updateUsergroupFromID(current.id, current, getCookie("token") || "");
+		if (update !== null) {
+			setUsergroups(usergroups.filter((v, i) => v.id !== update.id));
+			setLoadingUsergroups(true);
+			setUsergroups((old) => [...old, update]);
+			setUsergroupIndex(usergroups.length - 1);
+			setLoadingUsergroups(false);
+		}
 	};
 
 	const deleteUsergroup = async (e: BaseSyntheticEvent) => {

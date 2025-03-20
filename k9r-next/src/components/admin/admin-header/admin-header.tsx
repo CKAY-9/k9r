@@ -5,6 +5,7 @@ import {
 	MANAGE_DETAILS,
 	MANAGE_FORUMS,
 	MANAGE_USERGROUPS,
+	MANAGE_USERS,
 	usergroupsPermissionFlagCheck,
 } from "@/api/permissions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -37,6 +38,10 @@ const AdminHeader = (props: AdminHeaderProps) => {
 			case 2:
 				router.push(pathname + "?" + "tab=usergroups");
 				document.title = `Manage Usergroups - ${props.community_details.name}`;
+				break;
+			case 3:
+				router.push(pathname + "?" + "tab=users");
+				document.title = `Manage Users - ${props.community_details.name}`;
 				break;
 		}
         props.set_view(view);
@@ -90,6 +95,17 @@ const AdminHeader = (props: AdminHeaderProps) => {
 						onClick={() => changeView(2)}
 					>
 						Usergroups
+					</button>
+				)}
+				{(usergroupsPermissionFlagCheck(
+					props.usergroups,
+					MANAGE_USERS
+				) || usergroupsPermissionFlagCheck(props.usergroups, MANAGE_USERGROUPS)) && (
+					<button
+						className={style.link}
+						onClick={() => changeView(3)}
+					>
+						Users
 					</button>
 				)}
 			</nav>
