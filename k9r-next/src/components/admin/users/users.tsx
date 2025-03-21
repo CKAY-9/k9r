@@ -126,6 +126,9 @@ const UsersAdmin = () => {
 					<div className={style.users}>
 						<h2>Results</h2>
 						{user_results.map((user, index) => {
+							if (user.oauth_type === "root-root-user") {
+								return;
+							}
 							return (
 								<button
 									key={index + Math.random()}

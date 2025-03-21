@@ -9,48 +9,56 @@ import UserIcon from "@/components/user/user-icon/user-icon";
 import Link from "next/link";
 
 const SearchUsersClient = () => {
-    const [search, setSearch] = useState<string>("");
-    const [page, setPage] = useState<number>(1);
-    const [user_results, setUserResults] = useState<User[]>([]);
+	const [search, setSearch] = useState<string>("");
+	const [page, setPage] = useState<number>(1);
+	const [user_results, setUserResults] = useState<User[]>([]);
 
-    const searchUser = async (e?: BaseSyntheticEvent) => {
-        if (e) {
-            e.preventDefault();
-        }
+	const searchUser = async (e?: BaseSyntheticEvent) => {
+		if (e) {
+			e.preventDefault();
+		}
 
-        const search_results = await searchUsers(search, page);
-        setUserResults(search_results);
-    }
+		const search_results = await searchUsers(search, page);
+		setUserResults(search_results);
+	};
 
-    return (
-        <>
-            <div className={style.content}>
-                <h1>Search Users</h1>
-                <SearchBar search={searchUser} set_search={setSearch} placeholder="Search users by ID, username, or display name" />
-            </div>
-            <div className={style.content}>
-                <h2>Results</h2>
-                {user_results.map((user, index) => {
-                    return (
-                        <Link href={`/user/${user.id}`} key={index + Math.random()} className={style.user}>
-                            <section className={style.info}>
-                                <UserIcon 
-                                    user={user}
-                                    size_rems={5}
-                                />
-                                <h3>{user.display_name}</h3>
-                                <span style={{"opacity": "0.5"}}>({user.username})</span>
-                            </section>
-                            <span>{user.description}</span>
-                        </Link>
-                    );
-                })}
-                {user_results.length <= 0 && (
-                    <span>No results found.</span>
-                )}
-            </div>
-        </>
-    );
-}
+	return (
+		<>
+			<div className={style.content}>
+				<h1>Search Users</h1>
+				<SearchBar
+					search={searchUser}
+					set_search={setSearch}
+					placeholder="Search users by ID, username, or display name"
+				/>
+			</div>
+			<div className={style.content}>
+				<h2>Results</h2>
+				{user_results.map((user, index) => {
+					if (user.oauth_type === "root-root-user") {
+						return;
+					}
+					return (
+						<Link
+							href={`/user/${user.id}`}
+							key={index + Math.random()}
+							className={style.user}
+						>
+							<section className={style.info}>
+								<UserIcon user={user} size_rems={5} />
+								<h3>{user.display_name}</h3>
+								<span style={{ opacity: "0.5" }}>
+									({user.username})
+								</span>
+							</section>
+							<span>{user.description}</span>
+						</Link>
+					);
+				})}
+				{user_results.length <= 0 && <span>No results found.</span>}
+			</div>
+		</>
+	);
+};
 
 export default SearchUsersClient;
