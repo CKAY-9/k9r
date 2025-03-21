@@ -59,7 +59,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				changeView(2);
 				break;
 			case "users":
-				changeView(2);
+				changeView(3);
 				break;
 		}
 	}, []);
@@ -100,14 +100,10 @@ const AdminHeader = (props: AdminHeaderProps) => {
 						Usergroups
 					</button>
 				)}
-				{(usergroupsPermissionFlagCheck(
+				{usergroupsPermissionFlagCheck(
 					props.usergroups,
 					MANAGE_USERS
-				) ||
-					usergroupsPermissionFlagCheck(
-						props.usergroups,
-						MANAGE_USERGROUPS
-					)) && (
+				) && (
 					<button
 						className={style.link}
 						onClick={() => changeView(3)}

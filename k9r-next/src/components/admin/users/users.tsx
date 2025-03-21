@@ -3,7 +3,7 @@
 import { User } from "@/api/users/models";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./users.module.scss";
-import { searchUsers } from "@/api/users/api";
+import { getUserFromID, searchUsers } from "@/api/users/api";
 import SearchBar from "@/components/search-bar/search-bar";
 import Link from "next/link";
 import UserPreview from "@/components/user/user-preview/user-preview";
@@ -17,6 +17,7 @@ import {
 } from "@/api/usergroups/api";
 import { getCookie } from "@/utils/cookies";
 import Image from "next/image";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const UsersAdmin = () => {
 	const [search, setSearch] = useState<string>("");
@@ -25,6 +26,32 @@ const UsersAdmin = () => {
 	const [usergroups, setUsergroups] = useState<Usergroup[]>([]);
 	const [selected_user, setSelectedUser] = useState<User | null>(null);
 	const [add_usergroup, setAddUsergroup] = useState<boolean>(false);
+
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const user_query = searchParams.get("user_query");
+
+	useEffect(() => {
+		if (user_query !== null) {
+			(async () => {
+				try {
+					const user_id = Number.parseInt(user_query) || -1;
+					const user_result = await getUserFromID(user_id);
+					setSelectedUser(user_result);
+					if (user_result !== null) {
+						router.push(
+							pathname +
+								"?" +
+								`tab=users&user_query=${user_result.id}`
+						);
+					}
+				} catch {
+					return;
+				}
+			})();
+		}
+	}, [user_query]);
 
 	useEffect(() => {
 		(async () => {
@@ -102,7 +129,15 @@ const UsersAdmin = () => {
 							return (
 								<button
 									key={index + Math.random()}
-									onClick={() => setSelectedUser(user)}
+									onClick={(e: BaseSyntheticEvent) => {
+										e.preventDefault();
+										router.push(
+											pathname +
+												"?" +
+												`tab=users&user_query=${user.id}`
+										);
+										setSelectedUser(user);
+									}}
 								>
 									<UserPreview user={user} />
 								</button>
@@ -115,7 +150,15 @@ const UsersAdmin = () => {
 				</>
 			) : (
 				<>
-					<button onClick={() => setSelectedUser(null)}>Back</button>
+					<button
+						onClick={(e: BaseSyntheticEvent) => {
+							e.preventDefault();
+							router.push(pathname + "?" + `tab=users`);
+							setSelectedUser(null);
+						}}
+					>
+						Back
+					</button>
 					<UserTab user={selected_user} />
 					<span>Display Name: {selected_user.display_name}</span>
 					<span>Username: {selected_user.username}</span>
