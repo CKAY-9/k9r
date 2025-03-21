@@ -228,6 +228,7 @@ const Topics = (props: TopicsProps) => {
                                     topics[index].section = Number.parseInt(e.target.value);
                                     setTopics(topics);
                                 }}>
+									<option value=""></option>
                                     {props.forum_sections.map((section, index) => {
                                         return (
                                             <option value={section.id} key={index + Math.random()}>{section.name}</option>

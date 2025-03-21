@@ -10,10 +10,16 @@ type UserIconProps = {
 };
 
 const UserIcon = (props: UserIconProps) => {
+    if (props.user.avatar.length <= 0) {
+        return (
+            <></>
+        );
+    }
+
     return (
         <>
             <Image
-                src={props.user.avatar === "" ? null : props.user.avatar}
+                src={props.user.avatar}
                 alt="User Icon"
                 width={0}
                 height={0}

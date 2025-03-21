@@ -19,13 +19,12 @@ use forum::{
     put::{update_all_sections, update_all_topics, update_post, update_thread},
 };
 use middleware::permissions::{
-    create_new_post_middleware, create_new_thread_middleware, details_management_middleware,
-    edit_post_middleware, edit_thread_middleware, forum_management_middleware, usergroup_management_middleware,
+    create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_thread_middleware, forum_management_middleware, user_management_middleware, usergroup_management_middleware
 };
-use user::get::{
+use user::{delete::remove_usergroup_from_user, get::{
     get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
     get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github, user_search,
-};
+}, post::add_usergroup_to_user};
 use usergroup::{delete::delete_usergroup_by_id, get::{get_usergroup_by_id, get_usergroups}, post::new_usergroup, put::update_usergroup_by_id};
 
 pub mod community;
@@ -134,6 +133,18 @@ fn configure_user_routes(cfg: &mut web::ServiceConfig) {
             .service(get_threads_posted_by_user)
             .service(user_search)
             .service(get_user_by_id)
+            .service(
+                web::resource("/{user_id}/add_usergroup/{usergroup_id}")
+                    .wrap(from_fn(user_management_middleware))
+                    .route(web::post().to(add_usergroup_to_user))
+                    .guard(guard::Post())   
+            )
+            .service(
+                web::resource("/{user_id}/remove_usergroup/{usergroup_id}")
+                    .wrap(from_fn(user_management_middleware))
+                    .route(web::delete().to(remove_usergroup_from_user))
+                    .guard(guard::Delete())   
+            )
             .service(get_personal_user)
             .service(get_user_usergroups_by_id),
     );

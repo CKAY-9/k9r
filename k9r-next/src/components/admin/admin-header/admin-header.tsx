@@ -44,7 +44,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				document.title = `Manage Users - ${props.community_details.name}`;
 				break;
 		}
-        props.set_view(view);
+		props.set_view(view);
 	};
 
 	useEffect(() => {
@@ -56,6 +56,9 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				changeView(1);
 				break;
 			case "usergroups":
+				changeView(2);
+				break;
+			case "users":
 				changeView(2);
 				break;
 		}
@@ -100,7 +103,11 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				{(usergroupsPermissionFlagCheck(
 					props.usergroups,
 					MANAGE_USERS
-				) || usergroupsPermissionFlagCheck(props.usergroups, MANAGE_USERGROUPS)) && (
+				) ||
+					usergroupsPermissionFlagCheck(
+						props.usergroups,
+						MANAGE_USERGROUPS
+					)) && (
 					<button
 						className={style.link}
 						onClick={() => changeView(3)}

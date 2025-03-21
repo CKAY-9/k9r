@@ -7,21 +7,13 @@ import { useEffect, useState } from "react";
 import { Usergroup } from "@/api/usergroups/models";
 import { getUserUserGroupsFromID } from "@/api/users/api";
 import Image from "next/image";
+import UserUsergroups from "../usergroups/user-usergroups";
 
 type UserInfoProps = {
 	user: User;
 };
 
 const UserInfo = (props: UserInfoProps) => {
-	const [usergroups, setUsergroups] = useState<Usergroup[]>([]);
-
-	useEffect(() => {
-		(async () => {
-			const us = await getUserUserGroupsFromID(props.user.id);
-			setUsergroups(us);
-		})();
-	}, []);
-
 	return (
 		<div className={style.user_info}>
 			<section className={style.display}>
@@ -32,24 +24,7 @@ const UserInfo = (props: UserInfoProps) => {
 				<span className={style.username}>({props.user.username})</span>
 				<p className={style.description}>{props.user.description}</p>
 			</section>
-			<section className={style.usergroups}>
-				{usergroups.map((usergroup, index) => {
-					return (
-						<div key={index}>
-                            {usergroup.icon !== "" && (
-                                <Image 
-                                    src={usergroup.icon}
-                                    alt="Usergroup Icon"
-                                    sizes="100%"
-                                    width={0}
-                                    height={0}
-                                />
-                            )}
-                            <span style={{color: usergroup.color}}>{usergroup.name}</span>
-                        </div>
-					);
-				})}
-			</section>
+			<UserUsergroups user_id={props.user.id} />
 		</div>
 	);
 };
