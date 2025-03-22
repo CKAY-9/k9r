@@ -131,6 +131,7 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 					}
 					onChange={chooseSection}
 				>
+					<option value=""></option>
 					{all_sections.map((section, index) => {
 						return (
 							<option key={section.id} value={section.id}>
@@ -149,6 +150,7 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 						}
 						onChange={chooseTopic}
 					>
+						<option value=""></option>
 						{all_topics
 							.filter(
 								(topic, index) =>
