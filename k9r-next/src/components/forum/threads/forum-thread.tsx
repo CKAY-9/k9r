@@ -6,18 +6,26 @@ import { User } from "@/api/users/models";
 import style from "./threads.module.scss";
 import UserTab from "@/components/user/user-tab/user-tab";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
-import { getUserFromID } from "@/api/users/api";
+import {
+	getPersonalUser,
+	getUserFromID,
+	getUserUserGroupsFromID,
+} from "@/api/users/api";
 import Link from "next/link";
 import {
 	deleteForumThreadFromID,
 	getForumPostFromID,
 	getForumPostsFromForumThreadID,
+	toggleThreadLock,
+	toggleThreadSticky,
 	updateForumThreadFromID,
 } from "@/api/forum/api";
 import Post from "../posts/forum-post";
 import NewForumPost from "../posts/new-post";
 import MaterialIcon from "@/components/material-icon/material-icon";
 import { getCookie } from "@/utils/cookies";
+import { Usergroup } from "@/api/usergroups/models";
+import { MANAGE_POSTS, usergroupsPermissionFlagCheck } from "@/api/permissions";
 
 type ThreadProps = {
 	community_details: CommunityDetails;
@@ -30,11 +38,18 @@ type ThreadProps = {
 const Thread = (props: ThreadProps) => {
 	const [author, setAuthor] = useState<User | null>(null);
 	const [thread, setThread] = useState<ForumThread>(props.thread);
+	const [locked, setLocked] = useState<boolean>(props.thread.locked || false);
+	const [sticky, setSticky] = useState<boolean>(props.thread.sticky || false);
 	const [posts, setPosts] = useState<ForumPost[]>([]);
 	const [primary_post, setPrimaryPost] = useState<ForumPost | null>(null);
 	const [title, setTitle] = useState<string>(props.thread.title);
 	const [editing, setEditing] = useState<boolean>(false);
 	const [is_author, setIsAuthor] = useState<boolean>(false);
+	const [created, setCreated] = useState<string>("");
+	const [updated, setUpdated] = useState<string>("");
+	const [personal_usergroups, setPersonalUsergroups] = useState<Usergroup[]>(
+		[]
+	);
 
 	useEffect(() => {
 		(async () => {
@@ -45,6 +60,9 @@ const Thread = (props: ThreadProps) => {
 				setIsAuthor(a.id === (props.personal_user?.id || -1));
 			}
 
+			setCreated(new Date(props.thread.created).toLocaleString());
+			setUpdated(new Date(props.thread.updated).toLocaleString());
+
 			const p = await getForumPostFromID(props.thread.primary_post);
 			setPrimaryPost(p);
 
@@ -53,6 +71,13 @@ const Thread = (props: ThreadProps) => {
 				setPosts(ps.filter((v, i) => v.id !== p.id));
 			} else {
 				setPosts(ps);
+			}
+
+			if (props.personal_user !== null) {
+				const us = await getUserUserGroupsFromID(
+					props.personal_user.id
+				);
+				setPersonalUsergroups(us);
 			}
 		})();
 	}, []);
@@ -63,6 +88,7 @@ const Thread = (props: ThreadProps) => {
 
 	const deleteThread = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
+
 		const response = await deleteForumThreadFromID(
 			props.thread.id,
 			getCookie("token") || ""
@@ -73,16 +99,36 @@ const Thread = (props: ThreadProps) => {
 	};
 
 	const toggleEdit = async (e: BaseSyntheticEvent) => {
+		e.preventDefault();
+
 		if (editing) {
 			// Save
 			thread.title = title;
-			thread.updated = (new Date().toISOString());
+			thread.updated = new Date().toISOString();
 
-			const update = await updateForumThreadFromID(props.thread.id, thread, getCookie("token") || "");
+			const update = await updateForumThreadFromID(
+				props.thread.id,
+				thread,
+				getCookie("token") || ""
+			);
 			setThread(thread);
 		}
 
 		setEditing(!editing);
+	};
+
+	const toggleLocked = async (e: BaseSyntheticEvent) => {
+		e.preventDefault();
+
+		const response = await toggleThreadLock(props.thread.id, getCookie("token") || "");
+		setLocked(!locked);
+	};
+
+	const toggleSticky = async (e: BaseSyntheticEvent) => {
+		e.preventDefault();
+
+		const response = await toggleThreadSticky(props.thread.id, getCookie("token") || "");
+		setSticky(!sticky);
 	};
 
 	return (
@@ -114,17 +160,10 @@ const Thread = (props: ThreadProps) => {
 						)}
 					</div>
 					<div className={style.times}>
-						<span className={style.time}>
-							Posted:{" "}
-							{new Date(props.thread.created).toLocaleString()}
-						</span>
-						{new Date(thread.created).getTime() !==
-							new Date(thread.updated).getTime() && (
+						<span className={style.time}>Posted: {created}</span>
+						{created !== updated && (
 							<span className={style.time}>
-								Updated:{" "}
-								{new Date(
-									props.thread.updated
-								).toLocaleString()}
+								Updated: {updated}
 							</span>
 						)}
 					</div>
@@ -149,6 +188,35 @@ const Thread = (props: ThreadProps) => {
 								<MaterialIcon
 									src="/icons/delete.svg"
 									alt="Delete Thread"
+									size_rems={2}
+								/>
+							</button>
+						</>
+					)}
+					{usergroupsPermissionFlagCheck(
+						personal_usergroups,
+						MANAGE_POSTS
+					) && (
+						<>
+							<button
+								onClick={toggleLocked}
+								className={style.option}
+								style={{ opacity: locked ? "1" : "0.5" }}
+							>
+								<MaterialIcon
+									src="/icons/lock.svg"
+									alt="Lock Thread"
+									size_rems={2}
+								/>
+							</button>
+							<button
+								onClick={toggleSticky}
+								className={style.option}
+								style={{ opacity: sticky ? "1" : "0.5" }}
+							>
+								<MaterialIcon
+									src="/icons/pin.svg"
+									alt="Sticky Thread"
 									size_rems={2}
 								/>
 							</button>

@@ -7,6 +7,7 @@ import { User } from "@/api/users/models";
 import { getUserFromID } from "@/api/users/api";
 import UserTab from "@/components/user/user-tab/user-tab";
 import { getForumPostFromID } from "@/api/forum/api";
+import MaterialIcon from "@/components/material-icon/material-icon";
 
 type ThreadPreviewProps = {
 	forum_thread: ForumThread;
@@ -36,18 +37,38 @@ const ThreadPreview = (props: ThreadPreviewProps) => {
 
 	return (
 		<div className={style.thread_preview}>
-			<h4>{props.forum_thread.title}</h4>
-			{primary_post !== null && (
-				<span style={{ opacity: "0.5" }}>
-					{primary_post.content.slice(0, 50)}...
-				</span>
-			)}
-			<section className={style.times}>
-				{author !== null && <UserTab user={author} />}
-				<span className={style.time}>Posted: {created}</span>
-				{created !== updated && (
-					<span className={style.time}>Updated: {updated}</span>
+			<section className={style.section}>
+				<h4>{props.forum_thread.title}</h4>
+				{primary_post !== null && (
+					<span style={{ opacity: "0.5" }}>
+						{primary_post.content.slice(0, 50)}...
+					</span>
 				)}
+				<section className={style.times}>
+					{author !== null && <UserTab user={author} />}
+					<span className={style.time}>Posted: {created}</span>
+					{created !== updated && (
+						<span className={style.time}>Updated: {updated}</span>
+					)}
+				</section>
+			</section>
+			<section className={style.section}>
+				<div>
+					{props.forum_thread.locked && (
+						<MaterialIcon
+							src="/icons/lock.svg"
+							alt="Thread Locked"
+							size_rems={2}
+						/>
+					)}
+					{props.forum_thread.sticky && (
+						<MaterialIcon
+							src="/icons/pin.svg"
+							alt="Sticky Thread"
+							size_rems={2}
+						/>
+					)}
+				</div>
 			</section>
 		</div>
 	);

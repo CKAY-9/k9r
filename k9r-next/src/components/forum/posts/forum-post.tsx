@@ -23,11 +23,16 @@ const Post = (props: ForumPostProps) => {
 	const [post_content_edit, setPostContentEdit] = useState<string>(
 		props.forum_post.content || ""
 	);
+	const [created, setCreated] = useState<string>("");
+	const [updated, setUpdated] = useState<string>("");
 	const [author, setAuthor] = useState<User | null>(null);
 	const [is_author, setIsAuthor] = useState<boolean>(false);
 	const [editing, setEditing] = useState<boolean>(false);
 
 	useEffect(() => {
+		setCreated((new Date(props.forum_post.created)).toLocaleString());
+		setUpdated((new Date(props.forum_post.updated)).toLocaleString());
+
 		(async () => {
 			const a = await getUserFromID(props.forum_post.author);
 			setAuthor(a);
@@ -93,21 +98,12 @@ const Post = (props: ForumPostProps) => {
 						source={post.content || ""}
 					/>
 				)}
-				<section className={style.times}>
-					<span className={style.time}>
-						Posted:{" "}
-						{new Date(props.forum_post.created).toLocaleString()}
-					</span>
-					{new Date(props.forum_post.created).getTime() !==
-						new Date(props.forum_post.updated).getTime() && (
-						<span className={style.time}>
-							Updated:{" "}
-							{new Date(
-								props.forum_post.updated
-							).toLocaleString()}
-						</span>
+				<div className={style.times}>
+					<span className={style.time}>Posted: {created}</span>
+					{created !== updated && (
+						<span className={style.time}>Updated: {updated}</span>
 					)}
-				</section>
+				</div>
 				{is_author && (
 					<section className={style.options}>
 						<button onClick={toggleEdit} className={style.option}>

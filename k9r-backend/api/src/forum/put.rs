@@ -3,9 +3,15 @@ use std::time::SystemTime;
 use actix_web::{put, web, HttpMessage, HttpRequest, HttpResponse, Responder};
 use k9r_db::{
     crud::{
-        forum_posts::{get_forum_post_from_id, update_forum_post_from_id}, forum_sections::{create_forum_section, update_forum_section_from_id}, forum_threads::{get_forum_thread_from_id, update_forum_thread_from_id}, forum_topics::{create_forum_topic, update_forum_topic_from_id}
+        forum_posts::{get_forum_post_from_id, update_forum_post_from_id},
+        forum_sections::{create_forum_section, update_forum_section_from_id},
+        forum_threads::{get_forum_thread_from_id, update_forum_thread_from_id},
+        forum_topics::{create_forum_topic, update_forum_topic_from_id},
     },
-    models::{ForumPost, ForumSection, ForumThread, ForumTopic, NewForumSection, NewForumTopic, User},
+    models::{
+        ForumPost, ForumSection, ForumThread, ForumTopic, NewForumSection, NewForumThread,
+        NewForumTopic, User,
+    },
 };
 use k9r_utils::iso8601;
 
@@ -97,7 +103,7 @@ pub async fn update_post(
     let existing_post_option = get_forum_post_from_id(post_id);
     if existing_post_option.is_none() {
         return Ok(HttpResponse::NotFound().json(Message {
-            message: "Failed to get post".to_string()
+            message: "Failed to get post".to_string(),
         }));
     }
 
@@ -121,7 +127,7 @@ pub async fn update_post(
 }
 
 pub async fn update_thread(
-    (request, mut body): (HttpRequest, web::Json<ForumThread>)
+    (request, mut body): (HttpRequest, web::Json<ForumThread>),
 ) -> HttpResponse {
     let user = match request.extensions().get::<User>().cloned() {
         Some(user) => user,
@@ -136,11 +142,18 @@ pub async fn update_thread(
     let existing_thread_option = get_forum_thread_from_id(thread_id);
     if existing_thread_option.is_none() {
         return HttpResponse::NotFound().json(Message {
-            message: "Failed to get thread".to_string()
+            message: "Failed to get thread".to_string(),
         });
     }
 
     let existing_thread = existing_thread_option.unwrap();
+    if existing_thread.locked {
+        return HttpResponse::BadRequest().json(Message { 
+            message: "Can't update a locked thread".to_string()
+        });
+    }
+
+
     if user.id != existing_thread.author {
         return HttpResponse::Unauthorized().json(Message {
             message: "Invalid user".to_string(),
@@ -156,5 +169,77 @@ pub async fn update_thread(
         None => HttpResponse::BadRequest().json(Message {
             message: "Failed to update forum thread".to_string(),
         }),
+    }
+}
+
+pub async fn toggle_thread_lock((request, path): (HttpRequest, web::Path<(i32,)>)) -> HttpResponse {
+    let _user = match request.extensions().get::<User>().cloned() {
+        Some(user) => user,
+        None => {
+            return HttpResponse::Unauthorized().json(Message {
+                message: "Failed to get user".to_string(),
+            })
+        }
+    };
+
+    let thread_id = path.into_inner().0;
+    let thread_option = get_forum_thread_from_id(thread_id);
+    if thread_option.is_none() {
+        return HttpResponse::NotFound().json(Message {
+            message: "Failed to find thread".to_string(),
+        });
+    }
+
+    let mut thread = thread_option.unwrap();
+    thread.locked = !thread.locked;
+
+    let update =
+        serde_json::from_str::<NewForumThread>(serde_json::to_string(&thread).unwrap().as_str())
+            .unwrap();
+    match update_forum_thread_from_id(thread_id, update) {
+        Some(t) => {
+            HttpResponse::Ok().json(t)
+        }
+        None => {
+            HttpResponse::BadRequest().json(Message {
+                message: "Failed to update thread".to_string()
+            })
+        }
+    }
+}
+
+pub async fn toggle_thread_sticky((request, path): (HttpRequest, web::Path<(i32,)>)) -> HttpResponse {
+    let _user = match request.extensions().get::<User>().cloned() {
+        Some(user) => user,
+        None => {
+            return HttpResponse::Unauthorized().json(Message {
+                message: "Failed to get user".to_string(),
+            })
+        }
+    };
+
+    let thread_id = path.into_inner().0;
+    let thread_option = get_forum_thread_from_id(thread_id);
+    if thread_option.is_none() {
+        return HttpResponse::NotFound().json(Message {
+            message: "Failed to find thread".to_string(),
+        });
+    }
+
+    let mut thread = thread_option.unwrap();
+    thread.sticky = !thread.sticky;
+
+    let update =
+        serde_json::from_str::<NewForumThread>(serde_json::to_string(&thread).unwrap().as_str())
+            .unwrap();
+    match update_forum_thread_from_id(thread_id, update) {
+        Some(t) => {
+            HttpResponse::Ok().json(t)
+        }
+        None => {
+            HttpResponse::BadRequest().json(Message {
+                message: "Failed to update thread".to_string()
+            })
+        }
     }
 }

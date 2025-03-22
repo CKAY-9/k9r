@@ -192,10 +192,15 @@ pub async fn new_forum_post(
     if thread_opt.is_none() {
         return HttpResponse::NotFound().json(Message {
             message: "Failed to get forum thread".to_string(),
-        })
+        });
     }
 
     let mut thread = thread_opt.unwrap();
+    if thread.locked {
+        return HttpResponse::BadRequest().json(Message { 
+            message: "Can't post to a locked thread".to_string()
+        });
+    }
 
     let current_timestamp = iso8601(&SystemTime::now());
     new_post.likes = Vec::new();

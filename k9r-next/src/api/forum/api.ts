@@ -322,3 +322,39 @@ export const searchThreads = async (
 		return [];
 	}
 };
+
+export const toggleThreadLock = async (
+	thread_id: number,
+	token: string
+): Promise<boolean> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/thread/${thread_id}/lock`,
+			method: "PUT",
+			headers: {
+				Authorization: token
+			}
+		});
+		return request.data.locked;
+	} catch {
+		return false;
+	}
+}
+
+export const toggleThreadSticky = async (
+	thread_id: number,
+	token: string
+): Promise<boolean> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/thread/${thread_id}/sticky`,
+			method: "PUT",
+			headers: {
+				Authorization: token
+			}
+		});
+		return request.data.sticky;
+	} catch {
+		return false;
+	}
+}

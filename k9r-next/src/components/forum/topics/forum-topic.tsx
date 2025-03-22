@@ -69,7 +69,7 @@ const Topic = (props: TopicProps) => {
 					<LoadingAlert message="Loading threads..." />
 				) : (
 					<>
-						{threads.map((thread, index) => {
+						{threads.sort((a, b) => b.sticky ? 1 : -1 ).map((thread, index) => {
 							return (
 								<Link href={`/forum/topic/${thread.topic}/${thread.id}`} key={index}>
 									<ThreadPreview forum_thread={thread} />
