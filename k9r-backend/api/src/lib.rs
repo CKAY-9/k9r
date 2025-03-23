@@ -18,8 +18,9 @@ use forum::{
     post::{new_forum_post, new_forum_section, new_forum_thread, new_forum_topic},
     put::{toggle_thread_lock, toggle_thread_sticky, update_all_sections, update_all_topics, update_post, update_thread},
 };
+use game_servers::{delete::delete_game_server, get::{all_game_servers, get_game_server}, post::new_game_server, put::update_game_server};
 use middleware::permissions::{
-    create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_thread_middleware, forum_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware
+    community_management_middleware, create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_thread_middleware, forum_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware
 };
 use user::{delete::remove_usergroup_from_user, get::{
     get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
@@ -34,6 +35,7 @@ pub mod models;
 pub mod permissions;
 pub mod user;
 pub mod usergroup;
+pub mod game_servers;
 
 pub fn configure_api(cfg: &mut web::ServiceConfig) {
     cfg.service(
@@ -41,7 +43,8 @@ pub fn configure_api(cfg: &mut web::ServiceConfig) {
             .configure(configure_community_routes)
             .configure(configure_user_routes)
             .configure(configure_usergroup_routes)
-            .configure(configure_forum_routes),
+            .configure(configure_forum_routes)
+            .configure(configure_game_server_routes)
     );
 }
 
@@ -185,5 +188,32 @@ fn configure_usergroup_routes(cfg: &mut web::ServiceConfig) {
                     .route(web::delete().to(delete_usergroup_by_id))
                     .guard(guard::Delete())
             )
+    );
+}
+
+fn configure_game_server_routes(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::scope("/game_server")
+            .service(all_game_servers)
+            .service(get_game_server)
+            .service(
+                web::resource("/{id}")
+                    .wrap(from_fn(community_management_middleware))
+                    .route(web::put().to(update_game_server))
+                    .guard(guard::Put())
+            )
+            .service(
+                web::resource("/{id}")
+                    .wrap(from_fn(community_management_middleware))
+                    .route(web::delete().to(delete_game_server))
+                    .guard(guard::Delete())
+            )
+            .service(
+                web::resource("")
+                    .wrap(from_fn(community_management_middleware))
+                    .route(web::post().to(new_game_server))
+                    .guard(guard::Post())   
+            )
+
     );
 }

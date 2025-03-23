@@ -2,6 +2,7 @@ import { Usergroup } from "@/api/usergroups/models";
 import { User } from "@/api/users/models";
 import style from "./header.module.scss";
 import {
+	MANAGE_COMMUNITY,
 	MANAGE_DETAILS,
 	MANAGE_FORUMS,
 	MANAGE_USERGROUPS,
@@ -43,6 +44,10 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				router.push(pathname + "?" + "tab=users");
 				document.title = `Manage Users - ${props.community_details.name}`;
 				break;
+			case 4:
+				router.push(pathname + "?" + "tab=servers");
+				document.title = `Manage Game Servers - ${props.community_details.name}`;
+				break;
 		}
 		props.set_view(view);
 	};
@@ -60,6 +65,9 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				break;
 			case "users":
 				changeView(3);
+				break;
+			case "servers":
+				changeView(4);
 				break;
 		}
 	}, []);
@@ -109,6 +117,17 @@ const AdminHeader = (props: AdminHeaderProps) => {
 						onClick={() => changeView(3)}
 					>
 						Users
+					</button>
+				)}
+				{usergroupsPermissionFlagCheck(
+					props.usergroups,
+					MANAGE_COMMUNITY
+				) && (
+					<button
+						className={style.link}
+						onClick={() => changeView(4)}
+					>
+						Game Servers
 					</button>
 				)}
 			</nav>

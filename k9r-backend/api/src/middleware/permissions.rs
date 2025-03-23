@@ -10,7 +10,7 @@ use k9r_utils::extract_header_value;
 use crate::{
     models::Message,
     permissions::{
-        CREATE_NEW_POSTS, CREATE_NEW_THREADS, EDIT_POSTS, EDIT_THREADS, MANAGE_DETAILS, MANAGE_FORUMS, MANAGE_POSTS, MANAGE_USERGROUPS, MANAGE_USERS, ROOT_ACCESS
+        CREATE_NEW_POSTS, CREATE_NEW_THREADS, EDIT_POSTS, EDIT_THREADS, MANAGE_COMMUNITY, MANAGE_DETAILS, MANAGE_FORUMS, MANAGE_POSTS, MANAGE_USERGROUPS, MANAGE_USERS, ROOT_ACCESS
     },
 };
 
@@ -156,6 +156,41 @@ pub async fn usergroup_management_middleware(
         }
     }
 }
+
+pub async fn community_management_middleware(
+    req: ServiceRequest,
+    next: Next<impl MessageBody + 'static>,
+) -> Result<ServiceResponse<impl MessageBody + 'static>, Error> {
+    let user_token_opt = extract_header_value(&req.request(), "Authorization");
+    if user_token_opt.is_none() {
+        return Ok(req.into_response(HttpResponse::BadRequest().json(Message {
+            message: "No user token".to_string(),
+        })));
+    }
+
+    let user_token = user_token_opt.unwrap();
+    match get_user_from_token(user_token) {
+        Some(user) => match usergroups_match_permission(user.clone().usergroups, MANAGE_COMMUNITY)
+        {
+            true => {
+                req.extensions_mut().insert(user);
+                let res = next.call(req).await?;
+                return Ok(res.map_into_boxed_body());
+            }
+            false => Ok(
+                req.into_response(HttpResponse::Unauthorized().json(Message {
+                    message: "Invalid permissions".to_string(),
+                })),
+            ),
+        },
+        None => {
+            return Ok(req.into_response(HttpResponse::NotFound().json(Message {
+                message: "Failed to get user".to_string(),
+            })))
+        }
+    }
+}
+
 
 pub async fn user_management_middleware(
     req: ServiceRequest,

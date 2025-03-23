@@ -10,6 +10,7 @@ import CommunityDetailsAdmin from "@/components/admin/community-details/communit
 import UsergroupsAdmin from "@/components/admin/usergroups/usergroups";
 import { CommunityDetails } from "@/api/community-details/models";
 import UsersAdmin from "@/components/admin/users/users";
+import GameServersAdmin from "@/components/admin/game-servers/game-servers";
 
 type AdminHomeClientProps = {
 	personal_user: User;
@@ -40,6 +41,9 @@ const AdminHomeClient = (props: AdminHomeClientProps) => {
 				</div>
 				<div style={{ display: view === 3 ? "block" : "none" }}>
 					<UsersAdmin />
+				</div>
+				<div style={{ display: view === 4 ? "block" : "none" }}>
+					<GameServersAdmin />
 				</div>
 			</div>
 		</>

@@ -75,6 +75,18 @@ diesel::table! {
 }
 
 diesel::table! {
+    game_servers (id) {
+        id -> Int4,
+        name -> Text,
+        description -> Text,
+        game -> Text,
+        server_key -> Text,
+        host_address -> Text,
+        latest_state -> Text,
+    }
+}
+
+diesel::table! {
     usergroups (id) {
         id -> Int4,
         name -> Text,
@@ -109,6 +121,7 @@ diesel::allow_tables_to_appear_in_same_query!(
     forum_sections,
     forum_threads,
     forum_topics,
+    game_servers,
     usergroups,
     users,
 );

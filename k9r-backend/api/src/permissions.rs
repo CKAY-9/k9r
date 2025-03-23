@@ -10,4 +10,5 @@ pub const MANAGE_POSTS: i32 = 0x40000;
 pub const MANAGE_USERGROUPS: i32 = 0x80000;
 pub const MANAGE_DETAILS: i32 = 0x100000;
 pub const MANAGE_FORUMS: i32 = 0x200000;
+pub const MANAGE_COMMUNITY: i32 = 0x400000;
 pub const ROOT_ACCESS: i32 = 0x20000000;

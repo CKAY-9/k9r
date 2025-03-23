@@ -204,3 +204,27 @@ pub struct NewAdminKey {
     pub key: String,
     pub expires: String
 }
+
+#[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]
+#[diesel(table_name = crate::schema::game_servers)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct GameServer {
+    pub id: i32,
+    pub name: String,
+    pub description: String,
+    pub game: String,
+    pub server_key: String,
+    pub host_address: String,
+    pub latest_state: String
+}
+
+#[derive(Insertable, AsChangeset, Deserialize, Serialize)]
+#[diesel(table_name = crate::schema::game_servers)]
+pub struct NewGameServer {
+    pub name: String,
+    pub description: String,
+    pub game: String,
+    pub server_key: String,
+    pub host_address: String,
+    pub latest_state: String
+}

@@ -6,6 +6,7 @@ import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
 import { getStoredCookie } from "@/utils/stored-cookies";
 import { Metadata } from "next";
+import CommunityPageClient from "./client";
 
 export const generateMetadata = async (): Promise<Metadata> => {
     const details = await getCommunityDetails();
@@ -25,7 +26,7 @@ const CommunityHomePage = async () => {
         <>
             <Header personal_user={personal_user} community_details={details} />
             <main className="container">
-
+                <CommunityPageClient community_details={details} />
             </main>
             <Footer community_details={details} />
         </>

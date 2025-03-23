@@ -12,6 +12,7 @@ export const MANAGE_POSTS: number = 0x40000;
 export const MANAGE_USERGROUPS: number = 0x80000;
 export const MANAGE_DETAILS: number = 0x100000;
 export const MANAGE_FORUMS: number = 0x200000;
+export const MANAGE_COMMUNITY: number = 0x400000;
 export const ROOT_ACCESS: number = 0x20000000;
 
 export const usergroupsPermissionFlagCheck = (

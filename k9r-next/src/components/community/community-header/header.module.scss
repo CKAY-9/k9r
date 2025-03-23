@@ -1,0 +1,47 @@
+.community_header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: var(--foreground);
+    box-shadow: var(--shdw1);
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.splash {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.stats_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-direction: column;
+
+    .stats {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        justify-content: space-around;
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+
+            .heading {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+        }
+    }
+}

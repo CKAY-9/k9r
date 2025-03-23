@@ -6,3 +6,4 @@ pub mod forum_topics;
 pub mod forum_threads;
 pub mod forum_posts;
 pub mod admin_keys;
+pub mod game_servers;
