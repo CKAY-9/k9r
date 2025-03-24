@@ -4,20 +4,50 @@ import { CommunityDetails } from "@/api/community-details/models";
 import style from "./info.module.scss";
 import CommunityIcon from "@/components/community-icon/community-icon";
 import MaterialIcon from "@/components/material-icon/material-icon";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getUserCount } from "@/api/users/api";
 import { getForumPostCount, getForumThreadCount } from "@/api/forum/api";
+import { K9R_WEBSOCKET_HOST } from "@/api/resources";
+import { User } from "@/api/users/models";
 
 type ForumInfoProps = {
     community_details: CommunityDetails;
+    personal_user: User | null;
 };
 
 const ForumInfo = (props: ForumInfoProps) => {
     const [total_users, setTotalUsers] = useState<number>(0);
     const [total_threads, setTotalThreads] = useState<number>(0);
     const [total_posts, setTotalPosts] = useState<number>(0);
+    const [websocket_uuid, setWebsocketUUID] = useState<string>("");
+    const ws = useRef<WebSocket | null>(null);
 
     useEffect(() => {
+        const uuid = (new Date()).getTime() + Math.floor((Math.random() * 2_00_000_000)).toString()
+
+        ws.current = new WebSocket(K9R_WEBSOCKET_HOST);
+        ws.current.onopen = () => {
+            console.log("Websocket connected");
+            
+            if (ws.current !== null) {
+                ws.current.send(JSON.stringify({
+                    uuid: uuid,
+                    user_id: props.personal_user !== null ? props.personal_user.id : -1,
+                    room_id: "active-users",
+                    message_type: "add-activity",
+                    data: ""
+                }));
+            }
+        }
+
+        ws.current.onmessage = (event: MessageEvent<any>) => {
+            console.log(event);
+        }
+
+        ws.current.onerror = (error) => {
+            console.error(error);
+        }
+
         (async () => {
             const us = await getUserCount();
             setTotalUsers(us);
@@ -28,6 +58,19 @@ const ForumInfo = (props: ForumInfoProps) => {
             const ps = await getForumPostCount();
             setTotalPosts(ps);
         })();
+
+        return () => {
+            if (ws.current !== null) {
+                ws.current.send(JSON.stringify({
+                    uuid: uuid,
+                    user_id: props.personal_user !== null ? props.personal_user.id : -1,
+                    room_id: "active-users",
+                    message_type: "remove-activity",
+                    data: ""
+                }))
+                ws.current.close();
+            }
+        };
     }, []);
     
     return (

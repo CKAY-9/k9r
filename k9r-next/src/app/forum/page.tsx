@@ -34,7 +34,7 @@ const ForumHomePage = async () => {
                 <ForumHeader community_details={details} />
                 <ForumContent>
                     <ForumSections />
-                    <ForumInfo community_details={details} />
+                    <ForumInfo personal_user={personal_user} community_details={details} />
                 </ForumContent>
             </ForumContainer>
             <Footer community_details={details} />
