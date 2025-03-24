@@ -16,6 +16,8 @@ import {
 	deleteForumThreadFromID,
 	getForumPostFromID,
 	getForumPostsFromForumThreadID,
+	likePost,
+	likeThread,
 	toggleThreadLock,
 	toggleThreadSticky,
 	updateForumThreadFromID,
@@ -50,8 +52,19 @@ const Thread = (props: ThreadProps) => {
 	const [personal_usergroups, setPersonalUsergroups] = useState<Usergroup[]>(
 		[]
 	);
+	const [likes, setLikes] = useState<number[]>(props.thread.likes);
+	const [dislikes, setDislikes] = useState<number[]>(props.thread.dislikes);
+	const [like_state, setLikeState] = useState<-1 | 0 | 1>(0);
 
 	useEffect(() => {
+		if (likes.includes(props.personal_user?.id || 0)) {
+			setLikeState(1);
+		}
+
+		if (dislikes.includes(props.personal_user?.id || 0)) {
+			setLikeState(-1);
+		}
+
 		(async () => {
 			const a = await getUserFromID(props.thread.author);
 			setAuthor(a);
@@ -120,15 +133,60 @@ const Thread = (props: ThreadProps) => {
 	const toggleLocked = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
 
-		const response = await toggleThreadLock(props.thread.id, getCookie("token") || "");
+		const response = await toggleThreadLock(
+			props.thread.id,
+			getCookie("token") || ""
+		);
 		setLocked(!locked);
 	};
 
 	const toggleSticky = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
 
-		const response = await toggleThreadSticky(props.thread.id, getCookie("token") || "");
+		const response = await toggleThreadSticky(
+			props.thread.id,
+			getCookie("token") || ""
+		);
 		setSticky(!sticky);
+	};
+
+	const like = async (state: -1 | 0 | 1) => {
+		if (props.personal_user === null) {
+			return;
+		}
+
+		if (likes.includes(props.personal_user.id)) {
+			likes.splice(likes.indexOf(props.personal_user.id));
+		}
+
+		if (dislikes.includes(props.personal_user.id)) {
+			dislikes.splice(dislikes.indexOf(props.personal_user.id));
+		}
+
+		if (state === like_state) {
+			const response = await likeThread(
+				0,
+				props.thread.id,
+				getCookie("token") || ""
+			);
+			setLikeState(0);
+			return;
+		}
+
+		const response = await likeThread(
+			state,
+			props.thread.id,
+			getCookie("token") || ""
+		);
+
+		setLikeState(state);
+		if (state === -1) {
+			dislikes.push(props.personal_user.id);
+			setDislikes(dislikes);
+		} else {
+			likes.push(props.personal_user.id);
+			setLikes(likes);
+		}
 	};
 
 	return (
@@ -169,6 +227,43 @@ const Thread = (props: ThreadProps) => {
 					</div>
 				</section>
 				<section className={style.options}>
+					<div className={style.likes}>
+						<button
+							className={style.like}
+							style={{
+								opacity: likes.includes(
+									props.personal_user?.id || -1
+								)
+									? "1"
+									: "0.5",
+							}}
+							onClick={() => like(1)}
+						>
+							<MaterialIcon
+								src="/icons/thumbs_up.svg"
+								alt="Like post"
+								size_rems={2}
+							/>
+						</button>
+						<span>{likes.length - dislikes.length}</span>
+						<button
+							className={style.like}
+							style={{
+								opacity: dislikes.includes(
+									props.personal_user?.id || -1
+								)
+									? "1"
+									: "0.5",
+							}}
+							onClick={() => like(-1)}
+						>
+							<MaterialIcon
+								src="/icons/thumbs_down.svg"
+								alt="Like post"
+								size_rems={2}
+							/>
+						</button>
+					</div>
 					{is_author && (
 						<>
 							<button

@@ -3,12 +3,13 @@ use std::time::SystemTime;
 use actix_web::{http::StatusCode, post, web, HttpMessage, HttpRequest, HttpResponse};
 use k9r_db::{
     crud::{
-        forum_posts::{create_forum_post, update_forum_post_from_id},
+        forum_posts::{create_forum_post, get_forum_post_from_id, update_forum_post_from_id},
         forum_sections::{
             create_forum_section, get_forum_section_from_id, update_forum_section_from_id,
         },
         forum_threads::{
-            create_forum_thread, delete_forum_thread_from_id, get_forum_thread_from_id, update_forum_thread_from_id
+            create_forum_thread, delete_forum_thread_from_id, get_forum_thread_from_id,
+            update_forum_thread_from_id,
         },
         forum_topics::{create_forum_topic, delete_forum_topic_from_id},
     },
@@ -19,6 +20,8 @@ use k9r_db::{
 use k9r_utils::iso8601;
 
 use crate::{forum::models::NewThread, models::Message};
+
+use super::models::Like;
 
 #[post("/section")]
 pub async fn new_forum_section(
@@ -143,9 +146,8 @@ pub async fn new_forum_thread(
 
     post.thread = thread.id;
 
-    let updated_thread: NewForumThread = serde_json::from_str(
-        serde_json::to_string(&thread).unwrap().as_str()
-    ).unwrap();
+    let updated_thread: NewForumThread =
+        serde_json::from_str(serde_json::to_string(&thread).unwrap().as_str()).unwrap();
     let thread_update = update_forum_thread_from_id(thread.id, updated_thread);
 
     if thread_update.is_none() {
@@ -157,9 +159,8 @@ pub async fn new_forum_thread(
             });
     }
 
-    let updated_post: NewForumPost = serde_json::from_str(
-        serde_json::to_string(&post).unwrap().as_str()
-    ).unwrap();
+    let updated_post: NewForumPost =
+        serde_json::from_str(serde_json::to_string(&post).unwrap().as_str()).unwrap();
     let post_update = update_forum_post_from_id(post.id, updated_post);
 
     if post_update.is_none() {
@@ -197,8 +198,8 @@ pub async fn new_forum_post(
 
     let mut thread = thread_opt.unwrap();
     if thread.locked {
-        return HttpResponse::BadRequest().json(Message { 
-            message: "Can't post to a locked thread".to_string()
+        return HttpResponse::BadRequest().json(Message {
+            message: "Can't post to a locked thread".to_string(),
         });
     }
 
@@ -212,13 +213,10 @@ pub async fn new_forum_post(
     match create_forum_post(new_post) {
         Some(post) => {
             thread.posts.push(post.id);
-            let updated_thread: NewForumThread = serde_json::from_str(
-                serde_json::to_string(&thread).unwrap().as_str()
-            ).unwrap();
+            let updated_thread: NewForumThread =
+                serde_json::from_str(serde_json::to_string(&thread).unwrap().as_str()).unwrap();
             match update_forum_thread_from_id(thread.id, updated_thread) {
-                Some(_t) => {
-                    HttpResponse::Ok().json(post)
-                },
+                Some(_t) => HttpResponse::Ok().json(post),
                 None => {
                     // TODO: Cleanup post
                     HttpResponse::BadRequest().json(Message {
@@ -226,11 +224,105 @@ pub async fn new_forum_post(
                     })
                 }
             }
-        },
-        None => {
-            HttpResponse::BadRequest().json(Message {
-                message: "Failed to create forum post".to_string(),
-            })
         }
+        None => HttpResponse::BadRequest().json(Message {
+            message: "Failed to create forum post".to_string(),
+        }),
+    }
+}
+
+pub async fn like_post(
+    (request, path, body): (HttpRequest, web::Path<(i32,)>, web::Json<Like>),
+) -> HttpResponse {
+    let user = match request.extensions().get::<User>().cloned() {
+        Some(user) => user,
+        None => {
+            return HttpResponse::Unauthorized().json(Message {
+                message: "Failed to get user".to_string(),
+            });
+        }
+    };
+
+    let post_option = get_forum_post_from_id(path.into_inner().0);
+    if post_option.is_none() {
+        return HttpResponse::NotFound().json(Message {
+            message: "Failed to get forum post".to_string(),
+        });
+    }
+
+    let mut post = post_option.unwrap();
+
+    // Clear likes/dislikes if already exists
+    post.likes.retain(|x| x != &user.id);
+    post.dislikes.retain(|x| x != &user.id);
+
+    match body.state {
+        1 => {
+            post.likes.push(user.id);
+        }
+        -1 => {
+            post.dislikes.push(user.id);
+        }
+        _ => {
+            // do nothing
+        }
+    }
+
+    let updated =
+        serde_json::from_str::<NewForumPost>(serde_json::to_string(&post).unwrap().as_str())
+            .unwrap();
+    match update_forum_post_from_id(post.id, updated) {
+        Some(post) => HttpResponse::Ok().json(post),
+        None => HttpResponse::BadRequest().json(Message {
+            message: "Failed to update likes/dislikes on post".to_string(),
+        }),
+    }
+}
+
+pub async fn like_thread(
+    (request, path, body): (HttpRequest, web::Path<(i32,)>, web::Json<Like>),
+) -> HttpResponse {
+    let user = match request.extensions().get::<User>().cloned() {
+        Some(user) => user,
+        None => {
+            return HttpResponse::Unauthorized().json(Message {
+                message: "Failed to get user".to_string(),
+            });
+        }
+    };
+
+    let thread_option = get_forum_thread_from_id(path.into_inner().0);
+    if thread_option.is_none() {
+        return HttpResponse::NotFound().json(Message {
+            message: "Failed to get forum thread".to_string(),
+        });
+    }
+
+    let mut thread = thread_option.unwrap();
+
+    // Clear likes/dislikes if already exists
+    thread.likes.retain(|x| x != &user.id);
+    thread.dislikes.retain(|x| x != &user.id);
+
+    match body.state {
+        1 => {
+            thread.likes.push(user.id);
+        }
+        -1 => {
+            thread.dislikes.push(user.id);
+        }
+        _ => {
+            // do nothing
+        }
+    }
+
+    let updated =
+        serde_json::from_str::<NewForumThread>(serde_json::to_string(&thread).unwrap().as_str())
+            .unwrap();
+    match update_forum_thread_from_id(thread.id, updated) {
+        Some(thread) => HttpResponse::Ok().json(thread),
+        None => HttpResponse::BadRequest().json(Message {
+            message: "Failed to update likes/dislikes on thread".to_string(),
+        }),
     }
 }

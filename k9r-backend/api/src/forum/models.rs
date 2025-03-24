@@ -16,3 +16,8 @@ pub struct ThreadCount {
 pub struct PostCount {
     pub posts: usize
 }
+
+#[derive(Deserialize)]
+pub struct Like {
+    pub state: i32
+}

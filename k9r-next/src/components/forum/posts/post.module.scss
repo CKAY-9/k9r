@@ -6,6 +6,7 @@
 	padding: 1rem;
 	background-color: var(--foreground);
 	box-shadow: var(--shdw1);
+	min-height: 500px;
 
 	.content {
 		padding: 1rem;
@@ -29,6 +30,20 @@
 
 		&:hover {
 			background-color: var(--foreground);
+		}
+	}
+}
+
+.likes {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+	align-items: center;
+
+	.like {
+		padding: 0;
+		&:hover {
+			background-color: transparent;
 		}
 	}
 }

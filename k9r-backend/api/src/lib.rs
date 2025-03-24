@@ -15,12 +15,12 @@ use forum::{
         get_section, get_thread, get_topic, get_topic_threads, get_total_post_count,
         get_total_thread_count, thread_search,
     },
-    post::{new_forum_post, new_forum_section, new_forum_thread, new_forum_topic},
+    post::{like_post, like_thread, new_forum_post, new_forum_section, new_forum_thread, new_forum_topic},
     put::{toggle_thread_lock, toggle_thread_sticky, update_all_sections, update_all_topics, update_post, update_thread},
 };
 use game_servers::{delete::delete_game_server, get::{all_game_servers, get_game_server}, post::new_game_server, put::update_game_server};
 use middleware::permissions::{
-    community_management_middleware, create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_thread_middleware, forum_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware
+    community_management_middleware, create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_thread_middleware, forum_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware, valid_user_middleware
 };
 use user::{delete::remove_usergroup_from_user, get::{
     get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
@@ -95,6 +95,18 @@ fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
                             .wrap(from_fn(edit_thread_middleware))
                             .route(web::put().to(update_thread))
                             .guard(guard::Put()),
+                    )
+                    .service(
+                        web::resource("/thread/{id}/like")
+                            .wrap(from_fn(valid_user_middleware))
+                            .route(web::post().to(like_thread))
+                            .guard(guard::Post())
+                    )
+                    .service(
+                        web::resource("/post/{id}/like")
+                            .wrap(from_fn(valid_user_middleware))
+                            .route(web::post().to(like_post))
+                            .guard(guard::Post())
                     )
                     .service(
                         web::resource("/thread/{id}/lock")

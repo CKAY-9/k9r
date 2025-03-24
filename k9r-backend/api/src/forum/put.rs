@@ -148,11 +148,10 @@ pub async fn update_thread(
 
     let existing_thread = existing_thread_option.unwrap();
     if existing_thread.locked {
-        return HttpResponse::BadRequest().json(Message { 
-            message: "Can't update a locked thread".to_string()
+        return HttpResponse::BadRequest().json(Message {
+            message: "Can't update a locked thread".to_string(),
         });
     }
-
 
     if user.id != existing_thread.author {
         return HttpResponse::Unauthorized().json(Message {
@@ -172,7 +171,9 @@ pub async fn update_thread(
     }
 }
 
-pub async fn toggle_thread_lock((request, path): (HttpRequest, web::Path<(i32,)>)) -> HttpResponse {
+pub async fn toggle_thread_lock(
+    (request, path): (HttpRequest, web::Path<(i32,)>)
+) -> HttpResponse {
     let _user = match request.extensions().get::<User>().cloned() {
         Some(user) => user,
         None => {
@@ -197,18 +198,16 @@ pub async fn toggle_thread_lock((request, path): (HttpRequest, web::Path<(i32,)>
         serde_json::from_str::<NewForumThread>(serde_json::to_string(&thread).unwrap().as_str())
             .unwrap();
     match update_forum_thread_from_id(thread_id, update) {
-        Some(t) => {
-            HttpResponse::Ok().json(t)
-        }
-        None => {
-            HttpResponse::BadRequest().json(Message {
-                message: "Failed to update thread".to_string()
-            })
-        }
+        Some(t) => HttpResponse::Ok().json(t),
+        None => HttpResponse::BadRequest().json(Message {
+            message: "Failed to update thread".to_string(),
+        }),
     }
 }
 
-pub async fn toggle_thread_sticky((request, path): (HttpRequest, web::Path<(i32,)>)) -> HttpResponse {
+pub async fn toggle_thread_sticky(
+    (request, path): (HttpRequest, web::Path<(i32,)>),
+) -> HttpResponse {
     let _user = match request.extensions().get::<User>().cloned() {
         Some(user) => user,
         None => {
@@ -233,13 +232,9 @@ pub async fn toggle_thread_sticky((request, path): (HttpRequest, web::Path<(i32,
         serde_json::from_str::<NewForumThread>(serde_json::to_string(&thread).unwrap().as_str())
             .unwrap();
     match update_forum_thread_from_id(thread_id, update) {
-        Some(t) => {
-            HttpResponse::Ok().json(t)
-        }
-        None => {
-            HttpResponse::BadRequest().json(Message {
-                message: "Failed to update thread".to_string()
-            })
-        }
+        Some(t) => HttpResponse::Ok().json(t),
+        None => HttpResponse::BadRequest().json(Message {
+            message: "Failed to update thread".to_string(),
+        }),
     }
 }

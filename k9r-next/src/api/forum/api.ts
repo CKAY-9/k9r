@@ -238,9 +238,9 @@ export const updateForumPostFromID = async (
 			url: `${K9R_API}/forum/post`,
 			method: "PUT",
 			headers: {
-				Authorization: token
+				Authorization: token,
 			},
-			data: forum_post
+			data: forum_post,
 		});
 		return request.data;
 	} catch {
@@ -258,9 +258,9 @@ export const updateForumThreadFromID = async (
 			url: `${K9R_API}/forum/thread`,
 			method: "PUT",
 			headers: {
-				Authorization: token
+				Authorization: token,
 			},
-			data: forum_thread
+			data: forum_thread,
 		});
 		return request.data;
 	} catch {
@@ -277,14 +277,14 @@ export const deleteForumPostFromID = async (
 			url: `${K9R_API}/forum/post/${id}`,
 			method: "DELETE",
 			headers: {
-				Authorization: token
-			}
+				Authorization: token,
+			},
 		});
 		return true;
 	} catch {
 		return false;
 	}
-}
+};
 
 export const deleteForumThreadFromID = async (
 	id: number,
@@ -295,14 +295,14 @@ export const deleteForumThreadFromID = async (
 			url: `${K9R_API}/forum/thread/${id}`,
 			method: "DELETE",
 			headers: {
-				Authorization: token
-			}
+				Authorization: token,
+			},
 		});
 		return true;
 	} catch {
 		return false;
 	}
-}
+};
 
 export const searchThreads = async (
 	search: string,
@@ -332,14 +332,14 @@ export const toggleThreadLock = async (
 			url: `${K9R_API}/forum/thread/${thread_id}/lock`,
 			method: "PUT",
 			headers: {
-				Authorization: token
-			}
+				Authorization: token,
+			},
 		});
 		return request.data.locked;
 	} catch {
 		return false;
 	}
-}
+};
 
 export const toggleThreadSticky = async (
 	thread_id: number,
@@ -350,11 +350,55 @@ export const toggleThreadSticky = async (
 			url: `${K9R_API}/forum/thread/${thread_id}/sticky`,
 			method: "PUT",
 			headers: {
-				Authorization: token
-			}
+				Authorization: token,
+			},
 		});
 		return request.data.sticky;
 	} catch {
 		return false;
 	}
-}
+};
+
+export const likePost = async (
+	state: -1 | 0 | 1,
+	post_id: number,
+	token: string
+): Promise<ForumPost | null> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/post/${post_id}/like`,
+			method: "POST",
+			headers: {
+				Authorization: token,
+			},
+			data: {
+				state: state,
+			},
+		});
+		return request.data;
+	} catch {
+		return null;
+	}
+};
+
+export const likeThread = async (
+	state: -1 | 0 | 1,
+	thread_id: number,
+	token: string
+): Promise<ForumPost | null> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/thread/${thread_id}/like`,
+			method: "POST",
+			headers: {
+				Authorization: token,
+			},
+			data: {
+				state: state,
+			},
+		});
+		return request.data;
+	} catch {
+		return null;
+	}
+};
