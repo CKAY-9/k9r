@@ -25,7 +25,7 @@ const CommunityHomePage = async () => {
     return (
         <>
             <Header personal_user={personal_user} community_details={details} />
-            <main className="container">
+            <main className="container" style={{"gap": "1rem"}}>
                 <CommunityPageClient community_details={details} />
             </main>
             <Footer community_details={details} />

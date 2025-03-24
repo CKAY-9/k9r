@@ -12,39 +12,39 @@ import { K9R_WEBSOCKET_HOST } from "@/api/resources";
 import io from "socket.io-client";
 
 type CommunityHeaderProps = {
-    community_details: CommunityDetails;
-    game_servers: GameServer[];
+	community_details: CommunityDetails;
+	game_servers: GameServer[];
 };
 
 const CommunityHeader = (props: CommunityHeaderProps) => {
-    const [user_count, setUserCount] = useState<number>(0);
-    const [active_user_count, setActiveUserCount] = useState<number>(0);
-    const [room_id, setRoomID] = useState<string>("");
-    const ws = useRef<any>(null);
+	const [user_count, setUserCount] = useState<number>(0);
+	const [active_user_count, setActiveUserCount] = useState<number>(0);
+	const [room_id, setRoomID] = useState<string>("");
+	const ws = useRef<any>(null);
 
-    useEffect(() => {
-        ws.current = io(K9R_WEBSOCKET_HOST);
+	useEffect(() => {
+		ws.current = io(K9R_WEBSOCKET_HOST);
 
-        ws.current.on("connect", () => {
-            joinRoom("active-users");
-            sendMessage("active-users", "active-users");
-        })
+		ws.current.on("connect", () => {
+			joinRoom("active-users");
+			sendMessage("active-users", "active-users");
+		});
 
 		ws.current.on("receive_message", (data: any) => {
-            setActiveUserCount(Number.parseInt(data || "0"));
-        });
+			setActiveUserCount(Number.parseInt(data || "0"));
+		});
 
-        (async () => {
-            const users = await getUserCount();
-            setUserCount(users);
-        })();
+		(async () => {
+			const users = await getUserCount();
+			setUserCount(users);
+		})();
 
-        return () => {
+		return () => {
 			ws.current.off("receive_message");
 		};
-    }, []);
+	}, []);
 
-    const joinRoom = (room: string) => {
+	const joinRoom = (room: string) => {
 		if (room) {
 			ws.current.emit("join_room", room);
 		}
@@ -60,54 +60,67 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 			ws.current.emit("send_message", messageData);
 		}
 	};
-    
-    return (
-        <>
-            <header className={style.community_header}>
-                <section className={style.splash}>
-                    <CommunityIcon community_details={props.community_details} size_rems={15} />
-                    <h2>{props.community_details.name}</h2>
-                </section>
-                <div className={style.stats_container}>
-                    <div className={style.stats}>
-                        <div className={style.stat}>
-                            <section className={style.heading}>
-                                <MaterialIcon 
-                                    src="/icons/groups.svg"
-                                    alt="All Users"
-                                    size_rems={2}
-                                />
-                                <span>Registered Users</span>
-                            </section>
-                            <span>{user_count}</span>
-                        </div>
-                        <div className={style.stat}>
-                            <section className={style.heading}>
-                                <MaterialIcon 
-                                    src="/icons/internet.svg"
-                                    alt="Active Users"
-                                    size_rems={2}
-                                />
-                                <span>Active Users</span>
-                            </section>
-                            <span>{active_user_count}</span>
-                        </div>
-                        <div className={style.stat}>
-                            <section className={style.heading}>
-                                <MaterialIcon 
-                                    src="/icons/controller.svg"
-                                    alt="Active Users"
-                                    size_rems={2}
-                                />
-                                <span>Servers</span>
-                            </section>
-                            <span>{props.game_servers.length}</span>
-                        </div>
-                    </div>
-                </div>
-            </header>
-        </>
-    );
-}
+
+	return (
+		<>
+			<header
+				className={style.community_header}
+				style={{
+					background:
+						props.community_details.banner !== ""
+							? `url(${props.community_details.banner})`
+							: "var(--foreground)",
+				}}
+			>
+				<div className={style.content}>
+					<section className={style.splash}>
+						<CommunityIcon
+							community_details={props.community_details}
+							size_rems={15}
+						/>
+						<h2>{props.community_details.name}</h2>
+					</section>
+					<div className={style.stats_container}>
+						<div className={style.stats}>
+							<div className={style.stat}>
+								<section className={style.heading}>
+									<MaterialIcon
+										src="/icons/groups.svg"
+										alt="All Users"
+										size_rems={2}
+									/>
+									<span>Registered Users</span>
+								</section>
+								<span>{user_count}</span>
+							</div>
+							<div className={style.stat}>
+								<section className={style.heading}>
+									<MaterialIcon
+										src="/icons/internet.svg"
+										alt="Active Users"
+										size_rems={2}
+									/>
+									<span>Active Users</span>
+								</section>
+								<span>{active_user_count}</span>
+							</div>
+							<div className={style.stat}>
+								<section className={style.heading}>
+									<MaterialIcon
+										src="/icons/controller.svg"
+										alt="Active Users"
+										size_rems={2}
+									/>
+									<span>Servers</span>
+								</section>
+								<span>{props.game_servers.length}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</header>
+		</>
+	);
+};
 
 export default CommunityHeader;
