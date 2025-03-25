@@ -7,8 +7,8 @@
 .server {
 	background-color: var(--foreground);
 	border-radius: 1rem;
-    background-size: cover !important;
-    box-shadow: var(--shdw1);
+	background-size: cover !important;
+	box-shadow: var(--shdw1);
 
 	.content {
 		padding: 1rem;
@@ -16,9 +16,46 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-        justify-content: center;
-        gap: 1rem;
+		justify-content: center;
+		gap: 1rem;
 		backdrop-filter: blur(5px);
 		background-color: rgb(0, 0, 0, 0.5);
+	}
+}
+
+.server_container {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+
+	.server_splash {
+		height: 50vh;
+		display: grid;
+		place-content: center;
+		position: relative;
+
+		background-position: center;
+		background-attachment: fixed;
+		background-repeat: no-repeat;
+		background-size: cover;
+
+		.content {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 1rem;
+			backdrop-filter: blur(5px);
+			background-color: rgb(0, 0, 0, 0.5);
+			height: 50vh;
+			width: 100vw;
+		
+			.options {
+				display: flex;
+				flex-direction: row;
+				gap: 1rem;
+				margin-top: 1rem;
+			}
+		}
 	}
 }
