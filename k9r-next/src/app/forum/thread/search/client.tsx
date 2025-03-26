@@ -18,8 +18,15 @@ const SearchThreadsClient = () => {
             e.preventDefault();
         }
 
+        setThreadResults([]);
+
         const ts = await searchThreads(search, page);
         setThreadResults(ts);
+    }
+
+    const changePage = async (direction: -1 | 1) => {
+        setPage(page + direction);
+        await searchPosts();
     }
 
     return (

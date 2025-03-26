@@ -9,13 +9,13 @@ import LoadingAlert from "@/components/loading/loading-alert";
 
 type SectionsProps = {
 	forum_sections: ForumSection[];
-	set_sections: Function;
+	set_sections: any;
 };
 
 type TopicsProps = {
 	forum_topics: ForumTopic[];
 	forum_sections: ForumSection[];
-	set_topics: Function;
+	set_topics: any;
 };
 
 const Sections = (props: SectionsProps) => {

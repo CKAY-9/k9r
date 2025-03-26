@@ -5,7 +5,6 @@ import { GameServer } from "@/api/game-servers/models";
 import { User } from "@/api/users/models";
 import style from "./servers.module.scss";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { K9R_WEBSOCKET_HOST } from "@/api/resources";
 
 type GameServerProps = {
@@ -16,8 +15,8 @@ type GameServerProps = {
 
 const GameServerView = (props: GameServerProps) => {
 	const [background, setBackground] = useState<string>("");
-	const [room_id, setRoomID] = useState<string>("");
-	const ws = useRef<any>(null);
+	const [_room_id, setRoomID] = useState<string>("");
+	const ws = useRef<SocketIOClient.Socket | null>(null);
 
 	useEffect(() => {
 		if (props.game_server.game === "minecraft") {
@@ -32,21 +31,24 @@ const GameServerView = (props: GameServerProps) => {
             }
 		});
 
-		ws.current.on("receive_message", (data: any) => {
+		ws.current.on("receive_message", (_data: string) => {
 			
 		});
 
 		return () => {
+			if (!ws.current) return;
 			ws.current.off("receive_message");
 		};
-	}, []);
+	}, [props.game_server.game, props.game_server.id]);
 
 	const joinRoom = (room: string) => {
+		if (!ws.current) return;
 		ws.current.emit("join_room", room);
 		setRoomID(room);
 	};
 
-	const sendMessage = (message: string, room: string) => {
+	const _sendMessage = (message: string, room: string) => {
+		if (!ws.current) return;
 		const messageData = {
 			room,
 			content: message,

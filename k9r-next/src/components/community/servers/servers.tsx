@@ -23,7 +23,7 @@ const CommunityServer = (props: CommunityServerProps) => {
 			default:
 				break;
 		}
-	}, []);
+	}, [props.server.game]);
 
 	return (
 		<div className={style.server} style={{ background: background }}>

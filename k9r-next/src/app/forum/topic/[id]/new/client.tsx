@@ -57,7 +57,7 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 		e.preventDefault();
 
 		const section_id = Number.parseInt(e.target.value);
-		const section = all_sections.filter((v, i) => v.id === section_id)[0];
+		const section = all_sections.filter(v => v.id === section_id)[0];
 
 		setParentSection(section);
 	};
@@ -66,7 +66,7 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 		e.preventDefault();
 
 		const topic_id = Number.parseInt(e.target.value);
-		const topic = all_topics.filter((v, i) => v.id === topic_id)[0];
+		const topic = all_topics.filter(v => v.id === topic_id)[0];
 
 		setParentTopic(topic);
 	};
@@ -132,7 +132,7 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 					onChange={chooseSection}
 				>
 					<option value=""></option>
-					{all_sections.map((section, index) => {
+					{all_sections.map(section => {
 						return (
 							<option key={section.id} value={section.id}>
 								{section.name}
@@ -153,10 +153,10 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 						<option value=""></option>
 						{all_topics
 							.filter(
-								(topic, index) =>
+								topic =>
 									topic.section === parent_section.id
 							)
-							.map((topic, index) => {
+							.map(topic => {
 								return (
 									<option key={topic.id} value={topic.id}>
 										{topic.name}

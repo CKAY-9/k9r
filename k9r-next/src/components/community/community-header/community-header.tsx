@@ -6,7 +6,6 @@ import MaterialIcon from "@/components/material-icon/material-icon";
 import CommunityIcon from "@/components/community-icon/community-icon";
 import { GameServer } from "@/api/game-servers/models";
 import { useEffect, useRef, useState } from "react";
-import { User } from "@/api/users/models";
 import { getUserCount } from "@/api/users/api";
 import { K9R_WEBSOCKET_HOST } from "@/api/resources";
 import io from "socket.io-client";
@@ -19,8 +18,8 @@ type CommunityHeaderProps = {
 const CommunityHeader = (props: CommunityHeaderProps) => {
 	const [user_count, setUserCount] = useState<number>(0);
 	const [active_user_count, setActiveUserCount] = useState<number>(0);
-	const [room_id, setRoomID] = useState<string>("");
-	const ws = useRef<any>(null);
+	const [_room_id, _setRoomID] = useState<string>("");
+	const ws = useRef<SocketIOClient.Socket | null>(null);
 
 	useEffect(() => {
 		ws.current = io(K9R_WEBSOCKET_HOST);
@@ -40,25 +39,24 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 		})();
 
 		return () => {
+			if (!ws.current) return;
 			ws.current.off("receive_message");
 		};
 	}, []);
 
 	const joinRoom = (room: string) => {
-		if (room) {
-			ws.current.emit("join_room", room);
-		}
+		if (!ws.current) return;
+		ws.current.emit("join_room", room);
 	};
 
 	const sendMessage = (message: string, room: string) => {
-		if (message && room) {
-			const messageData = {
-				room,
-				content: message,
-				sender: ws.current.id,
-			};
-			ws.current.emit("send_message", messageData);
-		}
+		if (!ws.current) return;
+		const messageData = {
+			room,
+			content: message,
+			sender: ws.current.id,
+		};
+		ws.current.emit("send_message", messageData);
 	};
 
 	return (

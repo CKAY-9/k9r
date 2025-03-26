@@ -4,7 +4,6 @@ import { BaseSyntheticEvent, useState } from "react";
 import style from "./root.module.scss";
 import { getPersonalUser } from "@/api/users/api";
 import { setCookie } from "@/utils/cookies";
-import { useRouter } from "next/router";
 
 const AdminRootLoginClient = () => {
 	const [root_token, setRootToken] = useState<string>("");

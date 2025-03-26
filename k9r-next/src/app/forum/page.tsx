@@ -1,7 +1,6 @@
 "use server";
 
 import { getCommunityDetails } from "@/api/community-details/api";
-import { createNewForumThread } from "@/api/forum/api";
 import { getPersonalUser } from "@/api/users/api";
 import Footer from "@/components/footer/footer";
 import ForumContainer from "@/components/forum/container/forum-container";

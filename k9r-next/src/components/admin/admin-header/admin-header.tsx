@@ -17,7 +17,7 @@ type AdminHeaderProps = {
 	community_details: CommunityDetails;
 	personal_user: User;
 	usergroups: Usergroup[];
-	set_view: Function;
+	set_view: any;
 };
 
 const AdminHeader = (props: AdminHeaderProps) => {
@@ -70,7 +70,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				changeView(4);
 				break;
 		}
-	}, []);
+	}, [changeView, tab]);
 
 	return (
 		<>

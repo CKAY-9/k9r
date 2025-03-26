@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosError } from "axios";
+import axios from "axios";
 import { K9R_API } from "../resources";
 import { ForumPost, ForumSection, ForumThread, ForumTopic } from "./models";
 
@@ -273,7 +273,7 @@ export const deleteForumPostFromID = async (
 	token: string
 ): Promise<boolean> => {
 	try {
-		const request = await axios({
+		await axios({
 			url: `${K9R_API}/forum/post/${id}`,
 			method: "DELETE",
 			headers: {
@@ -291,7 +291,7 @@ export const deleteForumThreadFromID = async (
 	token: string
 ): Promise<boolean> => {
 	try {
-		const request = await axios({
+		await axios({
 			url: `${K9R_API}/forum/thread/${id}`,
 			method: "DELETE",
 			headers: {

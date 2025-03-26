@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { Component, useState } from "react";
 import style from "./dropdown.module.scss";
 
 type DropdownTabProps = {
-    children: any;
+    children: Component | any;
     title: string;
 };
 

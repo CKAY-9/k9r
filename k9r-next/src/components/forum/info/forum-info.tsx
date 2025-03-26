@@ -16,26 +16,25 @@ type ForumInfoProps = {
 	personal_user: User | null;
 };
 
-
 const ForumInfo = (props: ForumInfoProps) => {
 	const [total_users, setTotalUsers] = useState<number>(0);
 	const [active_users, setActiveUsers] = useState<number>(0);
-    const [total_threads, setTotalThreads] = useState<number>(0);
+	const [total_threads, setTotalThreads] = useState<number>(0);
 	const [total_posts, setTotalPosts] = useState<number>(0);
-	const [room_id, setRoomID] = useState<string>("");
-	const ws = useRef<any>(null);
+	const [_room_id, _setRoomID] = useState<string>("");
+	const ws = useRef<SocketIOClient.Socket | null>(null);
 
 	useEffect(() => {
-        ws.current = io(K9R_WEBSOCKET_HOST);
+		ws.current = io(K9R_WEBSOCKET_HOST);
 
-        ws.current.on("connect", () => {
-            joinRoom("active-users");
-            sendMessage("active-users", "active-users");
-        })
+		ws.current.on("connect", () => {
+			joinRoom("active-users");
+			sendMessage("active-users", "active-users");
+		});
 
 		ws.current.on("receive_message", (data: any) => {
-            setActiveUsers(Number.parseInt(data || "0"));
-        });
+			setActiveUsers(Number.parseInt(data || "0"));
+		});
 
 		(async () => {
 			const us = await getUserCount();
@@ -49,25 +48,24 @@ const ForumInfo = (props: ForumInfoProps) => {
 		})();
 
 		return () => {
+			if (!ws.current) return;
 			ws.current.off("receive_message");
 		};
 	}, []);
 
 	const joinRoom = (room: string) => {
-		if (room) {
-			ws.current.emit("join_room", room);
-		}
+		if (!ws.current) return;
+		ws.current.emit("join_room", room);
 	};
 
 	const sendMessage = (message: string, room: string) => {
-		if (message && room) {
-			const messageData = {
-				room,
-				content: message,
-				sender: ws.current.id,
-			};
-			ws.current.emit("send_message", messageData);
-		}
+		if (!ws.current) return;
+		const messageData = {
+			room,
+			content: message,
+			sender: ws.current.id,
+		};
+		ws.current.emit("send_message", messageData);
 	};
 
 	return (

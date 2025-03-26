@@ -18,9 +18,7 @@ export const generateMetadata = async ({
 	};
 }): Promise<Metadata> => {
 	const details = await getCommunityDetails();
-
-	const { id } = await params;
-	const thread = await getForumTopicFromID(Number.parseInt(id) || 0);
+	await params;
 
 	return {
 		title: `New Thread - ${details.name}`,

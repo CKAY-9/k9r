@@ -13,9 +13,9 @@ import { getCookie } from "@/utils/cookies";
 
 type GameServerEditProps = {
 	game_server: GameServer;
-	on_delete: Function;
-	on_update: Function;
-	on_create: Function;
+	on_delete: any;
+	on_update: any;
+	on_create: any;
 	index: number;
 };
 
@@ -118,7 +118,7 @@ const GameServersAdmin = () => {
 			return;
 		}
 
-		const response = await deleteGameServerFromID(
+		await deleteGameServerFromID(
 			game_server_id,
 			getCookie("token") || ""
 		);
@@ -172,7 +172,7 @@ const GameServersAdmin = () => {
 			<section>
 				<h2>Game Servers</h2>
 				<span>
-					K9-Revive's game servers service allows you to connect K9R
+					K9-Revive&apos;s game servers service allows you to connect K9R
 					with your game servers. Supported game(s): Minecraft
 				</span>
 			</section>

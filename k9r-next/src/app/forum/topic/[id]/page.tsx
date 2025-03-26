@@ -4,7 +4,6 @@ import { getCommunityDetails } from "@/api/community-details/api";
 import { getPersonalUser } from "@/api/users/api";
 import Footer from "@/components/footer/footer";
 import ForumContainer from "@/components/forum/container/forum-container";
-import ForumContent from "@/components/forum/content/forum-content";
 import ForumHeader from "@/components/forum/header/forum-header";
 import Header from "@/components/header/header";
 import { getStoredCookie } from "@/utils/stored-cookies";

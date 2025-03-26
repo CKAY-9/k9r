@@ -5,10 +5,8 @@ import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./users.module.scss";
 import { getUserFromID, searchUsers } from "@/api/users/api";
 import SearchBar from "@/components/search-bar/search-bar";
-import Link from "next/link";
 import UserPreview from "@/components/user/user-preview/user-preview";
 import UserTab from "@/components/user/user-tab/user-tab";
-import UserUsergroups from "@/components/user/usergroups/user-usergroups";
 import { Usergroup } from "@/api/usergroups/models";
 import {
 	addUsertoUsergroupFromIDs,
@@ -21,7 +19,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const UsersAdmin = () => {
 	const [search, setSearch] = useState<string>("");
-	const [page, setPage] = useState<number>(1);
+	const [page, _setPage] = useState<number>(1);
 	const [user_results, setUserResults] = useState<User[]>([]);
 	const [usergroups, setUsergroups] = useState<Usergroup[]>([]);
 	const [selected_user, setSelectedUser] = useState<User | null>(null);
@@ -51,7 +49,7 @@ const UsersAdmin = () => {
 				}
 			})();
 		}
-	}, [user_query]);
+	}, [user_query, pathname, router]);
 
 	useEffect(() => {
 		(async () => {
@@ -175,7 +173,7 @@ const UsersAdmin = () => {
 					<section>
 						<section className={style.usergroups}>
 							{usergroups
-								.filter((usergroup, index) =>
+								.filter((usergroup, _index) =>
 									selected_user.usergroups.includes(
 										usergroup.id
 									)
@@ -233,7 +231,7 @@ const UsersAdmin = () => {
 											<option value=""></option>
 											{usergroups
 												.filter(
-													(usergroup, index) =>
+													(usergroup, _index) =>
 														!selected_user.usergroups.includes(
 															usergroup.id
 														)

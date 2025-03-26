@@ -1,9 +1,10 @@
 "use client";
 
+import { Component } from "react";
 import style from "./content.module.scss";
 
 type ForumContentProps = {
-    children: any;
+    children: Component | any;
 };
 
 const ForumContent = (props: ForumContentProps) => {

@@ -5,6 +5,7 @@ import { getAllGameServers } from "@/api/game-servers/api";
 import { GameServer } from "@/api/game-servers/models";
 import CommunityHeader from "@/components/community/community-header/community-header";
 import CommunityServers from "@/components/community/servers/servers";
+import LoadingAlert from "@/components/loading/loading-alert";
 import { useEffect, useState } from "react";
 
 type CommunityPageClientProps = {
@@ -23,6 +24,12 @@ const CommunityPageClient = (props: CommunityPageClientProps) => {
             setLoading(false);
         })();
     })
+
+    if (loading) {
+        return (
+            <LoadingAlert message="Loading servers..." />
+        )
+    }
 
     return (
         <>

@@ -1,7 +1,5 @@
 "use client";
 
-import { getAllForumSections, getAllForumTopics, updateAllSections, updateAllTopics } from "@/api/forum/api";
-import { ForumSection, ForumTopic } from "@/api/forum/models";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./details.module.scss";
 import { getCookie } from "@/utils/cookies";

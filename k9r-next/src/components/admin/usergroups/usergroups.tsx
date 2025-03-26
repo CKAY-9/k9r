@@ -29,9 +29,7 @@ import { getCookie } from "@/utils/cookies";
 const UsergroupsAdmin = () => {
 	const [usergroups, setUsergroups] = useState<Usergroup[]>([]);
 	const [loading_usergroups, setLoadingUsergroups] = useState<boolean>(true);
-
 	const [usergroup_index, setUsergroupIndex] = useState<number>(-1);
-	const [previous_index, setPreviousIndex] = useState<number>(-1);
 
 	useEffect(() => {
 		(async () => {
@@ -43,6 +41,8 @@ const UsergroupsAdmin = () => {
 	}, []);
 
 	const generateNewUsergroup = async (e: BaseSyntheticEvent) => {
+		e.preventDefault()
+
 		const new_group: Usergroup = {
 			id: -1,
 			name: `New Usergroup #${usergroups.length + 1}`,
@@ -75,7 +75,7 @@ const UsergroupsAdmin = () => {
 			getCookie("token") || ""
 		);
 		if (update !== null) {
-			setUsergroups(usergroups.filter((v, i) => v.id !== update.id));
+			setUsergroups(usergroups.filter(v => v.id !== update.id));
 			setLoadingUsergroups(true);
 			setUsergroups((old) => [...old, update]);
 			setUsergroupIndex(usergroups.length - 1);
@@ -95,7 +95,7 @@ const UsergroupsAdmin = () => {
 			return;
 		}
 
-		const del = await deleteUsergroupFromID(
+		await deleteUsergroupFromID(
 			current.id,
 			getCookie("token") || ""
 		);
@@ -135,8 +135,8 @@ const UsergroupsAdmin = () => {
 					</>
 				)}
 				{usergroups
-					.filter((v, i) => i === usergroup_index)
-					.map((usergroup, index) => {
+					.filter((_v, i) => i === usergroup_index)
+					.map(() => {
 						return (
 							<div
 								className={style.usergroup}
@@ -203,7 +203,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														CREATE_NEW_THREADS
@@ -222,7 +222,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														CREATE_NEW_POSTS
@@ -241,7 +241,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														EDIT_POSTS
@@ -260,7 +260,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														EDIT_PROFILE
@@ -281,7 +281,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														DEFAULT_COMMUNITY_ACCESS
@@ -300,7 +300,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														EDIT_THREADS
@@ -319,7 +319,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														SITE_SETTINGS
@@ -338,7 +338,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														MANAGE_USERS
@@ -357,7 +357,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														MANAGE_POSTS
@@ -376,7 +376,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														MANAGE_USERGROUPS
@@ -395,7 +395,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														MANAGE_DETAILS
@@ -414,7 +414,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														MANAGE_FORUMS
@@ -436,7 +436,7 @@ const UsergroupsAdmin = () => {
 												}
 												type="checkbox"
 												onChange={(
-													e: BaseSyntheticEvent
+													_e: BaseSyntheticEvent
 												) => {
 													togglePermission(
 														ROOT_ACCESS

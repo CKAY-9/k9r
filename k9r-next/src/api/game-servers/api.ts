@@ -72,7 +72,7 @@ export const deleteGameServerFromID = async (
 	token: string
 ): Promise<boolean> => {
 	try {
-		const request = await axios({
+		await axios({
 			url: `${K9R_API}/game_server/${game_server_id}`,
 			method: "DELETE",
 			headers: {
