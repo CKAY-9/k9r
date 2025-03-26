@@ -205,7 +205,7 @@ pub struct NewAdminKey {
     pub expires: String
 }
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
 #[diesel(table_name = crate::schema::game_servers)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct GameServer {

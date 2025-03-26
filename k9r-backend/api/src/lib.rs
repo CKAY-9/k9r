@@ -18,9 +18,9 @@ use forum::{
     post::{like_post, like_thread, new_forum_post, new_forum_section, new_forum_thread, new_forum_topic},
     put::{toggle_thread_lock, toggle_thread_sticky, update_all_sections, update_all_topics, update_post, update_thread},
 };
-use game_servers::{delete::delete_game_server, get::{all_game_servers, get_game_server}, post::new_game_server, put::update_game_server};
+use game_servers::{delete::delete_game_server, get::{all_game_servers, get_authorized_server, get_game_server}, post::new_game_server, put::update_game_server};
 use middleware::permissions::{
-    community_management_middleware, create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_thread_middleware, forum_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware, valid_user_middleware
+    authorized_game_server_middleware, community_management_middleware, create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_thread_middleware, forum_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware, valid_user_middleware
 };
 use user::{delete::remove_usergroup_from_user, get::{
     get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
@@ -209,6 +209,12 @@ fn configure_game_server_routes(cfg: &mut web::ServiceConfig) {
             .service(all_game_servers)
             .service(get_game_server)
             .service(
+                web::resource("/auth")
+                    .wrap(from_fn(authorized_game_server_middleware))
+                    .route(web::get().to(get_authorized_server))
+                    .guard(guard::Get())   
+            )
+            .service(
                 web::resource("/{id}")
                     .wrap(from_fn(community_management_middleware))
                     .route(web::put().to(update_game_server))
@@ -226,6 +232,5 @@ fn configure_game_server_routes(cfg: &mut web::ServiceConfig) {
                     .route(web::post().to(new_game_server))
                     .guard(guard::Post())   
             )
-
     );
 }

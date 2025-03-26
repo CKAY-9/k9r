@@ -4,7 +4,7 @@ use actix_web::{
     middleware::Next,
     Error, HttpMessage, HttpResponse,
 };
-use k9r_db::crud::{usergroups::get_usergroup_from_id, users::get_user_from_token};
+use k9r_db::crud::{game_servers::get_game_server_from_server_key, usergroups::get_usergroup_from_id, users::get_user_from_token};
 use k9r_utils::extract_header_value;
 
 use crate::{
@@ -391,6 +391,32 @@ pub async fn edit_post_middleware(
         None => {
             return Ok(req.into_response(HttpResponse::NotFound().json(Message {
                 message: "Failed to get user".to_string(),
+            })))
+        }
+    }
+}
+
+pub async fn authorized_game_server_middleware(
+    req: ServiceRequest,
+    next: Next<impl MessageBody + 'static>,
+) -> Result<ServiceResponse<impl MessageBody + 'static>, Error> {
+    let server_key_option = extract_header_value(&req.request(), "Authorization");
+    if server_key_option.is_none() {
+        return Ok(req.into_response(HttpResponse::BadRequest().json(Message {
+            message: "No server key".to_string(),
+        })));
+    }
+
+    let server_key = server_key_option.unwrap();
+    match get_game_server_from_server_key(server_key) {
+        Some(server) => {
+            req.extensions_mut().insert(server);
+            let res = next.call(req).await?;
+            return Ok(res.map_into_boxed_body());
+        },
+        None => {
+            return Ok(req.into_response(HttpResponse::Unauthorized().json(Message {
+                message: "Invalid server key".to_string(),
             })))
         }
     }

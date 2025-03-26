@@ -1,4 +1,4 @@
-use diesel::{query_dsl::methods::FindDsl, ExpressionMethods, RunQueryDsl};
+use diesel::{query_dsl::methods::{FilterDsl, FindDsl}, ExpressionMethods, RunQueryDsl};
 
 use crate::{create_connection, models::{GameServer, NewGameServer}, schema::game_servers};
 
@@ -22,6 +22,22 @@ pub fn get_game_server_from_id(id: i32) -> Option<GameServer> {
     let connection = &mut create_connection();
     let find = game_servers::table
         .find(id)
+        .first(connection);
+
+    match find {
+        Ok(result) => {
+            Some(result)
+        }
+        Err(_e) => {
+            None
+        }
+    }
+}
+
+pub fn get_game_server_from_server_key(server_key: String) -> Option<GameServer> {
+    let connection = &mut create_connection();
+    let find = game_servers::table
+        .filter(game_servers::server_key.eq(server_key))
         .first(connection);
 
     match find {
