@@ -1,0 +1,14 @@
+
+.likes {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+	align-items: center;
+
+	.like {
+		padding: 0;
+		&:hover {
+			background-color: transparent;
+		}
+	}
+}

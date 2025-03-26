@@ -28,6 +28,7 @@ import MaterialIcon from "@/components/material-icon/material-icon";
 import { getCookie } from "@/utils/cookies";
 import { Usergroup } from "@/api/usergroups/models";
 import { MANAGE_POSTS, usergroupsPermissionFlagCheck } from "@/api/permissions";
+import LikeDislike from "../like-dislike/like-dislike";
 
 type ThreadProps = {
 	community_details: CommunityDetails;
@@ -52,19 +53,8 @@ const Thread = (props: ThreadProps) => {
 	const [personal_usergroups, setPersonalUsergroups] = useState<Usergroup[]>(
 		[]
 	);
-	const [likes, setLikes] = useState<number[]>(props.thread.likes);
-	const [dislikes, setDislikes] = useState<number[]>(props.thread.dislikes);
-	const [like_state, setLikeState] = useState<-1 | 0 | 1>(0);
 
 	useEffect(() => {
-		if (likes.includes(props.personal_user?.id || 0)) {
-			setLikeState(1);
-		}
-
-		if (dislikes.includes(props.personal_user?.id || 0)) {
-			setLikeState(-1);
-		}
-
 		(async () => {
 			const a = await getUserFromID(props.thread.author);
 			setAuthor(a);
@@ -150,45 +140,6 @@ const Thread = (props: ThreadProps) => {
 		setSticky(!sticky);
 	};
 
-	const like = async (state: -1 | 0 | 1) => {
-		if (props.personal_user === null) {
-			return;
-		}
-
-		if (likes.includes(props.personal_user.id)) {
-			likes.splice(likes.indexOf(props.personal_user.id));
-		}
-
-		if (dislikes.includes(props.personal_user.id)) {
-			dislikes.splice(dislikes.indexOf(props.personal_user.id));
-		}
-
-		if (state === like_state) {
-			const response = await likeThread(
-				0,
-				props.thread.id,
-				getCookie("token") || ""
-			);
-			setLikeState(0);
-			return;
-		}
-
-		const response = await likeThread(
-			state,
-			props.thread.id,
-			getCookie("token") || ""
-		);
-
-		setLikeState(state);
-		if (state === -1) {
-			dislikes.push(props.personal_user.id);
-			setDislikes(dislikes);
-		} else {
-			likes.push(props.personal_user.id);
-			setLikes(likes);
-		}
-	};
-
 	return (
 		<>
 			<header className={style.header}>
@@ -227,43 +178,11 @@ const Thread = (props: ThreadProps) => {
 					</div>
 				</section>
 				<section className={style.options}>
-					<div className={style.likes}>
-						<button
-							className={style.like}
-							style={{
-								opacity: likes.includes(
-									props.personal_user?.id || -1
-								)
-									? "1"
-									: "0.5",
-							}}
-							onClick={() => like(1)}
-						>
-							<MaterialIcon
-								src="/icons/thumbs_up.svg"
-								alt="Like post"
-								size_rems={2}
-							/>
-						</button>
-						<span>{likes.length - dislikes.length}</span>
-						<button
-							className={style.like}
-							style={{
-								opacity: dislikes.includes(
-									props.personal_user?.id || -1
-								)
-									? "1"
-									: "0.5",
-							}}
-							onClick={() => like(-1)}
-						>
-							<MaterialIcon
-								src="/icons/thumbs_down.svg"
-								alt="Like post"
-								size_rems={2}
-							/>
-						</button>
-					</div>
+					<LikeDislike
+						target={props.thread}
+						like_endpoint={likeThread}
+						personal_user={props.personal_user}
+					/>
 					{is_author && (
 						<>
 							<button

@@ -15,6 +15,7 @@ import {
 	updateForumPostFromID,
 } from "@/api/forum/api";
 import { getCookie } from "@/utils/cookies";
+import LikeDislike from "../like-dislike/like-dislike";
 
 type ForumPostProps = {
 	forum_post: ForumPost;
@@ -32,23 +33,10 @@ const Post = (props: ForumPostProps) => {
 	const [author, setAuthor] = useState<User | null>(null);
 	const [is_author, setIsAuthor] = useState<boolean>(false);
 	const [editing, setEditing] = useState<boolean>(false);
-	const [likes, setLikes] = useState<number[]>(props.forum_post.likes);
-	const [dislikes, setDislikes] = useState<number[]>(
-		props.forum_post.dislikes
-	);
-	const [like_state, setLikeState] = useState<-1 | 0 | 1>(0);
 
 	useEffect(() => {
 		setCreated(new Date(props.forum_post.created).toLocaleString());
 		setUpdated(new Date(props.forum_post.updated).toLocaleString());
-
-		if (likes.includes(props.personal_user?.id || 0)) {
-			setLikeState(1);
-		}
-
-		if (dislikes.includes(props.personal_user?.id || 0)) {
-			setLikeState(-1);
-		}
 
 		(async () => {
 			const a = await getUserFromID(props.forum_post.author);
@@ -91,44 +79,6 @@ const Post = (props: ForumPostProps) => {
 		}
 	};
 
-	const like = async (state: -1 | 0 | 1) => {
-		if (props.personal_user === null) {
-			return;
-		}
-
-		if (likes.includes(props.personal_user.id)) {
-			likes.splice(likes.indexOf(props.personal_user.id));
-		}
-
-		if (dislikes.includes(props.personal_user.id)) {
-			dislikes.splice(dislikes.indexOf(props.personal_user.id));
-		}
-
-		if (state === like_state) {
-			const response = await likePost(
-				0,
-				props.forum_post.id,
-				getCookie("token") || ""
-			);
-			setLikeState(0);
-			return;
-		}
-
-		const response = await likePost(
-			state,
-			props.forum_post.id,
-			getCookie("token") || ""
-		);
-
-		setLikeState(state);
-		if (state === -1) {
-			dislikes.push(props.personal_user.id);
-			setDislikes(dislikes);
-		} else {
-			likes.push(props.personal_user.id);
-			setLikes(likes);
-		}
-	};
 
 	return (
 		<div className={style.forum_post} id={`post-${props.forum_post.id}`}>
@@ -154,43 +104,11 @@ const Post = (props: ForumPostProps) => {
 						source={post.content || ""}
 					/>
 				)}
-				<div className={style.likes}>
-					<button
-						className={style.like}
-						style={{
-							opacity: likes.includes(
-								props.personal_user?.id || -1
-							)
-								? "1"
-								: "0.5",
-						}}
-						onClick={() => like(1)}
-					>
-						<MaterialIcon
-							src="/icons/thumbs_up.svg"
-							alt="Like post"
-							size_rems={2}
-						/>
-					</button>
-					<span>{likes.length - dislikes.length}</span>
-					<button
-						className={style.like}
-						style={{
-							opacity: dislikes.includes(
-								props.personal_user?.id || -1
-							)
-								? "1"
-								: "0.5",
-						}}
-						onClick={() => like(-1)}
-					>
-						<MaterialIcon
-							src="/icons/thumbs_down.svg"
-							alt="Like post"
-							size_rems={2}
-						/>
-					</button>
-				</div>
+				<LikeDislike 
+					target={props.forum_post}
+					like_endpoint={likePost}
+					personal_user={props.personal_user}
+				/>
 				<div className={style.times}>
 					<span className={style.time}>Posted: {created}</span>
 					{created !== updated && (
