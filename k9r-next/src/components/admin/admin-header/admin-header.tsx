@@ -10,7 +10,7 @@ import {
 	usergroupsPermissionFlagCheck,
 } from "@/api/permissions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { CommunityDetails } from "@/api/community-details/models";
 
 type AdminHeaderProps = {
@@ -26,7 +26,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 	const searchParams = useSearchParams();
 	const tab = searchParams.get("tab");
 
-	const changeView = (view: number) => {
+	const changeView = useCallback((view: number) => {
 		switch (view) {
 			case 0:
 				router.push(pathname + "?" + "tab=forum");
@@ -50,7 +50,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				break;
 		}
 		props.set_view(view);
-	};
+	}, [pathname, props, router]);
 
 	useEffect(() => {
 		switch (tab) {

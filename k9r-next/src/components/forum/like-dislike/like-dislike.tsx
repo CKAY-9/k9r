@@ -9,11 +9,11 @@ import MaterialIcon from "@/components/material-icon/material-icon";
 
 type LikeDislikeProps = {
 	target: ForumPost | ForumThread;
-	like_endpoint: Function;
+	like_endpoint: any;
 	personal_user: User | null;
-	on_like?: Function;
-	on_dislike?: Function;
-	on_neutral?: Function;
+	on_like?: any;
+	on_dislike?: any;
+	on_neutral?: any;
 };
 
 const LikeDislike = (props: LikeDislikeProps) => {
@@ -29,7 +29,7 @@ const LikeDislike = (props: LikeDislikeProps) => {
 		if (dislikes.includes(props.personal_user?.id || 0)) {
 			setLikeState(-1);
 		}
-	});
+	}, [likes, props.personal_user?.id, dislikes]);
 
 	const like = async (state: -1 | 0 | 1) => {
 		if (props.personal_user === null) {
@@ -51,6 +51,9 @@ const LikeDislike = (props: LikeDislikeProps) => {
 				getCookie("token") || ""
 			);
 			setLikeState(0);
+			if (props.on_neutral) {
+				props.on_neutral()
+			}
 			return;
 		}
 
@@ -64,9 +67,15 @@ const LikeDislike = (props: LikeDislikeProps) => {
 		if (state === -1) {
 			dislikes.push(props.personal_user.id);
 			setDislikes(dislikes);
+			if (props.on_dislike) {
+				props.on_dislike()
+			}
 		} else {
 			likes.push(props.personal_user.id);
 			setLikes(likes);
+			if (props.on_like) {
+				props.on_like()
+			}
 		}
 	};
 

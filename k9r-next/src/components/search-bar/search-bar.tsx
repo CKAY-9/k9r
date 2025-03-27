@@ -4,8 +4,8 @@ import MaterialIcon from "../material-icon/material-icon";
 import style from "./search.module.scss";
 
 type SearchBarProps = {
-	set_search: Function;
-	search: Function;
+	set_search: any;
+	search: any;
 	placeholder?: string;
 };
 

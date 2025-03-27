@@ -11,7 +11,7 @@ import { getCookie } from "@/utils/cookies";
 type NewForumPostProps = {
     forum_thread: ForumThread;
     personal_user: User;
-    on_new_post?: Function;
+    on_new_post?: any;
 };
 
 const NewForumPost = (props: NewForumPostProps) => {

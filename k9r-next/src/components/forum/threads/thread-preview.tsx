@@ -33,7 +33,12 @@ const ThreadPreview = (props: ThreadPreviewProps) => {
 			const p = await getForumPostFromID(props.forum_thread.primary_post);
 			setPrimaryPost(p);
 		})();
-	}, []);
+	}, [
+		props.forum_thread.author,
+		props.forum_thread.created,
+		props.forum_thread.primary_post,
+		props.forum_thread.updated,
+	]);
 
 	return (
 		<div className={style.thread_preview}>

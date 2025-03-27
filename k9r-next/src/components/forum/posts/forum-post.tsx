@@ -20,7 +20,7 @@ import LikeDislike from "../like-dislike/like-dislike";
 type ForumPostProps = {
 	forum_post: ForumPost;
 	personal_user: User | null;
-	on_post_delete?: Function;
+	on_post_delete?: any;
 };
 
 const Post = (props: ForumPostProps) => {
@@ -46,7 +46,12 @@ const Post = (props: ForumPostProps) => {
 				setIsAuthor(a.id === props.personal_user.id);
 			}
 		})();
-	}, [props.forum_post.author]);
+	}, [
+		props.forum_post.author,
+		props.forum_post.created,
+		props.forum_post.updated,
+		props.personal_user,
+	]);
 
 	const toggleEdit = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
@@ -79,7 +84,6 @@ const Post = (props: ForumPostProps) => {
 		}
 	};
 
-
 	return (
 		<div className={style.forum_post} id={`post-${props.forum_post.id}`}>
 			{author !== null && <UserInfo user={author} />}
@@ -104,7 +108,7 @@ const Post = (props: ForumPostProps) => {
 						source={post.content || ""}
 					/>
 				)}
-				<LikeDislike 
+				<LikeDislike
 					target={props.forum_post}
 					like_endpoint={likePost}
 					personal_user={props.personal_user}

@@ -7,11 +7,7 @@ import { getAllForumSections } from "@/api/forum/api";
 import LoadingAlert from "@/components/loading/loading-alert";
 import Section from "./forum-section";
 
-type ForumSectionsProps = {
-
-};
-
-const ForumSections = (props: ForumSectionsProps) => {
+const ForumSections = () => {
     const [sections, setSections] = useState<ForumSection[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 

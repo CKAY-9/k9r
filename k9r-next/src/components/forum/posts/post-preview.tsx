@@ -32,7 +32,12 @@ const PostPreview = (props: PostPreviewProps) => {
 			const t = await getForumThreadFromID(props.forum_post.thread);
 			setThread(t);
 		})();
-	}, []);
+	}, [
+		props.forum_post.author,
+		props.forum_post.created,
+		props.forum_post.thread,
+		props.forum_post.updated,
+	]);
 
 	return (
 		<div className={style.post_preview}>

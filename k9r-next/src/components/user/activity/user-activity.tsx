@@ -15,31 +15,34 @@ type UserActivityProps = {
 };
 
 type PostProps = {
-    post: ForumPost;
+	post: ForumPost;
 };
 
 const Post = (props: PostProps) => {
-    const [topic, setTopic] = useState<ForumTopic | null>(null);
-    const [thread, setThread] = useState<ForumThread | null>(null);
+	const [topic, setTopic] = useState<ForumTopic | null>(null);
+	const [thread, setThread] = useState<ForumThread | null>(null);
 
-    useEffect(() => {
-        (async () => {
-            const th = await getForumThreadFromID(props.post.thread);
-            setThread(th);
+	useEffect(() => {
+		(async () => {
+			const th = await getForumThreadFromID(props.post.thread);
+			setThread(th);
 
-            if (th !== null) {
-                const to = await getForumTopicFromID(th.topic);
-                setTopic(to);
-            }
-        })();
-    }, []);
-
+			if (th !== null) {
+				const to = await getForumTopicFromID(th.topic);
+				setTopic(to);
+			}
+		})();
+	}, [props.post.thread]);
 
 	return (
 		<>
 			<Link
 				className={style.preview}
-				href={(thread !== null && topic !== null) ? `/forum/topic/${topic.id}/${thread.id}#post-${props.post.id}` : "/forum"}
+				href={
+					thread !== null && topic !== null
+						? `/forum/topic/${topic.id}/${thread.id}#post-${props.post.id}`
+						: "/forum"
+				}
 			>
 				<PostPreview forum_post={props.post} />
 			</Link>
@@ -60,7 +63,7 @@ const UserActivity = (props: UserActivityProps) => {
 			const ps = await getPostsPostedByUser(props.user.id);
 			setPosts(ps);
 		})();
-	}, []);
+	}, [props.user.id]);
 
 	const changeView = (e: BaseSyntheticEvent, new_view: number) => {
 		e.preventDefault();

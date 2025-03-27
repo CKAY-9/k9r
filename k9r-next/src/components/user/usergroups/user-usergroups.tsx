@@ -18,7 +18,7 @@ const UserUsergroups = (props: UserUsergroupsProps) => {
 			const us = await getUserUserGroupsFromID(props.user_id);
 			setUsergroups(us);
 		})();
-	}, []);
+	}, [props.user_id]);
 
 	return (
 		<>

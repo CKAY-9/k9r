@@ -83,7 +83,14 @@ const Thread = (props: ThreadProps) => {
 				setPersonalUsergroups(us);
 			}
 		})();
-	}, []);
+	}, [
+		props.thread.id,
+		props.personal_user,
+		props.thread.author,
+		props.thread.created,
+		props.thread.updated,
+		props.thread.primary_post,
+	]);
 
 	const onPostDelete = async (post_id: number) => {
 		setPosts(posts.filter((post, index) => post.id !== post_id));
