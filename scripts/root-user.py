@@ -62,7 +62,24 @@ def create_root_user():
             handle_command()
 
 def reset_root_token():
-    print("Not implemented")
+    with psycopg.connect(postgres_url) as connection:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM users WHERE oauth_type='root-root-user'")
+            check_result = cursor.fetchone()
+            
+            if check_result == None:
+                print("Root user doesn't exist. Can't reset token.")
+                handle_command()
+            
+            token_string = f"root-root-user{random.randint(0, 100_000_000_00)}{random.randint(0, 100_000_000_00)}{random.randint(0, 100_000_000_00)}"
+            token = hashlib.sha256(str.encode(token_string)).hexdigest()
+
+            cursor.execute(f"UPDATE users SET token='{token}' WHERE oauth_type='root-root-user'")
+            connection.commit()
+            
+            print(f"Updated root user token: {token}")
+            
+            handle_command()
 
 def delete_root_user():
     with psycopg.connect(postgres_url) as connection:
