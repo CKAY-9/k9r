@@ -1,0 +1,9 @@
+name: K9R-Minecraft
+version: '${project.version}'
+main: dev.ckay9.k9r.K9R
+api-version: 1.20.6
+authors: [ CKAY9 ]
+description: A plugin that allows communication between K9-Revive and Minecraft servers.
+commands:
+  k9r:
+    description: Manage the K9R plugin. 
