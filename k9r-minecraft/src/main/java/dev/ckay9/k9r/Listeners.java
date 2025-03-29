@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.google.gson.Gson;
 
@@ -23,6 +23,14 @@ class PlayerData {
         this.display_name = display_name;
         this.admin = admin;
     }
+}
+
+class PlayerMessage {
+    String uuid;
+    String username;
+    String display_name;
+    String message;
+    String world_name;
 }
 
 class RegularUpdate {
@@ -51,8 +59,8 @@ public class Listeners implements Listener {
                 Gson gson = new Gson();
                 String update_string = gson.toJson(update);
 
+                // TODO: move this into a dedicated function
                 Message message = new Message();
-                
                 message.sender = k9r.server_details.name + "-" + k9r.server_details.id;
                 message.server_key = k9r.server_key;
                 message.content = update_string;
@@ -64,7 +72,27 @@ public class Listeners implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
+        String chat_message = event.getMessage();
 
+        // TODO: move this into a dedicated function
+        PlayerMessage player_message = new PlayerMessage();
+        player_message.uuid = player.getUniqueId().toString();
+        player_message.username = player.getName();
+        player_message.display_name = player.getDisplayName();
+        player_message.message = chat_message;
+        player_message.world_name = player.getWorld().getName();
+
+        Gson gson = new Gson();
+        String player_message_string = gson.toJson(player_message, PlayerMessage.class);
+
+        Message message = new Message();
+        message.sender = k9r.server_details.name + "-" + k9r.server_details.id;
+        message.server_key = k9r.server_key;
+        message.content = player_message_string;
+        message.room = k9r.server_details.name + "-" + k9r.server_details.id;
+
+        k9r.socket_client.emit("player_chat", gson.toJson(message, Message.class));
     }
 }

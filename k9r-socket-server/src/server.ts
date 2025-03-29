@@ -45,6 +45,21 @@ io.on("connection", (socket: Socket) => {
 		io.to(parsed.room).emit("update_interval", data);
 	});
 
+	socket.on("player_chat", async (data: string) => {
+		let parsed = JSON.parse(data);
+		if (parsed.server_key === "") {
+			return;
+		}
+
+		let game_server = await getAuthorizedServer(parsed.server_key);
+		if (game_server === null) {
+			return;
+		}
+
+		parsed.server_key = "";
+		io.to(parsed.room).emit("player_chat", data);
+	});
+
 	socket.on("send_message", async (data: string) => {
 		let parsed = JSON.parse(data);
 		let game_server = await getAuthorizedServer(parsed.server_key);
