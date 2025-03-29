@@ -58,15 +58,7 @@ public class Listeners implements Listener {
                 update.player_count = Bukkit.getOnlinePlayers().size();
                 Gson gson = new Gson();
                 String update_string = gson.toJson(update);
-
-                // TODO: move this into a dedicated function
-                Message message = new Message();
-                message.sender = k9r.server_details.name + "-" + k9r.server_details.id;
-                message.server_key = k9r.server_key;
-                message.content = update_string;
-                message.room = k9r.server_details.name + "-" + k9r.server_details.id;
-            
-                k9r.socket_client.emit("update_interval", gson.toJson(message, Message.class));
+                k9r.sendSocketMessage("update_interval", update_string);
             }
         }, 0L, update_interval);
     }
@@ -76,7 +68,6 @@ public class Listeners implements Listener {
         Player player = event.getPlayer();
         String chat_message = event.getMessage();
 
-        // TODO: move this into a dedicated function
         PlayerMessage player_message = new PlayerMessage();
         player_message.uuid = player.getUniqueId().toString();
         player_message.username = player.getName();
@@ -86,13 +77,6 @@ public class Listeners implements Listener {
 
         Gson gson = new Gson();
         String player_message_string = gson.toJson(player_message, PlayerMessage.class);
-
-        Message message = new Message();
-        message.sender = k9r.server_details.name + "-" + k9r.server_details.id;
-        message.server_key = k9r.server_key;
-        message.content = player_message_string;
-        message.room = k9r.server_details.name + "-" + k9r.server_details.id;
-
-        k9r.socket_client.emit("player_chat", gson.toJson(message, Message.class));
+        k9r.sendSocketMessage("player_chat", player_message_string);
     }
 }

@@ -29,13 +29,30 @@ public class K9R extends JavaPlugin {
     public K9RServer server_details;
     Listeners listeners;
 
-    @Override
-    public void onEnable() {
-        Config.initializeConfigFiles();
-        websocket_uri = URI.create(Config.config.getString("k9r_websocket_host", "http://127.0.0.1:8081"));
-        api_uri = URI.create(Config.config.getString("k9r_api_host", "http://127.0.0.1:8080") + "/api/v1");
-        server_key = Config.config.getString("server_key");
+    public void connectToK9RSocket() {
+        if (server_details == null) {
+            this.getLogger().warning("!!! K9R REQUIRES A VALID SERVER KEY BEFORE CONNECTING !!!");
+            return;
+        }
 
+        IO.Options options = IO.Options.builder()
+                .build();
+
+        socket_client = IO.socket(websocket_uri, options);
+        socket_client.io().on(Manager.EVENT_OPEN, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                sendSocketMessage("join_room", "join-room");
+            }
+        });
+
+        socket_client.connect();
+
+        listeners = new Listeners(this);
+        this.getServer().getPluginManager().registerEvents(listeners, this);
+    }
+
+    public void getK9RServerDetails() {
         CloseableHttpClient http_client = HttpClients.createDefault();
         HttpGet get_request = new HttpGet(api_uri + "/game_server/auth");
         get_request.addHeader("Authorization", server_key);
@@ -45,12 +62,19 @@ public class K9R extends JavaPlugin {
 
         try {
             CloseableHttpResponse response = http_client.execute(get_request);
-            HttpEntity entity = response.getEntity();   
+            HttpEntity entity = response.getEntity();
 
             if (entity != null) {
                 String content = EntityUtils.toString(entity);
-                K9RServer server = gson.fromJson(content, K9RServer.class);
-                server_details = server;
+                this.getLogger().info("Response from authentication API: "+ content);
+
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    K9RServer server = gson.fromJson(content, K9RServer.class);
+                    server_details = server;
+                    return;
+                }
+
+                server_details = null;
             }
         } catch (UnsupportedEncodingException e) {
             Utils.getPlugin().getLogger().warning(e.toString());
@@ -60,40 +84,41 @@ public class K9R extends JavaPlugin {
             Utils.getPlugin().getLogger().warning(e.toString());
         } catch (JsonSyntaxException e) {
             Utils.getPlugin().getLogger().warning(e.toString());
-
-            server_details = new K9RServer();
-            server_details.id = -1;
-            server_details.name = "invalid-server-0";
-            server_details.description = "invalid server description";
         }
+    }
 
-        if (server_details == null) {
-            this.getLogger().warning("!!! K9R REQUIRES A VALID SERVER KEY BEFORE STARTING !!!");
-            return;
-        }
+    public void sendSocketMessage(String event, String content) {
+        Gson gson = new Gson();
+        Message message = new Message();
+        message.sender = this.server_details.name + "-" + this.server_details.id;
+        message.server_key = this.server_key;
+        message.room = this.server_details.name + "-" + this.server_details.id;
+        message.content = content;
+        this.socket_client.emit(event, gson.toJson(message, Message.class));
+    }
 
-        IO.Options options = IO.Options.builder()
-            .build();
-        
-        socket_client = IO.socket(websocket_uri, options);
-        socket_client.io().on(Manager.EVENT_OPEN, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                Message message = new Message();
+    public void sendSocketMessage(String event, String content, String room) {
+        Gson gson = new Gson();
+        Message message = new Message();
+        message.sender = this.server_details.name + "-" + this.server_details.id;
+        message.server_key = this.server_key;
+        message.room = room;
+        message.content = content;
+        this.socket_client.emit(event, gson.toJson(message, Message.class));
+    }
 
-                message.sender = server_details.name + "-" + server_details.id;
-                message.server_key = server_key;
-                message.content = "join-room";
-                message.room = server_details.name + "-" + server_details.id;
+    @Override
+    public void onEnable() {
+        Config.initializeConfigFiles();
+        websocket_uri = URI.create(Config.config.getString("k9r_websocket_host", "http://127.0.0.1:8081"));
+        api_uri = URI.create(Config.config.getString("k9r_api_host", "http://127.0.0.1:8080") + "/api/v1");
+        server_key = Config.config.getString("server_key");
 
-                socket_client.emit("join_room", gson.toJson(message));
-            }
-        });
+        this.getCommand("k9r").setExecutor(new K9RCommand(this));
+        this.getCommand("k9r").setTabCompleter(new K9RCompleter(this));
 
-        socket_client.connect();
-
-        listeners = new Listeners(this);
-        this.getServer().getPluginManager().registerEvents(listeners, this);
+        getK9RServerDetails();
+        connectToK9RSocket();
     }
 
     @Override

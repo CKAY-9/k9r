@@ -9,7 +9,7 @@ public class Config {
     public static File config_file;
     public static YamlConfiguration config;
 
-    public static void initializeConfigFiles() { 
+    public static void initializeConfigFiles() {
         try {
             config_file = new File(Utils.getPlugin().getDataFolder(), "config.yml");
             if (!config_file.exists()) {
@@ -39,6 +39,15 @@ public class Config {
                 config.set("update_interval", 3);
             }
 
+            config.save(config_file);
+        } catch (IOException ex) {
+            Utils.getPlugin().getLogger().warning(ex.toString());
+        }
+    }
+
+    public static void setConfig(String key, String value) {
+        try {
+            Config.config.set(key, value);
             config.save(config_file);
         } catch (IOException ex) {
             Utils.getPlugin().getLogger().warning(ex.toString());
