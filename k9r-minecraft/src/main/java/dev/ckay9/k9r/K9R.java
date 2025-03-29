@@ -90,6 +90,8 @@ public class K9R extends JavaPlugin {
             }
         });
 
+        socket_client.connect();
+
         listeners = new Listeners(this);
         this.getServer().getPluginManager().registerEvents(listeners, this);
     }
