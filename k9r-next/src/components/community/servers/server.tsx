@@ -52,9 +52,6 @@ const GameServerView = (props: GameServerProps) => {
 			}
 
 			setServerActive(true);
-			setTimeout(() => {
-				setServerActive(false);
-			}, 1000 * 60);
 		});
 
 		ws.current.on("player_chat", (data: string) => {
@@ -184,6 +181,16 @@ const GameServerView = (props: GameServerProps) => {
 							return <></>;
 						}
 					)}
+					<div className={style.chat_input}>
+						<input type="text" placeholder={`Send a message to ${props.game_server.name}`} />
+						<button className={style.send_button}>
+							<MaterialIcon 
+								src="/icons/send.svg"
+								alt="Send message"
+								size_rems={2}
+							/>
+						</button>
+					</div>
 				</section>
 			</div>
 		</div>
