@@ -43,7 +43,7 @@ const Section = (props: ForumSectionProps) => {
                         <>
                             {topics.map((topic, index) => {
                                 return (
-                                    <Link href={`/forum/topic/${topic.id}`} key={index + Math.random()}>
+                                    <Link className={style.topic_link} href={`/forum/topic/${topic.id}`} key={index + Math.random()}>
                                         <TopicPreview forum_topic={topic} />
                                     </Link>
                                 )

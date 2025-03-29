@@ -139,6 +139,7 @@ const UsersAdmin = () => {
 										);
 										setSelectedUser(user);
 									}}
+									style={{"padding": "0"}}
 								>
 									<UserPreview user={user} />
 								</button>
