@@ -24,9 +24,26 @@ const io = new Server(server, {
 io.on("connection", (socket: Socket) => {
 	console.log("A user connected:", socket.id);
 
-	socket.on("join_room", (room_id: RoomID) => {
+	socket.on("join_room", async (data: Message) => {
+		const room_id = data.room;
 		socket.join(room_id);
 		console.log(`User ${socket.id} joined room ${room_id}`);
+	});
+
+	socket.on("update_interval", async (data: Message) => {
+		console.log(data);
+
+		if (!data.server_key || data.server_key === "") {
+			return;
+		}
+
+		let game_server = await getAuthorizedServer(data.server_key);
+		if (game_server === null) {
+			return;
+		}
+
+		data.server_key = "";
+		io.to(data.room).emit("update_interval", data);
 	});
 
 	socket.on("send_message", async (data: Message) => {
@@ -35,14 +52,14 @@ io.on("connection", (socket: Socket) => {
 		if (data.server_key) {
 			game_server = await getAuthorizedServer(data.server_key);
 			if (game_server === null) {
-				return; // just ignore message
+				return;
 			}
 		}
 
 		if (game_server !== null) {
-			// Handle game server messages
+			
 		} else {
-			// user messages
+			
 		}
 
 		if (data.content === "active-users") {

@@ -1,4 +1,4 @@
-package dev.k9r;
+package dev.ckay9.k9r;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,6 +9,6 @@ public class Utils {
     }
 
     public static K9R getPlugin() {
-        return (K9R) Bukkit.getPluginManager().getPlugin("DuelCraft");
+        return (K9R) Bukkit.getPluginManager().getPlugin("K9R-Minecraft");
     }
 }

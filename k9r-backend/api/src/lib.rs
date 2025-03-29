@@ -15,27 +15,51 @@ use forum::{
         get_section, get_thread, get_topic, get_topic_threads, get_total_post_count,
         get_total_thread_count, thread_search,
     },
-    post::{like_post, like_thread, new_forum_post, new_forum_section, new_forum_thread, new_forum_topic},
-    put::{toggle_thread_lock, toggle_thread_sticky, update_all_sections, update_all_topics, update_post, update_thread},
+    post::{
+        like_post, like_thread, new_forum_post, new_forum_section, new_forum_thread,
+        new_forum_topic,
+    },
+    put::{
+        toggle_thread_lock, toggle_thread_sticky, update_all_sections, update_all_topics,
+        update_post, update_thread,
+    },
 };
-use game_servers::{delete::delete_game_server, get::{all_game_servers, get_authorized_server, get_game_server}, post::new_game_server, put::update_game_server};
+use game_servers::{
+    delete::delete_game_server,
+    get::{all_game_servers, get_authorized_server, get_game_server},
+    post::new_game_server,
+    put::update_game_server,
+};
 use middleware::permissions::{
-    authorized_game_server_middleware, community_management_middleware, create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_thread_middleware, forum_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware, valid_user_middleware
+    authorized_game_server_middleware, community_management_middleware, create_new_post_middleware,
+    create_new_thread_middleware, details_management_middleware, edit_post_middleware,
+    edit_thread_middleware, forum_management_middleware, thread_management_middleware,
+    user_management_middleware, usergroup_management_middleware, valid_user_middleware,
 };
-use user::{delete::remove_usergroup_from_user, get::{
-    get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
-    get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github, user_search,
-}, post::add_usergroup_to_user};
-use usergroup::{delete::delete_usergroup_by_id, get::{get_usergroup_by_id, get_usergroups}, post::new_usergroup, put::update_usergroup_by_id};
+use user::{
+    delete::remove_usergroup_from_user,
+    get::{
+        get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
+        get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github,
+        user_search,
+    },
+    post::add_usergroup_to_user,
+};
+use usergroup::{
+    delete::delete_usergroup_by_id,
+    get::{get_usergroup_by_id, get_usergroups},
+    post::new_usergroup,
+    put::update_usergroup_by_id,
+};
 
 pub mod community;
 pub mod forum;
+pub mod game_servers;
 pub mod middleware;
 pub mod models;
 pub mod permissions;
 pub mod user;
 pub mod usergroup;
-pub mod game_servers;
 
 pub fn configure_api(cfg: &mut web::ServiceConfig) {
     cfg.service(
@@ -44,7 +68,7 @@ pub fn configure_api(cfg: &mut web::ServiceConfig) {
             .configure(configure_user_routes)
             .configure(configure_usergroup_routes)
             .configure(configure_forum_routes)
-            .configure(configure_game_server_routes)
+            .configure(configure_game_server_routes),
     );
 }
 
@@ -100,25 +124,25 @@ fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
                         web::resource("/thread/{id}/like")
                             .wrap(from_fn(valid_user_middleware))
                             .route(web::post().to(like_thread))
-                            .guard(guard::Post())
+                            .guard(guard::Post()),
                     )
                     .service(
                         web::resource("/post/{id}/like")
                             .wrap(from_fn(valid_user_middleware))
                             .route(web::post().to(like_post))
-                            .guard(guard::Post())
+                            .guard(guard::Post()),
                     )
                     .service(
                         web::resource("/thread/{id}/lock")
                             .wrap(from_fn(thread_management_middleware))
                             .route(web::put().to(toggle_thread_lock))
-                            .guard(guard::Put())
+                            .guard(guard::Put()),
                     )
                     .service(
                         web::resource("/thread/{id}/sticky")
                             .wrap(from_fn(thread_management_middleware))
                             .route(web::put().to(toggle_thread_sticky))
-                            .guard(guard::Put())
+                            .guard(guard::Put()),
                     )
                     .service(
                         web::resource("/thread/{id}")
@@ -164,13 +188,13 @@ fn configure_user_routes(cfg: &mut web::ServiceConfig) {
                 web::resource("/{user_id}/add_usergroup/{usergroup_id}")
                     .wrap(from_fn(user_management_middleware))
                     .route(web::post().to(add_usergroup_to_user))
-                    .guard(guard::Post())   
+                    .guard(guard::Post()),
             )
             .service(
                 web::resource("/{user_id}/remove_usergroup/{usergroup_id}")
                     .wrap(from_fn(user_management_middleware))
                     .route(web::delete().to(remove_usergroup_from_user))
-                    .guard(guard::Delete())   
+                    .guard(guard::Delete()),
             )
             .service(get_personal_user)
             .service(get_user_usergroups_by_id),
@@ -185,52 +209,52 @@ fn configure_usergroup_routes(cfg: &mut web::ServiceConfig) {
             .service(
                 web::resource("")
                     .wrap(from_fn(usergroup_management_middleware))
-                    .route(web::post().to(new_usergroup)) 
-                    .guard(guard::Post())  
+                    .route(web::post().to(new_usergroup))
+                    .guard(guard::Post()),
             )
             .service(
                 web::resource("/{id}")
                     .wrap(from_fn(usergroup_management_middleware))
-                    .route(web::put().to(update_usergroup_by_id)) 
-                    .guard(guard::Put())  
+                    .route(web::put().to(update_usergroup_by_id))
+                    .guard(guard::Put()),
             )
             .service(
                 web::resource("/{id}")
                     .wrap(from_fn(usergroup_management_middleware))
                     .route(web::delete().to(delete_usergroup_by_id))
-                    .guard(guard::Delete())
-            )
+                    .guard(guard::Delete()),
+            ),
     );
 }
 
 fn configure_game_server_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/game_server")
-            .service(all_game_servers)
-            .service(get_game_server)
             .service(
                 web::resource("/auth")
                     .wrap(from_fn(authorized_game_server_middleware))
                     .route(web::get().to(get_authorized_server))
-                    .guard(guard::Get())   
+                    .guard(guard::Get()),
             )
+            .service(all_game_servers)
+            .service(get_game_server)
             .service(
                 web::resource("/{id}")
                     .wrap(from_fn(community_management_middleware))
                     .route(web::put().to(update_game_server))
-                    .guard(guard::Put())
+                    .guard(guard::Put()),
             )
             .service(
                 web::resource("/{id}")
                     .wrap(from_fn(community_management_middleware))
                     .route(web::delete().to(delete_game_server))
-                    .guard(guard::Delete())
+                    .guard(guard::Delete()),
             )
             .service(
                 web::resource("")
                     .wrap(from_fn(community_management_middleware))
                     .route(web::post().to(new_game_server))
-                    .guard(guard::Post())   
-            )
+                    .guard(guard::Post()),
+            ),
     );
 }

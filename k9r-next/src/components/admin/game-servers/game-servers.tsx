@@ -75,6 +75,10 @@ const GameServerEdit = (props: GameServerEditProps) => {
 					}}
 				/>
 			</section>
+			<section className={style.field}>
+				<label>Server Key</label>
+				<span>{props.game_server.server_key || ""} (TODO: Hide this)</span>
+			</section>
 			{props.game_server.id <= -1 ? (
 				<button
 					onClick={() => props.on_create(game_server, props.index)}

@@ -1,8 +1,7 @@
-import { Component } from "react";
 import style from "./container.module.scss";
 
 type ForumContainerProps = {
-    children: Component | any;
+    children: any;
 };
 
 const ForumContainer = (props: ForumContainerProps) => {

@@ -26,7 +26,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 	const searchParams = useSearchParams();
 	const tab = searchParams.get("tab");
 
-	const changeView = useCallback((view: number) => {
+	const changeView = (view: number) => {
 		switch (view) {
 			case 0:
 				router.push(pathname + "?" + "tab=forum");
@@ -50,7 +50,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				break;
 		}
 		props.set_view(view);
-	}, [pathname, props, router]);
+	}
 
 	useEffect(() => {
 		switch (tab) {
@@ -70,7 +70,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				changeView(4);
 				break;
 		}
-	}, [changeView, tab]);
+	}, []);
 
 	return (
 		<>
