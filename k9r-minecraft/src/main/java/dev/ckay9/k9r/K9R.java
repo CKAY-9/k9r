@@ -11,11 +11,16 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import dev.ckay9.k9r.Models.K9RServer;
+import dev.ckay9.k9r.Models.Message;
+import dev.ckay9.k9r.Models.PlayerChat;
+import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Manager;
 import io.socket.client.Socket;
@@ -46,6 +51,17 @@ public class K9R extends JavaPlugin {
             }
         });
 
+        socket_client.on("send_chat_message", args -> {
+            String data = (String)args[0];
+            this.getLogger().info(data);
+
+            Gson gson = new Gson();
+            Message parsed = gson.fromJson(data, Message.class);
+            PlayerChat chat_message = gson.fromJson(parsed.content, PlayerChat.class);
+
+            Bukkit.broadcastMessage(Utils.formatText("&1&l[K9R]&r &d<" + chat_message.display_name + ">&r " + chat_message.message));
+        });
+
         socket_client.connect();
 
         listeners = new Listeners(this);
@@ -66,7 +82,7 @@ public class K9R extends JavaPlugin {
 
             if (entity != null) {
                 String content = EntityUtils.toString(entity);
-                this.getLogger().info("Response from authentication API: "+ content);
+                this.getLogger().info("Response from authentication API: " + content);
 
                 if (response.getStatusLine().getStatusCode() == 200) {
                     K9RServer server = gson.fromJson(content, K9RServer.class);
@@ -123,6 +139,6 @@ public class K9R extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        this.socket_client.close();
     }
 }

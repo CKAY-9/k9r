@@ -109,6 +109,10 @@
 		display: flex;
 		flex: 1;
 
+		.input {
+			flex: 1;
+		}
+
 		.send_button {
 			padding: 0;
 			background-color: transparent;

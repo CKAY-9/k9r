@@ -4,10 +4,11 @@ import { CommunityDetails } from "@/api/community-details/models";
 import { GameServer, ServerMessage } from "@/api/game-servers/models";
 import { User } from "@/api/users/models";
 import style from "./servers.module.scss";
-import { useEffect, useRef, useState } from "react";
+import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
 import { K9R_WEBSOCKET_HOST } from "@/api/resources";
 import io from "socket.io-client";
 import MaterialIcon from "@/components/material-icon/material-icon";
+import { getCookie } from "@/utils/cookies";
 
 type GameServerProps = {
 	game_server: GameServer;
@@ -25,15 +26,16 @@ type MinecraftPlayerChatMessage = {
 
 const GameServerView = (props: GameServerProps) => {
 	const [background, setBackground] = useState<string>("");
-	const [_room_id, setRoomID] = useState<string>("");
 	const ws = useRef<SocketIOClient.Socket | null>(null);
 	const [player_count, setPlayerCount] = useState<number>(0);
 	const [server_active, setServerActive] = useState<boolean>(false);
+	const [chat_message, setChatMessage] = useState<string>("");
 	const [chat_messages, setChatMessages] = useState<
 		MinecraftPlayerChatMessage[] | any[]
 	>([]);
 
 	useEffect(() => {
+		const room = `${props.game_server.name}-${props.game_server.id}`;
 		if (props.game_server.game === "minecraft") {
 			setBackground("url(/games/minecraft_default.png)");
 		}
@@ -41,7 +43,7 @@ const GameServerView = (props: GameServerProps) => {
 		ws.current = io(K9R_WEBSOCKET_HOST);
 
 		ws.current.on("connect", () => {
-			joinRoom(`${props.game_server.name}-${props.game_server.id}`);
+			joinRoom(room);
 		});
 
 		ws.current.on("update_interval", (data: string) => {
@@ -81,18 +83,26 @@ const GameServerView = (props: GameServerProps) => {
 				content: "join-room",
 			})
 		);
-		setRoomID(room);
 	};
 
-	const _sendMessage = (message: string, room: string) => {
-		if (!ws.current) return;
+	const sendChatMessage = async (e: BaseSyntheticEvent) => {
+		if (!ws.current || props.personal_user === null || chat_message.length <= 0) return;
 		const message_data = {
-			room,
-			content: message,
+			room: `${props.game_server.name}-${props.game_server.id}`,
+			content: {
+				username: props.personal_user.username,
+				display_name: props.personal_user.display_name,
+				message: chat_message,
+			},
 			sender: ws.current.id,
-			server_key: "",
+			server_key: getCookie("token") || "",
 		};
-		ws.current.emit("send_message", JSON.stringify(message_data));
+		ws.current.emit("send_chat_message", JSON.stringify(message_data));
+		setChatMessage("");
+		const input_element: HTMLInputElement | null = (document.getElementById("minecraft_chat_input") as HTMLInputElement);
+		if (input_element !== null) {
+			input_element.value = "";
+		}
 	};
 
 	return (
@@ -181,16 +191,30 @@ const GameServerView = (props: GameServerProps) => {
 							return <></>;
 						}
 					)}
-					<div className={style.chat_input}>
-						<input type="text" placeholder={`Send a message to ${props.game_server.name}`} />
-						<button className={style.send_button}>
-							<MaterialIcon 
-								src="/icons/send.svg"
-								alt="Send message"
-								size_rems={2}
+					{props.personal_user !== null && (
+						<div className={style.chat_input}>
+							<input
+								type="text"
+								placeholder={`Send a message to ${props.game_server.name}`}
+								className={style.input}
+								defaultValue={chat_message}
+								onChange={(e: BaseSyntheticEvent) =>
+									setChatMessage(e.target.value)
+								}
+								id="minecraft_chat_input"
 							/>
-						</button>
-					</div>
+							<button
+								onClick={sendChatMessage}
+								className={style.send_button}
+							>
+								<MaterialIcon
+									src="/icons/send.svg"
+									alt="Send message"
+									size_rems={2}
+								/>
+							</button>
+						</div>
+					)}
 				</section>
 			</div>
 		</div>

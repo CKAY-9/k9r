@@ -1,7 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-import { getAuthorizedServer } from "./api";
+import { getAuthorizedServer, getPersonalUser } from "./api";
 
 type RoomID = string;
 type UserID = string;
@@ -58,6 +58,21 @@ io.on("connection", (socket: Socket) => {
 
 		parsed.server_key = "";
 		io.to(parsed.room).emit("player_chat", data);
+	});
+
+	socket.on("send_chat_message", async (data: string) => {
+		let parsed = JSON.parse(data);
+		if (parsed.server_key === "") {
+			return;
+		}
+
+		let user = await getPersonalUser(parsed.server_key);
+		if (user === null) {
+			return;
+		}
+
+		parsed.content = JSON.stringify(parsed.content);
+		io.to(parsed.room).emit("send_chat_message", JSON.stringify(parsed));
 	});
 
 	socket.on("send_message", async (data: string) => {
