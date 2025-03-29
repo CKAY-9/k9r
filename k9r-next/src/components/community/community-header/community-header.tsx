@@ -46,17 +46,24 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 
 	const joinRoom = (room: string) => {
 		if (!ws.current) return;
-		ws.current.emit("join_room", room);
+		const message_data = {
+			room,
+			content: room,
+			sender: ws.current.id,
+			server_key: ""
+		};
+		ws.current.emit("join_room", JSON.stringify(message_data));
 	};
 
 	const sendMessage = (message: string, room: string) => {
 		if (!ws.current) return;
-		const messageData = {
+		const message_data = {
 			room,
 			content: message,
 			sender: ws.current.id,
+			server_key: ""
 		};
-		ws.current.emit("send_message", messageData);
+		ws.current.emit("send_message", JSON.stringify(message_data));
 	};
 
 	return (

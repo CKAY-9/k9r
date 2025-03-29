@@ -7,3 +7,10 @@ export type GameServer = {
     host_address: string;
     latest_state: string;
 };
+
+export type ServerMessage = {
+    sender: string;
+    content: string;
+    server_key: string;
+    room: string;
+}

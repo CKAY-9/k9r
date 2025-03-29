@@ -42,6 +42,7 @@ public class Listeners implements Listener {
             public void run() {
                 // Regular update
                 RegularUpdate update = new RegularUpdate();
+                update.players = new ArrayList<>();
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     update.players.add(new PlayerData(player.getUniqueId().toString(), player.getName(), player.getDisplayName(), player.isOp()));
                 }

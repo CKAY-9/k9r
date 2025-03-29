@@ -1,11 +1,13 @@
 "use client";
 
 import { CommunityDetails } from "@/api/community-details/models";
-import { GameServer } from "@/api/game-servers/models";
+import { GameServer, ServerMessage } from "@/api/game-servers/models";
 import { User } from "@/api/users/models";
 import style from "./servers.module.scss";
 import { useEffect, useRef, useState } from "react";
 import { K9R_WEBSOCKET_HOST } from "@/api/resources";
+import io from "socket.io-client"
+import MaterialIcon from "@/components/material-icon/material-icon";
 
 type GameServerProps = {
 	game_server: GameServer;
@@ -17,6 +19,8 @@ const GameServerView = (props: GameServerProps) => {
 	const [background, setBackground] = useState<string>("");
 	const [_room_id, setRoomID] = useState<string>("");
 	const ws = useRef<SocketIOClient.Socket | null>(null);
+	const [player_count, setPlayerCount] = useState<number>(0);
+	const [server_active, setServerActive] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (props.game_server.game === "minecraft") {
@@ -26,13 +30,20 @@ const GameServerView = (props: GameServerProps) => {
 		ws.current = io(K9R_WEBSOCKET_HOST);
 
 		ws.current.on("connect", () => {
-			if (props.game_server.game === "minecraft") {
-                joinRoom(`minecraft-server-${props.game_server.id}`);
-            }
+            joinRoom(`${props.game_server.name}-${props.game_server.id}`);
 		});
 
-		ws.current.on("receive_message", (_data: string) => {
-			
+		ws.current.on("update_interval", (data: string) => {
+			let parsed: ServerMessage = JSON.parse(data);
+			if (props.game_server.game === "minecraft") {
+				let parsed_content = JSON.parse(parsed.content);
+				setPlayerCount(parsed_content.player_count)
+			}
+
+			setServerActive(true);
+			setTimeout(() => {
+				setServerActive(false);
+			}, 1000 * 60);
 		});
 
 		return () => {
@@ -43,18 +54,24 @@ const GameServerView = (props: GameServerProps) => {
 
 	const joinRoom = (room: string) => {
 		if (!ws.current) return;
-		ws.current.emit("join_room", room);
+		ws.current.emit("join_room", JSON.stringify({
+			room: room,
+			sender: props.personal_user?.id || -1,
+			server_key: "",
+			content: "join-room"
+		}));
 		setRoomID(room);
 	};
 
 	const _sendMessage = (message: string, room: string) => {
 		if (!ws.current) return;
-		const messageData = {
+		const message_data = {
 			room,
 			content: message,
 			sender: ws.current.id,
+			server_key: ""
 		};
-		ws.current.emit("send_message", messageData);
+		ws.current.emit("send_message", JSON.stringify(message_data));
 	};
 
 	return (
@@ -78,7 +95,33 @@ const GameServerView = (props: GameServerProps) => {
 					</section>
 				</div>
 			</div>
-			<div className="container"></div>
+			<div className="container">
+				<h2>Information</h2>
+				<section className={style.info}>
+					<div className={style.info_block}>
+						<section className={style.title}>
+							<MaterialIcon 
+								src="/icons/internet.svg"
+								alt="Online Players"
+								size_rems={2}
+							/>
+							<h4>Status</h4>
+						</section>
+						<span>{server_active ? "Online" : "Offline"}</span>
+					</div>
+					<div className={style.info_block}>
+						<section className={style.title}>
+							<MaterialIcon 
+								src="/icons/groups.svg"
+								alt="Online Players"
+								size_rems={2}
+							/>
+							<h4>Online Players</h4>
+						</section>
+						<span>{player_count}</span>
+					</div>
+				</section>
+			</div>
 		</div>
 	);
 };

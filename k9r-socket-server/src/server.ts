@@ -8,7 +8,7 @@ type UserID = string;
 type Message = {
 	room: RoomID;
 	sender: UserID;
-	server_key?: string;
+	server_key: string;
 	content: string;
 };
 
@@ -24,52 +24,40 @@ const io = new Server(server, {
 io.on("connection", (socket: Socket) => {
 	console.log("A user connected:", socket.id);
 
-	socket.on("join_room", async (data: Message) => {
-		const room_id = data.room;
+	socket.on("join_room", async (data: string) => {
+		let parsed = JSON.parse(data);
+		const room_id = parsed.room;
 		socket.join(room_id);
-		console.log(`User ${socket.id} joined room ${room_id}`);
 	});
 
-	socket.on("update_interval", async (data: Message) => {
-		console.log(data);
-
-		if (!data.server_key || data.server_key === "") {
+	socket.on("update_interval", async (data: string) => {
+		let parsed = JSON.parse(data);
+		if (parsed.server_key === "") {
 			return;
 		}
 
-		let game_server = await getAuthorizedServer(data.server_key);
+		let game_server = await getAuthorizedServer(parsed.server_key);
 		if (game_server === null) {
 			return;
 		}
 
-		data.server_key = "";
-		io.to(data.room).emit("update_interval", data);
+		parsed.server_key = "";
+		io.to(parsed.room).emit("update_interval", data);
 	});
 
-	socket.on("send_message", async (data: Message) => {
-		console.log(`Message received in room ${data.room}:`, data.content);
-		let game_server = null;
-		if (data.server_key) {
-			game_server = await getAuthorizedServer(data.server_key);
-			if (game_server === null) {
-				return;
-			}
-		}
-
+	socket.on("send_message", async (data: string) => {
+		let parsed = JSON.parse(data);
+		let game_server = await getAuthorizedServer(parsed.server_key);
 		if (game_server !== null) {
-			
-		} else {
-			
+			return;
 		}
 
-		if (data.content === "active-users") {
-            io.to(data.room).emit("receive_message", io.sockets.sockets.size)
-        }
+		if (parsed.content === "active-users") {
+			io.to(parsed.room).emit("receive_message", io.sockets.sockets.size);
+		}
 	});
 
-	socket.on("disconnect", () => {
-		console.log("User disconnected:", socket.id);
-	});
+	socket.on("disconnect", () => {});
 });
 
 const PORT = 8081;
