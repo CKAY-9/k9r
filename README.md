@@ -34,6 +34,37 @@ K9R offers a simple store service for your community. Whether it's just having a
 ### Self-Hosted
 K9R is meant to be self-hosted and isn't tied to any specific server or host. This allows you to setup K9R in whatever way you want.
 
+## How to use
+
+This will go over how to create a local enviornment. This will not show how to setup a dedicated server.
+
+### Frontend
+1. Setup your enviornment variables, see .env.example
+2. Run `npm install`
+3. Run `npm run build`
+4. Run `npm run start`
+
+Frontend is hosted by default on port 3000.
+
+### Backend
+1. Setup your enviornment variables, see .env.example
+2. Diesel Setup:
+    1. Ensure you have the enviornment variable `DATABASE_URL` setup 
+    2. `diesel setup` create postgresql database
+    3. `diesel migration run` generate postgresql tables
+3. Build k9r-backend with `cargo build --release`
+4. Run k9r-backend.exe
+
+Backend is hosted by default on port 8080.
+
+### Websocket Server
+1. Setup your enviornmental variables, see .env.example
+2. Run `npm install`
+3. Run `npm run build`
+4. Run `npm run start`
+
+Websocket host by default in on port 8081.
+
 ## Attribution
 
 Default details banner: https://commons.wikimedia.org/wiki/File:Backgorund.gif#, CC BY-SA 4.0 <https://creativecommons.org/licenses/by-sa/4.0>, via Wikimedia Commons

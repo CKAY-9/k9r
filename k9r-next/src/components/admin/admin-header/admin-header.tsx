@@ -55,22 +55,27 @@ const AdminHeader = (props: AdminHeaderProps) => {
 	useEffect(() => {
 		switch (tab) {
 			case "forum":
-				changeView(0);
+				router.push(pathname + "?" + "tab=forum");
+				document.title = `Manage Forum - ${props.community_details.name}`;
 				break;
 			case "details":
-				changeView(1);
+				router.push(pathname + "?" + "tab=details");
+				document.title = `Manage Details - ${props.community_details.name}`;
 				break;
 			case "usergroups":
-				changeView(2);
+				router.push(pathname + "?" + "tab=usergroups");
+				document.title = `Manage Usergroups - ${props.community_details.name}`;
 				break;
 			case "users":
-				changeView(3);
+				router.push(pathname + "?" + "tab=users");
+				document.title = `Manage Users - ${props.community_details.name}`;
 				break;
 			case "servers":
-				changeView(4);
+				router.push(pathname + "?" + "tab=servers");
+				document.title = `Manage Game Servers - ${props.community_details.name}`;
 				break;
 		}
-	}, []);
+	}, [tab, pathname, props.community_details.name, router]);
 
 	return (
 		<>

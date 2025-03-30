@@ -12,13 +12,14 @@ import { Metadata } from "next";
 export const generateMetadata = async ({
 	params,
 }: {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }): Promise<Metadata> => {
 	const details = await getCommunityDetails();
 
-	const server_id = Number.parseInt(params.id || "-1");
+	const { id } = await params;
+	const server_id = Number.parseInt(id || "-1");
 	const game_server = await getGameServerFromID(server_id);
 
 	if (game_server !== null) {
@@ -37,13 +38,14 @@ export const generateMetadata = async ({
 const GameServerPage = async ({
 	params,
 }: {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }) => {
 	const details = await getCommunityDetails();
 
-	const server_id = Number.parseInt(params.id || "-1");
+	const { id } = await params;
+	const server_id = Number.parseInt(id || "-1");
 	const game_server = await getGameServerFromID(server_id);
 
 	const user_token = await getStoredCookie("token");

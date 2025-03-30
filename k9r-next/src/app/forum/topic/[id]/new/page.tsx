@@ -13,9 +13,9 @@ import ForumHeader from "@/components/forum/header/forum-header";
 export const generateMetadata = async ({
 	params,
 }: {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }): Promise<Metadata> => {
 	const details = await getCommunityDetails();
 	await params;
@@ -28,9 +28,9 @@ export const generateMetadata = async ({
 const NewForumThreadPage = async ({
 	params,
 }: {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }) => {
 	const details = await getCommunityDetails();
 

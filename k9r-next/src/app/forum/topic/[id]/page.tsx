@@ -14,9 +14,9 @@ import Topic from "@/components/forum/topics/forum-topic";
 export const generateMetadata = async ({
 	params,
 }: {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }): Promise<Metadata> => {
 	const details = await getCommunityDetails();
 
@@ -39,9 +39,9 @@ export const generateMetadata = async ({
 const TopicPage = async ({
 	params,
 }: {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }) => {
 	const details = await getCommunityDetails();
 

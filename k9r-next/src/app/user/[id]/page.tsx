@@ -9,9 +9,9 @@ import { Metadata } from "next";
 import UserProfileClient from "./client";
 
 export const generateMetadata = async ({ params }: {
-    params: {
+    params: Promise<{
         id: string
-    }
+    }>
 }): Promise<Metadata> => {
     const details = await getCommunityDetails();
 
@@ -32,9 +32,9 @@ export const generateMetadata = async ({ params }: {
 }
 
 const UserPage = async ({ params }: {
-    params: {
+    params: Promise<{
         id: string
-    }
+    }>
 }) => {
     const details = await getCommunityDetails();
 

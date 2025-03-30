@@ -34,44 +34,6 @@ const GameServerView = (props: GameServerProps) => {
 		MinecraftPlayerChatMessage[] | any[]
 	>([]);
 
-	useEffect(() => {
-		const room = `${props.game_server.name}-${props.game_server.id}`;
-		if (props.game_server.game === "minecraft") {
-			setBackground("url(/games/minecraft_default.png)");
-		}
-
-		ws.current = io(K9R_WEBSOCKET_HOST);
-
-		ws.current.on("connect", () => {
-			joinRoom(room);
-		});
-
-		ws.current.on("update_interval", (data: string) => {
-			let parsed: ServerMessage = JSON.parse(data);
-			if (props.game_server.game === "minecraft") {
-				let parsed_content = JSON.parse(parsed.content);
-				setPlayerCount(parsed_content.player_count);
-			}
-
-			setServerActive(true);
-		});
-
-		ws.current.on("player_chat", (data: string) => {
-			let parsed: ServerMessage = JSON.parse(data);
-			if (props.game_server.game === "minecraft") {
-				let parsed_content: MinecraftPlayerChatMessage = JSON.parse(
-					parsed.content
-				);
-				setChatMessages((old) => [...old, parsed_content]);
-			}
-		});
-
-		return () => {
-			if (!ws.current) return;
-			ws.current.off("receive_message");
-		};
-	}, [props.game_server.game, props.game_server.id]);
-
 	const joinRoom = (room: string) => {
 		if (!ws.current) return;
 		ws.current.emit(
@@ -86,7 +48,12 @@ const GameServerView = (props: GameServerProps) => {
 	};
 
 	const sendChatMessage = async (e: BaseSyntheticEvent) => {
-		if (!ws.current || props.personal_user === null || chat_message.length <= 0) return;
+		if (
+			!ws.current ||
+			props.personal_user === null ||
+			chat_message.length <= 0
+		)
+			return;
 		const message_data = {
 			room: `${props.game_server.name}-${props.game_server.id}`,
 			content: {
@@ -99,11 +66,56 @@ const GameServerView = (props: GameServerProps) => {
 		};
 		ws.current.emit("send_chat_message", JSON.stringify(message_data));
 		setChatMessage("");
-		const input_element: HTMLInputElement | null = (document.getElementById("minecraft_chat_input") as HTMLInputElement);
+		const input_element: HTMLInputElement | null = document.getElementById(
+			"minecraft_chat_input"
+		) as HTMLInputElement;
 		if (input_element !== null) {
 			input_element.value = "";
 		}
 	};
+
+	useEffect(() => {
+		const room = `${props.game_server.name}-${props.game_server.id}`;
+		if (props.game_server.game === "minecraft") {
+			setBackground("url(/games/minecraft_default.png)");
+		}
+
+		ws.current = io(K9R_WEBSOCKET_HOST);
+
+		ws.current.on("connect", () => {
+			joinRoom(room);
+		});
+
+		ws.current.on("update_interval", (data: string) => {
+			const parsed: ServerMessage = JSON.parse(data);
+			if (props.game_server.game === "minecraft") {
+				const parsed_content = JSON.parse(parsed.content);
+				setPlayerCount(parsed_content.player_count);
+			}
+
+			setServerActive(true);
+		});
+
+		ws.current.on("player_chat", (data: string) => {
+			const parsed: ServerMessage = JSON.parse(data);
+			if (props.game_server.game === "minecraft") {
+				const parsed_content: MinecraftPlayerChatMessage = JSON.parse(
+					parsed.content
+				);
+				setChatMessages((old) => [...old, parsed_content]);
+			}
+		});
+
+		return () => {
+			if (!ws.current) return;
+			ws.current.off("receive_message");
+		};
+	}, [
+		props.game_server.game,
+		props.game_server.id,
+		joinRoom,
+		props.game_server.name,
+	]);
 
 	return (
 		<div className={style.server_container}>

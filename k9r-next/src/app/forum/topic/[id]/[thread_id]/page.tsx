@@ -12,10 +12,10 @@ import { Metadata } from "next";
 export const generateMetadata = async ({
 	params,
 }: {
-	params: {
+	params: Promise<{
 		id: string;
 		thread_id: string;
-	};
+	}>;
 }): Promise<Metadata> => {
     const details = await getCommunityDetails();
     
@@ -39,10 +39,10 @@ export const generateMetadata = async ({
 const ThreadPage = async ({
 	params,
 }: {
-	params: {
+	params: Promise<{
 		id: string;
 		thread_id: string;
-	};
+	}>;
 }) => {
     const details = await getCommunityDetails();
     

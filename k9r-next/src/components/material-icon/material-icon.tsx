@@ -11,7 +11,7 @@ const MaterialIcon = (props: MaterialIconProps) => {
     return (
         <>
             <Image 
-                src={props.src === "" ? null : props.src}
+                src={props.src === "" ? "/icon.png" : props.src}
                 alt={props.alt ? props.alt : `Material Icon (${props.src})`}
                 sizes="100%"
                 width={0}
