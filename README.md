@@ -49,7 +49,7 @@ K9R allows you to easily configure different usergroups and permissions through 
     <img src="./assets/showcase/game_integration_ig.png" height="200" width="auto" />
 </div>
 
-K9R, also being inspired by CxDashboard, comes with simple game mods/plugins for real-time websocket communicatio with K9R. These are used for real-time statistics, chat, commands, and fetching data from the K9R API.
+K9R, also being inspired by CxDashboard, comes with simple game mods/plugins for real-time websocket communication with K9R. These are used for real-time statistics, chat, commands, and fetching data from the K9R API.
 
 ### Store
 K9R offers a simple store service for your community. Whether it's just having a special usergroup, doing something in-game, or executing your own scripts, K9R store can do it. Implemented with Stripe API.
@@ -86,7 +86,7 @@ Backend is hosted by default on port 8080.
 3. Run `npm run build`
 4. Run `npm run start`
 
-Websocket host by default in on port 8081.
+Websocket server is hosted by default on port 8081.
 
 ## Attribution
 
