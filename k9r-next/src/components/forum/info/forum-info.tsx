@@ -49,7 +49,7 @@ const ForumInfo = (props: ForumInfoProps) => {
 
 		return () => {
 			if (!ws.current) return;
-			ws.current.off("receive_message");
+			ws.current.close();
 		};
 	}, []);
 

@@ -93,12 +93,12 @@
 	flex-direction: column;
 	gap: 1rem;
 
-	.minecraft_message {
+	.chat_message {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 
-		.player_data {
+		.user_data {
 			display: flex;
 			align-items: center;
 			gap: 1rem;

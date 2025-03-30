@@ -72,6 +72,7 @@ io.on("connection", (socket: Socket) => {
 		}
 
 		parsed.content = JSON.stringify(parsed.content);
+		parsed.server_key = "";
 		io.to(parsed.room).emit("send_chat_message", JSON.stringify(parsed));
 	});
 
@@ -81,7 +82,7 @@ io.on("connection", (socket: Socket) => {
 		if (game_server !== null) {
 			return;
 		}
-
+		
 		if (parsed.content === "active-users") {
 			io.to(parsed.room).emit("receive_message", io.sockets.sockets.size);
 		}

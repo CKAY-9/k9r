@@ -9,6 +9,8 @@ import { K9R_WEBSOCKET_HOST } from "@/api/resources";
 import io from "socket.io-client";
 import MaterialIcon from "@/components/material-icon/material-icon";
 import { getCookie } from "@/utils/cookies";
+import UserIcon from "@/components/user/user-icon/user-icon";
+import { getUserFromID } from "@/api/users/api";
 
 type GameServerProps = {
 	game_server: GameServer;
@@ -24,6 +26,41 @@ type MinecraftPlayerChatMessage = {
 	world_name: string;
 };
 
+type K9RChatMessage = {
+	id: number;
+	username: string;
+	display_name: string;
+	message: string;
+};
+
+type K9RMinecraftMessageProps = {
+	message: K9RChatMessage;
+};
+
+const K9RChatMessage = (props: K9RMinecraftMessageProps) => {
+	const [sender, setSender] = useState<User | null>(null);
+
+	useEffect(() => {
+		(async () => {
+			const s = await getUserFromID(props.message.id);
+			setSender(s);
+		})();
+	}, [props.message.id]);
+
+	return (
+		<div className={style.chat_message}>
+			<section className={style.user_data}>
+				{sender !== null && <UserIcon user={sender} size_rems={2} />}
+				<span>{props.message.display_name}</span>
+				<span style={{"opacity": "0.5"}}>[K9R]</span>
+			</section>
+			<section className={style.content}>
+				<p>{props.message.message}</p>
+			</section>
+		</div>
+	);
+};
+
 const GameServerView = (props: GameServerProps) => {
 	const [background, setBackground] = useState<string>("");
 	const ws = useRef<SocketIOClient.Socket | null>(null);
@@ -31,7 +68,7 @@ const GameServerView = (props: GameServerProps) => {
 	const [server_active, setServerActive] = useState<boolean>(false);
 	const [chat_message, setChatMessage] = useState<string>("");
 	const [chat_messages, setChatMessages] = useState<
-		MinecraftPlayerChatMessage[] | any[]
+		K9RChatMessage[] | MinecraftPlayerChatMessage[] | any[]
 	>([]);
 
 	const joinRoom = (room: string) => {
@@ -57,6 +94,7 @@ const GameServerView = (props: GameServerProps) => {
 		const message_data = {
 			room: `${props.game_server.name}-${props.game_server.id}`,
 			content: {
+				id: props.personal_user.id,
 				username: props.personal_user.username,
 				display_name: props.personal_user.display_name,
 				message: chat_message,
@@ -106,9 +144,19 @@ const GameServerView = (props: GameServerProps) => {
 			}
 		});
 
+		ws.current.on("send_chat_message", (data: string) => {
+			const parsed: ServerMessage = JSON.parse(data);
+			if (props.game_server.game === "minecraft") {
+				const parsed_content: K9RChatMessage = JSON.parse(
+					parsed.content
+				);
+				setChatMessages((old) => [...old, parsed_content]);
+			}
+		});
+
 		return () => {
 			if (!ws.current) return;
-			ws.current.off("receive_message");
+			ws.current.close();
 		};
 	}, [
 		props.game_server.game,
@@ -169,40 +217,41 @@ const GameServerView = (props: GameServerProps) => {
 					{chat_messages.length <= 0 && (
 						<span>No chat messages.</span>
 					)}
-					{chat_messages.map(
-						(
-							message: MinecraftPlayerChatMessage,
-							index: number
-						) => {
-							if (props.game_server.game === "minecraft") {
-								const msg =
-									message as MinecraftPlayerChatMessage;
-								return (
-									<div
-										key={index}
-										className={style.minecraft_message}
-									>
-										<section className={style.player_data}>
-											<MaterialIcon
-												src={`https://mc-heads.net/avatar/${msg.uuid}`}
-												alt="Player head"
-												size_rems={2}
-											/>
-											<span>{msg.display_name}</span>
-											<span style={{ opacity: "0.5" }}>
-												[{msg.world_name}]
-											</span>
-										</section>
-										<section className={style.content}>
-											<p>{msg.message}</p>
-										</section>
-									</div>
-								);
-							}
-
-							return <></>;
+					{chat_messages.map((message: any, index: number) => {
+						if (
+							props.game_server.game === "minecraft" &&
+							typeof message?.uuid === "string"
+						) {
+							const msg = message as MinecraftPlayerChatMessage;
+							return (
+								<div key={index} className={style.chat_message}>
+									<section className={style.user_data}>
+										<MaterialIcon
+											src={`https://mc-heads.net/avatar/${msg.uuid}`}
+											alt="Player head"
+											size_rems={2}
+										/>
+										<span>{msg.display_name}</span>
+										<span style={{ opacity: "0.5" }}>
+											[{msg.world_name}]
+										</span>
+									</section>
+									<section className={style.content}>
+										<p>{msg.message}</p>
+									</section>
+								</div>
+							);
 						}
-					)}
+
+						return (
+							<K9RChatMessage
+								key={index}
+								message={message as K9RChatMessage}
+							/>
+						);
+
+						return <></>;
+					})}
 					{props.personal_user !== null && (
 						<div className={style.chat_input}>
 							<input

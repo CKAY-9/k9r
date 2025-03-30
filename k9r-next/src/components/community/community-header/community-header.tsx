@@ -40,7 +40,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 
 		return () => {
 			if (!ws.current) return;
-			ws.current.off("receive_message");
+			ws.current.close();
 		};
 	}, []);
 
