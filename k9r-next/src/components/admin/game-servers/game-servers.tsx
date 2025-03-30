@@ -24,6 +24,12 @@ const GameServerEdit = (props: GameServerEditProps) => {
 		props.game_server
 	);
 
+	const copyServerKey = (e: BaseSyntheticEvent) => {
+		e.preventDefault();
+		navigator.clipboard.writeText(props.game_server.server_key);
+		alert("Copied server key to clipboard.");
+	};
+
 	return (
 		<div className={style.server}>
 			<section className={style.field}>
@@ -76,8 +82,7 @@ const GameServerEdit = (props: GameServerEditProps) => {
 				/>
 			</section>
 			<section className={style.field}>
-				<label>Server Key</label>
-				<span>{props.game_server.server_key || ""} (TODO: Hide this)</span>
+				<button onClick={copyServerKey}>Copy Server Key</button>
 			</section>
 			{props.game_server.id <= -1 ? (
 				<button
@@ -180,6 +185,7 @@ const GameServersAdmin = () => {
 					with your game servers. Supported game(s): Minecraft
 				</span>
 			</section>
+			<button onClick={generateNewGameServer}>New Server</button>
 			<div className={style.servers}>
 				{game_servers.map((game_server, index) => {
 					return (
@@ -193,7 +199,6 @@ const GameServersAdmin = () => {
 						/>
 					);
 				})}
-				<button onClick={generateNewGameServer}>New Server</button>
 			</div>
 		</div>
 	);

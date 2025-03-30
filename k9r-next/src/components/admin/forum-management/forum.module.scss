@@ -23,6 +23,10 @@
     padding: 1rem;
     gap: 1rem;
     flex: 1;
+
+    button {
+        width: fit-content;
+    }
 }
 
 .sections, .topics {
@@ -30,6 +34,10 @@
     flex-direction: row;
     gap: 1rem;
     flex-wrap: wrap;
+    
+    button {
+        width: 100%;
+    }
 }
 
 .edit {

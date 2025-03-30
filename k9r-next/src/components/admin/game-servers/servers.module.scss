@@ -6,6 +6,10 @@
     border-radius: 1rem;
     background-color: var(--foreground);
     box-shadow: var(--shdw1);
+
+    button {
+        width: fit-content;
+    }
 }
 
 .servers {
@@ -23,6 +27,10 @@
     background-color: var(--accent);
     box-shadow: var(--shdw1);
     border-radius: 1rem;
+
+    button {
+        width: 100%;
+    }
 }
 
 .field {
