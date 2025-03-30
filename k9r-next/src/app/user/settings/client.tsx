@@ -3,8 +3,9 @@
 import { User } from "@/api/users/models";
 import style from "./settings.module.scss";
 import { BaseSyntheticEvent, useState } from "react";
-import { updateUserByToken } from "@/api/users/api";
-import { getCookie } from "@/utils/cookies";
+import { deleteUser, updateUserByToken } from "@/api/users/api";
+import { eraseCookie, getCookie } from "@/utils/cookies";
+import { deleteAllUserPosts, deleteAllUserThreads } from "@/api/forum/api";
 
 type UserSettingsPageClientProps = {
 	personal_user: User;
@@ -28,6 +29,28 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 
 		}
     }
+
+	const deleteThreads = async (e: BaseSyntheticEvent) => {
+		e.preventDefault();
+
+		const _response = await deleteAllUserThreads(getCookie("token") || "");
+	}
+
+	const deletePosts = async (e: BaseSyntheticEvent) => {
+		e.preventDefault();
+		
+		const _response = await deleteAllUserPosts(getCookie("token") || "");
+	}
+
+	const deleteAccount = async (e: BaseSyntheticEvent) => {
+		e.preventDefault();
+		
+		const response = await deleteUser(getCookie("token") || "");
+		if (response) {
+			eraseCookie("token");
+			window.location.href = "/user/login";
+		}
+	}
 
 	return (
 		<>
@@ -66,9 +89,10 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
                 <button onClick={updateAccount}>Update</button>
 			</section>
             <section className={style.settings_section}>
-				<h2>Activity</h2>
-                <button>Delete all posts</button>
-                <button>Delete all threads</button>
+				<h2>Dangerous</h2>
+                <button onClick={deletePosts}>Delete all posts</button>
+                <button onClick={deleteThreads}>Delete all threads</button>
+				<button onClick={deleteAccount}>Delete account</button>
 			</section>
 		</>
 	);

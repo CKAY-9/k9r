@@ -32,7 +32,7 @@ use middleware::permissions::{
     authorized_game_server_middleware, community_management_middleware, create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_profile_middleware, edit_thread_middleware, forum_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware, valid_user_middleware
 };
 use user::{
-    delete::remove_usergroup_from_user,
+    delete::{delete_all_user_posts, delete_all_user_threads, delete_user, remove_usergroup_from_user},
     get::{
         get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
         get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github,
@@ -198,6 +198,24 @@ fn configure_user_routes(cfg: &mut web::ServiceConfig) {
                     .wrap(from_fn(edit_profile_middleware))
                     .route(web::put().to(update_user)) 
                     .guard(guard::Put())  
+            )
+            .service(
+                web::resource("/threads")
+                    .wrap(from_fn(edit_thread_middleware))
+                    .route(web::delete().to(delete_all_user_threads))
+                    .guard(guard::Delete())
+            )
+            .service(
+                web::resource("/posts")
+                    .wrap(from_fn(edit_thread_middleware))
+                    .route(web::delete().to(delete_all_user_posts))
+                    .guard(guard::Delete())
+            )
+            .service(
+                web::resource("/delete")
+                    .wrap(from_fn(valid_user_middleware))
+                    .route(web::delete().to(delete_user))
+                    .guard(guard::Delete())
             )
             .service(get_user_usergroups_by_id),
     );

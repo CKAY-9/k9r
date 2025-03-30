@@ -415,3 +415,37 @@ export const likeThread = async (
 		return null;
 	}
 };
+
+export const deleteAllUserThreads = async (
+	token: string
+): Promise<boolean> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/user/threads`,
+			method: "DELETE",
+			headers: {
+				Authorization: token,
+			},
+		});
+		return true;
+	} catch {
+		return false;
+	}
+};
+
+export const deleteAllUserPosts = async (
+	token: string
+): Promise<boolean> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/user/posts`,
+			method: "DELETE",
+			headers: {
+				Authorization: token,
+			},
+		});
+		return true;
+	} catch {
+		return false;
+	}
+};

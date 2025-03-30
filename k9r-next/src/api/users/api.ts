@@ -132,3 +132,20 @@ export const updateUserByToken = async (
 		return null;
 	}
 };
+
+export const deleteUser = async (
+	token: string
+): Promise<boolean> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/user/delete`,
+			method: "DELETE",
+			headers: {
+				Authorization: token,
+			},
+		});
+		return true;
+	} catch {
+		return false;
+	}
+};

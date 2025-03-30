@@ -1,8 +1,7 @@
 use actix_web::{web, HttpMessage, HttpRequest, HttpResponse};
 use k9r_db::{
     crud::{
-        usergroups::get_usergroup_from_id,
-        users::{get_user_from_id, update_user_from_id},
+        forum_posts::{delete_forum_post_from_id, get_forum_posts_from_user_id}, forum_threads::{delete_forum_thread_from_id, get_forum_threads_from_user_id}, usergroups::get_usergroup_from_id, users::{delete_user_from_id, get_user_from_id, update_user_from_id}
     },
     models::{NewUser, User},
 };
@@ -58,5 +57,84 @@ pub async fn remove_usergroup_from_user(
         None => HttpResponse::BadRequest().json(Message {
             message: "Failed to update user".to_string(),
         }),
+    }
+}
+
+pub async fn delete_all_user_threads(
+    request: HttpRequest
+) -> HttpResponse {
+    let user = match request.extensions().get::<User>().cloned() {
+        Some(user) => user,
+        None => {
+            return HttpResponse::Unauthorized().json(Message {
+                message: "Failed to get user".to_string(),
+            })
+        }
+    };
+
+    let threads = get_forum_threads_from_user_id(user.id);
+    for thread in threads.iter() {
+        delete_forum_thread_from_id(thread.id);
+    }
+
+    HttpResponse::Ok().json(Message {
+        message: "Deleted threads".to_string()
+    })
+}
+
+pub async fn delete_all_user_posts(
+    request: HttpRequest
+) -> HttpResponse {
+    let user = match request.extensions().get::<User>().cloned() {
+        Some(user) => user,
+        None => {
+            return HttpResponse::Unauthorized().json(Message {
+                message: "Failed to get user".to_string(),
+            })
+        }
+    };
+
+    let posts = get_forum_posts_from_user_id(user.id);
+    for post in posts.iter() {
+        delete_forum_post_from_id(post.id);
+    }
+
+    HttpResponse::Ok().json(Message {
+        message: "Deleted posts".to_string()
+    })
+}
+
+pub async fn delete_user(
+    request: HttpRequest
+) -> HttpResponse {
+    let user = match request.extensions().get::<User>().cloned() {
+        Some(user) => user,
+        None => {
+            return HttpResponse::Unauthorized().json(Message {
+                message: "Failed to get user".to_string(),
+            })
+        }
+    };
+    match delete_user_from_id(user.id) {
+        true => {
+            let posts = get_forum_posts_from_user_id(user.id);
+            for post in posts.iter() {
+                delete_forum_post_from_id(post.id);
+            }
+        
+            let threads = get_forum_threads_from_user_id(user.id);
+            for thread in threads.iter() {
+                delete_forum_thread_from_id(thread.id);
+            }
+
+            HttpResponse::Ok().json(Message {
+                message: "Deleted user".to_string()
+            })
+        }
+        false => {
+            HttpResponse::BadRequest().json(Message {
+                message: "Failed to delete user".to_string()
+            })
+        }
     }
 }
