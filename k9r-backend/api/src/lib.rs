@@ -11,9 +11,7 @@ use community::{get::get_community_details, put::update_community_details};
 use forum::{
     delete::{delete_post, delete_thread},
     get::{
-        all_forum_sections, all_section_topics, all_topics, get_post, get_posts_in_thread,
-        get_section, get_thread, get_topic, get_topic_threads, get_total_post_count,
-        get_total_thread_count, thread_search,
+        all_forum_sections, all_section_topics, all_topics, get_latest_thread_in_topic, get_post, get_posts_in_thread, get_section, get_thread, get_topic, get_topic_threads, get_total_post_count, get_total_thread_count, thread_search
     },
     post::{
         like_post, like_thread, new_forum_post, new_forum_section, new_forum_thread,
@@ -99,6 +97,7 @@ fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
             .service(get_thread)
             .service(get_post)
             .service(get_posts_in_thread)
+            .service(get_latest_thread_in_topic)
             .service(get_topic_threads)
             .service(
                 web::scope("")

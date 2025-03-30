@@ -1,4 +1,4 @@
-use actix_web::{get, web, HttpRequest, HttpResponse, Responder};
+use actix_web::{get, web, HttpRequest, HttpResponse};
 use k9r_db::crud::{
     forum_posts::{get_all_forum_posts, get_forum_post_from_id, get_forum_posts_in_forum_thread},
     forum_sections::{get_all_forum_sections, get_forum_section_from_id},
@@ -6,7 +6,7 @@ use k9r_db::crud::{
         get_all_forum_threads, get_forum_thread_from_id, get_threads_in_forum_topic,
         search_threads_with_page,
     },
-    forum_topics::{get_all_forum_topics, get_forum_topic_from_id, get_forum_topics_from_section},
+    forum_topics::{get_all_forum_topics, get_forum_topic_from_id, get_forum_topics_from_section, get_latest_forum_thread_in_forum_topic_from_id},
 };
 
 use crate::{
@@ -17,114 +17,130 @@ use crate::{
 #[get("/section")]
 pub async fn all_forum_sections(
     _request: HttpRequest,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+) -> HttpResponse {
     let sections = get_all_forum_sections();
-    Ok(HttpResponse::Ok().json(sections))
+    HttpResponse::Ok().json(sections)
 }
 
 #[get("/topic")]
 pub async fn all_topics(
     _request: HttpRequest,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+) -> HttpResponse {
     let topics = get_all_forum_topics();
-    Ok(HttpResponse::Ok().json(topics))
+    HttpResponse::Ok().json(topics)
 }
 
 #[get("/section/{id}")]
 pub async fn get_section(
     path: web::Path<(i32,)>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+) -> HttpResponse {
     let section_id = path.into_inner().0;
     match get_forum_section_from_id(section_id) {
-        Some(s) => Ok(HttpResponse::Ok().json(s)),
-        None => Ok(HttpResponse::NotFound().json(Message {
+        Some(s) => HttpResponse::Ok().json(s),
+        None => HttpResponse::NotFound().json(Message {
             message: "Failed to get section".to_string(),
-        })),
+        }),
     }
 }
 
 #[get("/section/{id}/topics")]
 pub async fn all_section_topics(
     path: web::Path<(i32,)>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+) -> HttpResponse {
     let section_id = path.into_inner().0;
     let topics = get_forum_topics_from_section(section_id);
 
-    Ok(HttpResponse::Ok().json(topics))
+    HttpResponse::Ok().json(topics)
 }
 
 #[get("/topic/{id}")]
 pub async fn get_topic(
     path: web::Path<(i32,)>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+) -> HttpResponse {
     let topic_id = path.into_inner().0;
     match get_forum_topic_from_id(topic_id) {
-        Some(t) => Ok(HttpResponse::Ok().json(t)),
-        None => Ok(HttpResponse::NotFound().json(Message {
+        Some(t) => HttpResponse::Ok().json(t),
+        None => HttpResponse::NotFound().json(Message {
             message: "Failed to get topic".to_string(),
-        })),
+        }),
+    }
+}
+
+#[get("/topic/{id}/latest_thread")]
+pub async fn get_latest_thread_in_topic(
+    path: web::Path<(i32,)>,
+) -> HttpResponse {
+    match get_latest_forum_thread_in_forum_topic_from_id(path.into_inner().0) {
+        Some(thread) => {
+            HttpResponse::Ok().json(thread)
+        }
+        None => {
+            HttpResponse::NotFound().json(Message {
+                message: "Failed to get latest thread".to_string()
+            })
+        }
     }
 }
 
 #[get("/topic/{id}/threads")]
 pub async fn get_topic_threads(
     path: web::Path<(i32,)>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+) -> HttpResponse {
     let topic_id = path.into_inner().0;
     let threads = get_threads_in_forum_topic(topic_id);
-    Ok(HttpResponse::Ok().json(threads))
+    HttpResponse::Ok().json(threads)
 }
 
 #[get("/thread/count")]
-pub async fn get_total_thread_count() -> Result<impl Responder, Box<dyn std::error::Error>> {
+pub async fn get_total_thread_count() -> HttpResponse {
     let threads = get_all_forum_threads();
-    Ok(HttpResponse::Ok().json(ThreadCount {
+    HttpResponse::Ok().json(ThreadCount {
         threads: threads.len(),
-    }))
+    })
 }
 
 #[get("/thread/{id}")]
 pub async fn get_thread(
     path: web::Path<(i32,)>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+) -> HttpResponse {
     match get_forum_thread_from_id(path.into_inner().0) {
-        Some(thread) => Ok(HttpResponse::Ok().json(thread)),
-        None => Ok(HttpResponse::NotFound().json(Message {
+        Some(thread) => HttpResponse::Ok().json(thread),
+        None => HttpResponse::NotFound().json(Message {
             message: "Failed to get thread".to_string(),
-        })),
+        }),
     }
 }
 
 #[get("/thread/{id}/posts")]
 pub async fn get_posts_in_thread(
     path: web::Path<(i32,)>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+) -> HttpResponse {
     let posts = get_forum_posts_in_forum_thread(path.into_inner().0);
-    Ok(HttpResponse::Ok().json(posts))
+    HttpResponse::Ok().json(posts)
 }
 
 #[get("/thread/search")]
 pub async fn thread_search(
     query: web::Query<SearchModel>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+) -> HttpResponse {
     let query_results = search_threads_with_page(query.search.clone(), query.page as i64);
-    Ok(HttpResponse::Ok().json(query_results))
+    HttpResponse::Ok().json(query_results)
 }
 
 #[get("/post/{id}")]
 pub async fn get_post(
     path: web::Path<(i32,)>,
-) -> Result<impl Responder, Box<dyn std::error::Error>> {
+) -> HttpResponse {
     match get_forum_post_from_id(path.into_inner().0) {
-        Some(post) => Ok(HttpResponse::Ok().json(post)),
-        None => Ok(HttpResponse::NotFound().json(Message {
+        Some(post) => HttpResponse::Ok().json(post),
+        None => HttpResponse::NotFound().json(Message {
             message: "Failed to get post".to_string(),
-        })),
+        }),
     }
 }
 
 #[get("/post/count")]
-pub async fn get_total_post_count() -> Result<impl Responder, Box<dyn std::error::Error>> {
+pub async fn get_total_post_count() -> HttpResponse {
     let posts = get_all_forum_posts();
-    Ok(HttpResponse::Ok().json(PostCount { posts: posts.len() }))
+    HttpResponse::Ok().json(PostCount { posts: posts.len() })
 }

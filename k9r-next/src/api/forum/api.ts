@@ -68,6 +68,18 @@ export const getAllForumTopics = async (): Promise<ForumTopic[]> => {
 	}
 };
 
+export const getLatestForumThreadInForumTopic = async (topic_id: number): Promise<ForumThread | null> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/topic/${topic_id}/latest_thread`,
+			method: "GET",
+		});
+		return request.data;
+	} catch {
+		return null;
+	}
+};
+
 export const getForumSectionFromID = async (
 	section_id: number
 ): Promise<ForumSection | null> => {
@@ -180,6 +192,7 @@ export const getForumThreadsInForumTopicFromID = async (
 			url: `${K9R_API}/forum/topic/${topic_id}/threads`,
 			method: "GET",
 		});
+		console.log(request.data);
 		return request.data;
 	} catch {
 		return [];
@@ -195,7 +208,7 @@ export const getForumThreadFromID = async (
 			method: "GET",
 		});
 		return request.data;
-	} catch {
+	} catch (ex) {
 		return null;
 	}
 };

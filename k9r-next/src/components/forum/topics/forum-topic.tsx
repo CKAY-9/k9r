@@ -6,10 +6,9 @@ import style from "./topics.module.scss";
 import MaterialIcon from "@/components/material-icon/material-icon";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getForumThreadsInForumTopicFromID } from "@/api/forum/api";
+import { getForumThreadsInForumTopicFromID, getLatestForumThreadInForumTopic } from "@/api/forum/api";
 import LoadingAlert from "@/components/loading/loading-alert";
 import ThreadPreview from "../threads/thread-preview";
-import TopicPreview from "./topic-preview";
 
 type TopicProps = {
 	personal_user: User | null;
@@ -19,7 +18,7 @@ type TopicProps = {
 const Topic = (props: TopicProps) => {
 	const [threads, setThreads] = useState<ForumThread[]>([]);
 	const [loading_threads, setLoadingThreads] = useState<boolean>(true);
-
+	
 	useEffect(() => {
 		(async () => {
 			const ts = await getForumThreadsInForumTopicFromID(props.forum_topic.id);
