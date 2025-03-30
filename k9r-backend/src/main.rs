@@ -1,9 +1,16 @@
 use std::time::SystemTime;
 
 use actix_cors::Cors;
-use actix_web::{App, HttpServer};
+use actix_web::{middleware::Logger, web, App, HttpServer};
 use dotenvy::dotenv;
-use k9r_api::{configure_api, permissions::{CREATE_NEW_POSTS, CREATE_NEW_THREADS, DEFAULT_COMMUNITY_ACCESS, EDIT_POSTS, EDIT_PROFILE, EDIT_THREADS, ROOT_ACCESS}};
+use k9r_api::{
+    configure_api,
+    permissions::{
+        CREATE_NEW_POSTS, CREATE_NEW_THREADS, DEFAULT_COMMUNITY_ACCESS, EDIT_POSTS, EDIT_PROFILE,
+        EDIT_THREADS, ROOT_ACCESS,
+    },
+    storage::{setup_storage, AppState},
+};
 use k9r_db::{
     crud::{
         community_details::{create_community_details, get_community_details_from_id},
@@ -169,13 +176,20 @@ fn initialize_k9r() {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
-
     initialize_k9r();
 
-    HttpServer::new(|| {
+    let storage = setup_storage().await;
+
+    HttpServer::new(move || {
         let cors = Cors::permissive();
 
-        App::new().wrap(cors).configure(configure_api)
+        App::new()
+            .app_data(web::Data::new(AppState {
+                storage: storage.clone(),
+            }))
+            .wrap(cors)
+            .wrap(Logger::default())
+            .configure(configure_api)
     })
     .bind(("0.0.0.0", 8080))?
     .run()

@@ -75,8 +75,11 @@ Frontend is hosted by default on port 3000.
     1. Ensure you have the enviornment variable `DATABASE_URL` setup 
     2. `diesel setup` create postgresql database
     3. `diesel migration run` generate postgresql tables
-3. Build k9r-backend with `cargo build --release`
-4. Run k9r-backend.exe
+3. S3 Setup:
+    1. To enable AWS S3 for files, change your K9R_STORAGE_TYPE variable to s3
+    2. Ensure you have cmake and other required build tools for s3 (<a href="https://docs.rs/aws-sdk-s3/latest/aws_sdk_s3/">Docs</a>)
+4. Build k9r-backend with `cargo build --release`
+5. Run k9r-backend.exe
 
 Backend is hosted by default on port 8080.
 

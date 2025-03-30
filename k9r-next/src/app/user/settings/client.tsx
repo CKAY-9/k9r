@@ -6,6 +6,7 @@ import { BaseSyntheticEvent, useState } from "react";
 import { deleteUser, updateUserByToken } from "@/api/users/api";
 import { eraseCookie, getCookie } from "@/utils/cookies";
 import { deleteAllUserPosts, deleteAllUserThreads } from "@/api/forum/api";
+import ImageUpload from "@/components/image-upload/image-upload";
 
 type UserSettingsPageClientProps = {
 	personal_user: User;
@@ -18,12 +19,18 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 	const [description, setDescription] = useState<string>(
 		props.personal_user.description || ""
 	);
+	const [avatar_url, setAvatarURL] = useState<string>(
+		props.personal_user.avatar || ""
+	)
 
-    const updateAccount = async (e: BaseSyntheticEvent) => {
-		e.preventDefault();
+    const updateAccount = async (e?: BaseSyntheticEvent) => {
+		if (e) {
+			e.preventDefault();
+		}
 
 		props.personal_user.display_name = display_name;
 		props.personal_user.description = description;
+		props.personal_user.avatar = avatar_url;
 		const response = await updateUserByToken(props.personal_user, getCookie("token") || "");
 		if (response !== null) {
 
@@ -43,13 +50,17 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 	}
 
 	const deleteAccount = async (e: BaseSyntheticEvent) => {
-		e.preventDefault();
 		
 		const response = await deleteUser(getCookie("token") || "");
 		if (response) {
 			eraseCookie("token");
 			window.location.href = "/user/login";
 		}
+	}
+
+	const avatarUpdate = (new_url: string) => {
+		setAvatarURL(new_url);
+		updateAccount();
 	}
 
 	return (
@@ -83,8 +94,8 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 					/>
 				</section>
                 <section className={style.setting}>
-					<label>Profile Picture</label>
-					<span>TODO: Add file uploading...</span>
+					<label>Avatar</label>
+					<ImageUpload on_upload={avatarUpdate} default_image_url={props.personal_user.avatar} />
 				</section>
                 <button onClick={updateAccount}>Update</button>
 			</section>

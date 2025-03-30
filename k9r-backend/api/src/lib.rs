@@ -11,7 +11,9 @@ use community::{get::get_community_details, put::update_community_details};
 use forum::{
     delete::{delete_post, delete_thread},
     get::{
-        all_forum_sections, all_section_topics, all_topics, get_latest_thread_in_topic, get_post, get_posts_in_thread, get_section, get_thread, get_topic, get_topic_threads, get_total_post_count, get_total_thread_count, thread_search
+        all_forum_sections, all_section_topics, all_topics, get_latest_thread_in_topic, get_post,
+        get_posts_in_thread, get_section, get_thread, get_topic, get_topic_threads,
+        get_total_post_count, get_total_thread_count, thread_search,
     },
     post::{
         like_post, like_thread, new_forum_post, new_forum_section, new_forum_thread,
@@ -29,16 +31,27 @@ use game_servers::{
     put::update_game_server,
 };
 use middleware::permissions::{
-    authorized_game_server_middleware, community_management_middleware, create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_profile_middleware, edit_thread_middleware, forum_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware, valid_user_middleware
+    authorized_game_server_middleware, community_management_middleware, create_new_post_middleware,
+    create_new_thread_middleware, details_management_middleware, edit_post_middleware,
+    edit_profile_middleware, edit_thread_middleware, forum_management_middleware,
+    thread_management_middleware, user_management_middleware, usergroup_management_middleware,
+    valid_user_middleware,
+};
+use storage::{
+    get::{get_file, get_file_url},
+    post::save_file,
 };
 use user::{
-    delete::{delete_all_user_posts, delete_all_user_threads, delete_user, remove_usergroup_from_user},
+    delete::{
+        delete_all_user_posts, delete_all_user_threads, delete_user, remove_usergroup_from_user,
+    },
     get::{
         get_personal_user, get_posts_posted_by_user, get_threads_posted_by_user, get_user_by_id,
         get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github,
         user_search,
     },
-    post::add_usergroup_to_user, put::update_user,
+    post::add_usergroup_to_user,
+    put::update_user,
 };
 use usergroup::{
     delete::delete_usergroup_by_id,
@@ -53,6 +66,7 @@ pub mod game_servers;
 pub mod middleware;
 pub mod models;
 pub mod permissions;
+pub mod storage;
 pub mod user;
 pub mod usergroup;
 
@@ -63,6 +77,7 @@ pub fn configure_api(cfg: &mut web::ServiceConfig) {
             .configure(configure_user_routes)
             .configure(configure_usergroup_routes)
             .configure(configure_forum_routes)
+            .configure(configure_storage_routes)
             .configure(configure_game_server_routes),
     );
 }
@@ -77,6 +92,15 @@ fn configure_community_routes(cfg: &mut web::ServiceConfig) {
                     .route(web::put().to(update_community_details))
                     .guard(guard::Put()),
             ),
+    );
+}
+
+fn configure_storage_routes(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::scope("/storage")
+            .service(web::resource("/upload").route(web::post().to(save_file)))
+            .service(web::resource("/files/{filename}").route(web::get().to(get_file)))
+            .service(web::resource("/file-url/{filename}").route(web::get().to(get_file_url))),
     );
 }
 
@@ -196,26 +220,26 @@ fn configure_user_routes(cfg: &mut web::ServiceConfig) {
             .service(
                 web::resource("")
                     .wrap(from_fn(edit_profile_middleware))
-                    .route(web::put().to(update_user)) 
-                    .guard(guard::Put())  
+                    .route(web::put().to(update_user))
+                    .guard(guard::Put()),
             )
             .service(
                 web::resource("/threads")
                     .wrap(from_fn(edit_thread_middleware))
                     .route(web::delete().to(delete_all_user_threads))
-                    .guard(guard::Delete())
+                    .guard(guard::Delete()),
             )
             .service(
                 web::resource("/posts")
                     .wrap(from_fn(edit_thread_middleware))
                     .route(web::delete().to(delete_all_user_posts))
-                    .guard(guard::Delete())
+                    .guard(guard::Delete()),
             )
             .service(
                 web::resource("/delete")
                     .wrap(from_fn(valid_user_middleware))
                     .route(web::delete().to(delete_user))
-                    .guard(guard::Delete())
+                    .guard(guard::Delete()),
             )
             .service(get_user_usergroups_by_id),
     );
