@@ -29,10 +29,7 @@ use game_servers::{
     put::update_game_server,
 };
 use middleware::permissions::{
-    authorized_game_server_middleware, community_management_middleware, create_new_post_middleware,
-    create_new_thread_middleware, details_management_middleware, edit_post_middleware,
-    edit_thread_middleware, forum_management_middleware, thread_management_middleware,
-    user_management_middleware, usergroup_management_middleware, valid_user_middleware,
+    authorized_game_server_middleware, community_management_middleware, create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_profile_middleware, edit_thread_middleware, forum_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware, valid_user_middleware
 };
 use user::{
     delete::remove_usergroup_from_user,
@@ -41,7 +38,7 @@ use user::{
         get_user_count, get_user_usergroups_by_id, login_with_discord, login_with_github,
         user_search,
     },
-    post::add_usergroup_to_user,
+    post::add_usergroup_to_user, put::update_user,
 };
 use usergroup::{
     delete::delete_usergroup_by_id,
@@ -196,6 +193,12 @@ fn configure_user_routes(cfg: &mut web::ServiceConfig) {
                     .guard(guard::Delete()),
             )
             .service(get_personal_user)
+            .service(
+                web::resource("")
+                    .wrap(from_fn(edit_profile_middleware))
+                    .route(web::put().to(update_user)) 
+                    .guard(guard::Put())  
+            )
             .service(get_user_usergroups_by_id),
     );
 }

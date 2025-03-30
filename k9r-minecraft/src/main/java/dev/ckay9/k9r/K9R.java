@@ -20,7 +20,6 @@ import com.google.gson.JsonSyntaxException;
 import dev.ckay9.k9r.Models.K9RServer;
 import dev.ckay9.k9r.Models.Message;
 import dev.ckay9.k9r.Models.PlayerChat;
-import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Manager;
 import io.socket.client.Socket;

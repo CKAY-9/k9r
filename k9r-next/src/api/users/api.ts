@@ -113,3 +113,22 @@ export const getPostsPostedByUser = async (
 		return [];
 	}
 };
+
+export const updateUserByToken = async (
+	user: User,
+	token: string
+): Promise<User | null> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/user`,
+			method: "PUT",
+			headers: {
+				Authorization: token,
+			},
+			data: user,
+		});
+		return request.data;
+	} catch {
+		return null;
+	}
+};

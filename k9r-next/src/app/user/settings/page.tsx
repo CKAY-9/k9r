@@ -7,6 +7,7 @@ import { getPersonalUser } from "@/api/users/api";
 import Header from "@/components/header/header";
 import Footer from "@/components/footer/footer";
 import { redirect } from "next/navigation";
+import UserSettingsPageClient from "./client";
 
 export const generateMetadata = async (): Promise<Metadata> => {
     const details = await getCommunityDetails();
@@ -29,8 +30,8 @@ const UserSettingsPage = async () => {
 	return (
 		<>
             <Header personal_user={personal_user} community_details={details} />
-            <main className="container">
-                
+            <main className="container" style={{"gap": "1rem"}}>
+                <UserSettingsPageClient personal_user={personal_user} />
             </main>
             <Footer community_details={details} />
 		</>
