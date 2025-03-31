@@ -38,6 +38,7 @@ use middleware::permissions::{
     valid_user_middleware,
 };
 use storage::{
+    delete::delete_file,
     get::{get_file, get_file_url},
     post::save_file,
 };
@@ -98,7 +99,18 @@ fn configure_community_routes(cfg: &mut web::ServiceConfig) {
 fn configure_storage_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/storage")
-            .service(web::resource("/upload").route(web::post().to(save_file)))
+            .service(
+                web::resource("/upload")
+                    .wrap(from_fn(valid_user_middleware))
+                    .route(web::post().to(save_file))
+                    .guard(guard::Post()),   
+            )        
+            .service(
+                web::resource("/delete/{filename}")
+                    .wrap(from_fn(valid_user_middleware))
+                    .route(web::delete().to(delete_file))
+                    .guard(guard::Delete()),
+            )
             .service(web::resource("/files/{filename}").route(web::get().to(get_file)))
             .service(web::resource("/file-url/{filename}").route(web::get().to(get_file_url))),
     );

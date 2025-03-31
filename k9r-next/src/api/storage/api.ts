@@ -22,9 +22,27 @@ export const uploadFile = async (
 	}
 };
 
+export const deleteFile = async (
+	filename: string,
+	token: string
+): Promise<any> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/storage/delete/${filename}`,
+			method: "DELETE",
+			headers: {
+				Authorization: token
+			}
+		});
+        return request.data;
+	} catch {
+		return null;
+	}
+};
+
 export const getFile = async (
 	filename: string,
-): Promise<any> => {
+): Promise<ImageResponse | null> => {
 	try {
 		const request = await axios({
 			url: `${K9R_API}/storage/files/${filename}`,

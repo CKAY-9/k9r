@@ -1,7 +1,7 @@
 "use client";
 
 import { K9R_API } from "@/api/resources";
-import { uploadFile } from "@/api/storage/api";
+import { deleteFile, getFile, getFileURL, uploadFile } from "@/api/storage/api";
 import { getCookie } from "@/utils/cookies";
 import Image from "next/image";
 import { BaseSyntheticEvent, useState } from "react";
@@ -10,6 +10,7 @@ import style from "./upload.module.scss";
 type ImageUploadProps = {
 	default_image_url?: string;
 	on_upload?: any;
+	on_remove?: any;
 	width?: number;
 	height?: number;
 };
@@ -47,21 +48,44 @@ const ImageUpload = (props: ImageUploadProps) => {
 		}
 	};
 
+	const handleDelete = async (e: BaseSyntheticEvent) => {
+		e.preventDefault();
+
+		if (!image_url) return;
+
+		const url_split = image_url.split("files/")[1];
+		if (!url_split) return;
+
+		const response = await deleteFile(url_split, getCookie("token") || "");
+
+		if (response) {
+			setImageUrl(null);
+			if (props.on_remove) {
+				props.on_remove();
+			}
+		}
+	};
+
 	return (
 		<div className={style.container}>
 			{image_url && (
-				<div>
-					<Image
-						src={image_url}
-						style={{"objectFit": "cover"}}
-						alt="Uploaded preview"
-						onError={(e: BaseSyntheticEvent) => {
-							e.target.src = "/icon.png";
-						}}
-						width={props.width || 128}
-						height={props.height || 128}
-					/>
-				</div>
+				<>
+					{props.on_remove && (
+						<button onClick={handleDelete}>Remove Image</button>
+					)}
+					<div>
+						<Image
+							src={image_url}
+							style={{ objectFit: "cover" }}
+							alt="Uploaded preview"
+							onError={(e: BaseSyntheticEvent) => {
+								e.target.src = "/icon.png";
+							}}
+							width={props.width || 128}
+							height={props.height || 128}
+						/>
+					</div>
+				</>
 			)}
 			<input
 				type="file"

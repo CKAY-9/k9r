@@ -1,6 +1,11 @@
 "use client";
 
-import { getAllForumSections, getAllForumTopics, updateAllSections, updateAllTopics } from "@/api/forum/api";
+import {
+	getAllForumSections,
+	getAllForumTopics,
+	updateAllSections,
+	updateAllTopics,
+} from "@/api/forum/api";
 import { ForumSection, ForumTopic } from "@/api/forum/models";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./forum.module.scss";
@@ -45,8 +50,11 @@ const Sections = (props: SectionsProps) => {
 		if (e) {
 			e.preventDefault();
 		}
-		
-		const update = await updateAllSections(sections, getCookie("token") || "");
+
+		const update = await updateAllSections(
+			sections,
+			getCookie("token") || ""
+		);
 		props.set_sections(update);
 		setSections(update);
 	};
@@ -101,10 +109,17 @@ const Sections = (props: SectionsProps) => {
 							</section>
 							<section className={style.field}>
 								<label>Icon</label>
-								<ImageUpload on_upload={(new_url: string) => {
-									sections[index].icon = new_url;
-									updateSections();
-								}} default_image_url={sections[index].icon} />
+								<ImageUpload
+									on_remove={() => {
+										sections[index].icon = "";
+										updateSections();
+									}}
+									on_upload={(new_url: string) => {
+										sections[index].icon = new_url;
+										updateSections();
+									}}
+									default_image_url={sections[index].icon}
+								/>
 							</section>
 							<section className={style.field}>
 								<label>Sort Order</label>
@@ -139,9 +154,7 @@ const Sections = (props: SectionsProps) => {
 };
 
 const Topics = (props: TopicsProps) => {
-	const [topics, setTopics] = useState<ForumTopic[]>(
-		props.forum_topics
-	);
+	const [topics, setTopics] = useState<ForumTopic[]>(props.forum_topics);
 
 	const generateNewTopic = (e: BaseSyntheticEvent) => {
 		e.preventDefault();
@@ -162,7 +175,7 @@ const Topics = (props: TopicsProps) => {
 
 	const updateTopics = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
-		
+
 		const update = await updateAllTopics(topics, getCookie("token") || "");
 		props.set_topics(update);
 		setTopics(update);
@@ -172,14 +185,14 @@ const Topics = (props: TopicsProps) => {
 		setTopics(topics.filter((v, i) => i !== index));
 	};
 
-    if (props.forum_sections.length <= 0) {
-        return (
-            <div className={style.content}>
-                <h2>Topics</h2>
-                <span>A section must exist before you can create a topic!</span>
-            </div>
-        )
-    }
+	if (props.forum_sections.length <= 0) {
+		return (
+			<div className={style.content}>
+				<h2>Topics</h2>
+				<span>A section must exist before you can create a topic!</span>
+			</div>
+		);
+	}
 
 	return (
 		<div className={style.content}>
@@ -229,20 +242,32 @@ const Topics = (props: TopicsProps) => {
 								<label>Icon</label>
 								<span>TODO: Add file uploading</span>
 							</section>
-                            <section className={style.field}>
-                                <label>Section</label>
-                                <select defaultValue={topic.section} onChange={(e: BaseSyntheticEvent) => {
-                                    topics[index].section = Number.parseInt(e.target.value);
-                                    setTopics(topics);
-                                }}>
+							<section className={style.field}>
+								<label>Section</label>
+								<select
+									defaultValue={topic.section}
+									onChange={(e: BaseSyntheticEvent) => {
+										topics[index].section = Number.parseInt(
+											e.target.value
+										);
+										setTopics(topics);
+									}}
+								>
 									<option value=""></option>
-                                    {props.forum_sections.map((section, index) => {
-                                        return (
-                                            <option value={section.id} key={index + Math.random()}>{section.name}</option>
-                                        )
-                                    })}
-                                </select>
-                            </section>
+									{props.forum_sections.map(
+										(section, index) => {
+											return (
+												<option
+													value={section.id}
+													key={index + Math.random()}
+												>
+													{section.name}
+												</option>
+											);
+										}
+									)}
+								</select>
+							</section>
 							<button
 								onClick={() => {
 									removeTopic(index);
@@ -270,7 +295,7 @@ const ForumManagementAdmin = () => {
 		(async () => {
 			const s = await getAllForumSections();
 			setSections(s);
-			
+
 			const t = await getAllForumTopics();
 			setTopics(t);
 
@@ -287,7 +312,7 @@ const ForumManagementAdmin = () => {
 			<div className={style.container}>
 				<LoadingAlert />
 			</div>
-		)
+		);
 	}
 
 	return (

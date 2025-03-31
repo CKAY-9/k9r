@@ -1,10 +1,12 @@
 use std::sync::Arc;
-pub mod get;
-pub mod post;
 use async_trait::async_trait;
 use aws_sdk_s3::{primitives::ByteStream, Client};
 use k9r_utils::get_env_var;
 use thiserror::Error;
+
+pub mod get;
+pub mod post;
+pub mod delete;
 
 #[derive(Error, Debug)]
 pub enum StorageError {
@@ -21,6 +23,7 @@ pub trait StorageBackend: Send + Sync {
     async fn save_file(&self, data: Vec<u8>, filename: &str) -> Result<String, StorageError>;
     async fn get_file(&self, filename: &str) -> Result<Vec<u8>, StorageError>;
     async fn get_file_url(&self, filename: &str) -> Option<String>;
+    async fn delete_file(&self, filename: &str) -> Result<(), StorageError>;
 }
 
 pub struct LocalStorage {
@@ -48,6 +51,15 @@ impl StorageBackend for LocalStorage {
 
     async fn get_file_url(&self, filename: &str) -> Option<String> {
         Some(format!("/files/{}", filename))
+    }
+
+    async fn delete_file(&self, filename: &str) -> Result<(), StorageError> {
+        let path = std::path::Path::new(&self.base_path).join(filename);
+        tokio::fs::remove_file(&path).await.map_err(|e| match e.kind() {
+            std::io::ErrorKind::NotFound => StorageError::NotFound,
+            std::io::ErrorKind::PermissionDenied => StorageError::PermissionDenied,
+            _ => StorageError::Unknown(e.to_string()),
+        })
     }
 }
 
@@ -98,6 +110,17 @@ impl StorageBackend for S3Storage {
         self.public_url_base
             .as_ref()
             .map(|base| format!("{}/{}", base, filename))
+    }
+
+    async fn delete_file(&self, filename: &str) -> Result<(), StorageError> {
+        self.client
+            .delete_object()
+            .bucket(&self.bucket_name)
+            .key(filename)
+            .send()
+            .await
+            .map_err(|e| StorageError::Unknown(e.to_string()))?;
+        Ok(())
     }
 }
 
