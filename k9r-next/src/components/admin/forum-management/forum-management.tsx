@@ -6,6 +6,7 @@ import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./forum.module.scss";
 import { getCookie } from "@/utils/cookies";
 import LoadingAlert from "@/components/loading/loading-alert";
+import ImageUpload from "@/components/image-upload/image-upload";
 
 type SectionsProps = {
 	forum_sections: ForumSection[];
@@ -40,8 +41,11 @@ const Sections = (props: SectionsProps) => {
 		]);
 	};
 
-	const updateSections = async (e: BaseSyntheticEvent) => {
-		e.preventDefault();
+	const updateSections = async (e?: BaseSyntheticEvent) => {
+		if (e) {
+			e.preventDefault();
+		}
+		
 		const update = await updateAllSections(sections, getCookie("token") || "");
 		props.set_sections(update);
 		setSections(update);
@@ -97,7 +101,10 @@ const Sections = (props: SectionsProps) => {
 							</section>
 							<section className={style.field}>
 								<label>Icon</label>
-								<span>TODO: Add file uploading</span>
+								<ImageUpload on_upload={(new_url: string) => {
+									sections[index].icon = new_url;
+									updateSections();
+								}} default_image_url={sections[index].icon} />
 							</section>
 							<section className={style.field}>
 								<label>Sort Order</label>
