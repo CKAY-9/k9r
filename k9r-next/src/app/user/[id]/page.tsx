@@ -47,7 +47,7 @@ const UserPage = async ({ params }: {
     return (
         <>
             <Header community_details={details} personal_user={personal_user} />
-            <main className="container">
+            <main className="container" style={{"background": `url(${user?.banner})`}}>
                 {user === null ? (
                     <h1>Failed to find user with specified ID</h1>
                 ) : (

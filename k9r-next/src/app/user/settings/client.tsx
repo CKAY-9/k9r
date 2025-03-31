@@ -22,6 +22,9 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 	const [avatar_url, setAvatarURL] = useState<string>(
 		props.personal_user.avatar || ""
 	)
+	const [banner_url, setBannerURL] = useState<string>(
+		props.personal_user.banner || ""
+	)
 
     const updateAccount = async (e?: BaseSyntheticEvent) => {
 		if (e) {
@@ -31,6 +34,7 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 		props.personal_user.display_name = display_name;
 		props.personal_user.description = description;
 		props.personal_user.avatar = avatar_url;
+		props.personal_user.banner = banner_url;
 		const response = await updateUserByToken(props.personal_user, getCookie("token") || "");
 		if (response !== null) {
 
@@ -60,6 +64,11 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 
 	const avatarUpdate = (new_url: string) => {
 		setAvatarURL(new_url);
+		updateAccount();
+	}
+
+	const bannerUpdate = (new_url: string) => {
+		setBannerURL(new_url);
 		updateAccount();
 	}
 
@@ -96,6 +105,10 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
                 <section className={style.setting}>
 					<label>Avatar</label>
 					<ImageUpload on_upload={avatarUpdate} default_image_url={props.personal_user.avatar} />
+				</section>
+				<section className={style.setting}>
+					<label>Banner</label>
+					<ImageUpload on_upload={bannerUpdate} default_image_url={props.personal_user.banner} />
 				</section>
                 <button onClick={updateAccount}>Update</button>
 			</section>

@@ -11,7 +11,7 @@ type UserContainerProps = {
 const UserContainer = (props: UserContainerProps) => {
     return (
         <>
-            <div className={style.user_container}>
+            <div className={style.user_container} style={{"backgroundColor": props.user.banner.length >= 1 ? "rgb(0, 0, 0, 0.75)" : "initial"}}>
                 {props.children}
             </div>
         </>

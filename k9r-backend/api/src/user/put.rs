@@ -16,6 +16,7 @@ pub async fn update_user((request, body): (HttpRequest, web::Json<User>)) -> Htt
     user.display_name = body.display_name.clone();
     user.description = body.description.clone();
     user.avatar = body.avatar.clone();
+    user.banner = body.banner.clone();
 
     let update =
         serde_json::from_str::<NewUser>(serde_json::to_string(&user).unwrap().as_str()).unwrap();
