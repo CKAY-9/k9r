@@ -71,10 +71,6 @@ pub async fn login_with_discord(
     // Check if a user already exists with OAuth provider
     if user_option.is_some() {
         let mut user = user_option.unwrap();
-        user.avatar = format!(
-            "https://cdn.discordapp.com/avatars/{}/{}",
-            user_response_parsed.id, user_response_parsed.avatar
-        );
         user.username = user_response_parsed.global_name;
         let update: NewUser =
             serde_json::from_str(serde_json::to_string(&user).unwrap().as_str()).unwrap();
@@ -169,7 +165,6 @@ pub async fn login_with_github(
 
     if user.is_some() {
         let mut user_unwrap = user.unwrap();
-        user_unwrap.avatar = user_response_parsed.avatar_url.clone();
         user_unwrap.username = user_response_parsed.login;
         let update: NewUser =
             serde_json::from_str(serde_json::to_string(&user_unwrap).unwrap().as_str()).unwrap();

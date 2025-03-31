@@ -3,12 +3,17 @@
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./details.module.scss";
 import { getCookie } from "@/utils/cookies";
-import LoadingAlert from "@/components/loading/loading-alert"
+import LoadingAlert from "@/components/loading/loading-alert";
 import { CommunityDetails } from "@/api/community-details/models";
-import { getCommunityDetails, updateCommunityDetails } from "@/api/community-details/api";
+import {
+	getCommunityDetails,
+	updateCommunityDetails,
+} from "@/api/community-details/api";
+import ImageUpload from "@/components/image-upload/image-upload";
 
 const CommunityDetailsAdmin = () => {
-	const [community_details, setCommunityDetails] = useState<CommunityDetails | null>(null);
+	const [community_details, setCommunityDetails] =
+		useState<CommunityDetails | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -20,26 +25,42 @@ const CommunityDetailsAdmin = () => {
 		})();
 	}, []);
 
-	const updateDetails = async (e: BaseSyntheticEvent) => {
-		e.preventDefault();
+	const updateDetails = async (e?: BaseSyntheticEvent) => {
+		if (e) {
+			e.preventDefault();
+		}
 
 		if (community_details === null) {
 			return;
 		}
 
-		console.log(community_details);
-		const response = await updateCommunityDetails(getCookie("token") || "", community_details);
+		const response = await updateCommunityDetails(
+			getCookie("token") || "",
+			community_details
+		);
 		if (response !== null) {
 			setCommunityDetails(response);
 		}
-	}
+	};
+
+	const iconUpdate = (new_url: string) => {
+		if (community_details === null) return;
+		community_details.icon = new_url;
+		updateDetails();
+	};
+
+	const bannerUpdate = (new_url: string) => {
+		if (community_details === null) return;
+		community_details.banner = new_url;
+		updateDetails();
+	};
 
 	if (loading || community_details === null) {
 		return (
 			<div className={style.container}>
 				<LoadingAlert />
 			</div>
-		)
+		);
 	}
 
 	return (
@@ -47,25 +68,35 @@ const CommunityDetailsAdmin = () => {
 			<h2>Community Details</h2>
 			<section className={style.edit}>
 				<label>Name</label>
-				<input type="text" onChange={(e: BaseSyntheticEvent) => {
-					community_details.name = e.target.value;
-					setCommunityDetails(community_details);
-				}} placeholder="Community Name" defaultValue={community_details.name} />
+				<input
+					type="text"
+					onChange={(e: BaseSyntheticEvent) => {
+						community_details.name = e.target.value;
+						setCommunityDetails(community_details);
+					}}
+					placeholder="Community Name"
+					defaultValue={community_details.name}
+				/>
 			</section>
 			<section className={style.edit}>
 				<label>Description</label>
-				<textarea rows={5} onChange={(e: BaseSyntheticEvent) => {
-					community_details.description = e.target.value;
-					setCommunityDetails(community_details);
-				}} placeholder="Community Name" defaultValue={community_details.description} />
+				<textarea
+					rows={5}
+					onChange={(e: BaseSyntheticEvent) => {
+						community_details.description = e.target.value;
+						setCommunityDetails(community_details);
+					}}
+					placeholder="Community Name"
+					defaultValue={community_details.description}
+				/>
 			</section>
 			<section className={style.edit}>
 				<label>Icon</label>
-				<input type="file" />
+				<ImageUpload default_image_url={`${community_details.icon}`} on_upload={iconUpdate} />
 			</section>
 			<section className={style.edit}>
 				<label>Banner</label>
-				<input type="file" />
+				<ImageUpload default_image_url={`${community_details.banner}`} on_upload={bannerUpdate} />
 			</section>
 			<button onClick={updateDetails}>Update</button>
 		</div>

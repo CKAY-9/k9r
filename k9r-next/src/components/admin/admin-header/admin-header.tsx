@@ -57,22 +57,27 @@ const AdminHeader = (props: AdminHeaderProps) => {
 			case "forum":
 				router.push(pathname + "?" + "tab=forum");
 				document.title = `Manage Forum - ${props.community_details.name}`;
+				props.set_view(0);
 				break;
 			case "details":
 				router.push(pathname + "?" + "tab=details");
 				document.title = `Manage Details - ${props.community_details.name}`;
+				props.set_view(1);
 				break;
 			case "usergroups":
 				router.push(pathname + "?" + "tab=usergroups");
 				document.title = `Manage Usergroups - ${props.community_details.name}`;
+				props.set_view(2);
 				break;
 			case "users":
 				router.push(pathname + "?" + "tab=users");
 				document.title = `Manage Users - ${props.community_details.name}`;
+				props.set_view(3);
 				break;
 			case "servers":
 				router.push(pathname + "?" + "tab=servers");
 				document.title = `Manage Game Servers - ${props.community_details.name}`;
+				props.set_view(4);
 				break;
 		}
 	}, [tab, pathname, props.community_details.name, router]);

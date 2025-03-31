@@ -10,6 +10,8 @@ import style from "./upload.module.scss";
 type ImageUploadProps = {
 	default_image_url?: string;
 	on_upload?: any;
+	width?: number;
+	height?: number;
 };
 
 const ImageUpload = (props: ImageUploadProps) => {
@@ -56,8 +58,8 @@ const ImageUpload = (props: ImageUploadProps) => {
 						onError={(e: BaseSyntheticEvent) => {
 							e.target.src = "/icon.png";
 						}}
-						width={128}
-						height={128}
+						width={props.width || 128}
+						height={props.height || 128}
 					/>
 				</div>
 			)}
