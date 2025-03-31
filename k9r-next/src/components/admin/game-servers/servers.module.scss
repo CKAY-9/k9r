@@ -38,3 +38,17 @@
     flex-direction: column;
     gap: 0.5rem;
 }
+
+.how_to {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .step {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        word-wrap: break-word;
+        max-width: 50rem;
+    }
+}

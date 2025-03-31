@@ -10,6 +10,8 @@ import {
 	updateGameServerFromID,
 } from "@/api/game-servers/api";
 import { getCookie } from "@/utils/cookies";
+import Popup from "@/components/popup/popup";
+import Image from "next/image";
 
 type GameServerEditProps = {
 	game_server: GameServer;
@@ -108,6 +110,8 @@ const GameServerEdit = (props: GameServerEditProps) => {
 
 const GameServersAdmin = () => {
 	const [game_servers, setGameServers] = useState<GameServer[]>([]);
+	const [showing_how, setShowingHow] = useState<boolean>(false);
+	const [how_game, setHowGame] = useState<number>(0);
 
 	useEffect(() => {
 		(async () => {
@@ -127,10 +131,7 @@ const GameServersAdmin = () => {
 			return;
 		}
 
-		await deleteGameServerFromID(
-			game_server_id,
-			getCookie("token") || ""
-		);
+		await deleteGameServerFromID(game_server_id, getCookie("token") || "");
 	};
 
 	const updateGameServer = async (game_server: GameServer, index: number) => {
@@ -177,30 +178,165 @@ const GameServersAdmin = () => {
 	};
 
 	return (
-		<div className={style.container}>
-			<section>
-				<h2>Game Servers</h2>
-				<span>
-					K9-Revive&apos;s game servers service allows you to connect K9R
-					with your game servers. Supported game(s): Minecraft
-				</span>
-			</section>
-			<button onClick={generateNewGameServer}>New Server</button>
-			<div className={style.servers}>
-				{game_servers.map((game_server, index) => {
-					return (
-						<GameServerEdit
-							on_create={newGameServer}
-							on_update={updateGameServer}
-							on_delete={deleteGameServer}
-							game_server={game_server}
-							key={game_server.id}
-							index={index}
-						/>
-					);
-				})}
+		<>
+			{showing_how && (
+				<Popup close={() => setShowingHow(false)}>
+					<>
+						<h2>How to use K9R Game Servers</h2>
+						<section>
+							<button onClick={() => setHowGame(0)}>
+								Minecraft
+							</button>
+							<button onClick={() => setHowGame(1)}>
+								Garry&apos;s Mod{" "}
+								<span style={{ opacity: "0.5" }}>
+									(coming soon...)
+								</span>
+							</button>
+						</section>
+						{how_game === 0 && (
+							// Minecraft
+							<>
+								<h4>Minecraft Servers</h4>
+								<section>
+									<span></span>
+								</section>
+								<div className={style.how_to}>
+									<section className={style.step}>
+										<span>
+											Create a new game server here
+										</span>
+										<Image
+											src="/games/minecraft_how1.png"
+											alt="How To 1"
+											sizes="100%"
+											width={0}
+											height={0}
+											style={{
+												height: "auto",
+												width: "40rem",
+											}}
+										/>
+									</section>
+									<section className={style.step}>
+										<span>
+											Download the latest version of the
+											K9R-Minecraft plugin
+										</span>
+										<Image
+											src="/games/minecraft_how2.png"
+											alt="How To 2"
+											sizes="100%"
+											width={0}
+											height={0}
+											style={{
+												width: "40rem",
+												height: "auto",
+											}}
+										/>
+									</section>
+									<section className={style.step}>
+										<span>
+											Place k9r-minecraft-version.jar into
+											your server&apos;s /plugnis folder
+										</span>
+										<Image
+											src="/games/minecraft_how3.png"
+											alt="How To 3"
+											sizes="100%"
+											width={0}
+											height={0}
+											style={{
+												width: "40rem",
+												height: "auto",
+											}}
+										/>
+									</section>
+									<section className={style.step}>
+										<span>Run your Minecraft server</span>
+										<Image
+											src="/games/minecraft_how4.png"
+											alt="How To 4"
+											sizes="100%"
+											width={0}
+											height={0}
+											style={{
+												width: "40rem",
+												height: "auto",
+											}}
+										/>
+										<span>
+											Don't worry about the warning. You
+											just haven't setup your server
+											key/configuration.
+										</span>
+									</section>
+									<section className={style.step}>
+										<span>
+											Edit your K9R config (either in game
+											or through
+											plugins/K9R-Minecraft/config.yml)
+										</span>
+										<Image
+											src="/games/minecraft_how5.png"
+											alt="How To 4"
+											sizes="100%"
+											width={0}
+											height={0}
+											style={{
+												width: "40rem",
+												height: "auto",
+											}}
+										/>
+									</section>
+									<section className={style.step}>
+										<span>
+											Restart your Minecraft server
+										</span>
+										<span>
+											Upon restart, your server should
+											connect to K9R. If it doesn't,
+											something may be wrong with your
+											server key or websocket/API host.
+										</span>
+									</section>
+								</div>
+							</>
+						)}
+					</>
+				</Popup>
+			)}
+			<div className={style.container}>
+				<section>
+					<h2>Game Servers</h2>
+					<span>
+						K9-Revive&apos;s game servers service allows you to
+						connect K9R with your game servers. Supported game(s):
+						Minecraft
+					</span>
+				</section>
+				<section>
+					<button onClick={() => setShowingHow(true)}>
+						How to use
+					</button>
+					<button onClick={generateNewGameServer}>New Server</button>
+				</section>
+				<div className={style.servers}>
+					{game_servers.map((game_server, index) => {
+						return (
+							<GameServerEdit
+								on_create={newGameServer}
+								on_update={updateGameServer}
+								on_delete={deleteGameServer}
+								game_server={game_server}
+								key={game_server.id}
+								index={index}
+							/>
+						);
+					})}
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 
