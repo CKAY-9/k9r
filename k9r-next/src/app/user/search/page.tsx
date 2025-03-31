@@ -9,8 +9,8 @@ import SearchUsersClient from "./client";
 export const generateMetadata = async (): Promise<Metadata> => {
 	const details = await getCommunityDetails();
 	return {
-		title: `Login - ${details.name}`,
-		description: `Login to ${details.name} using whatever method you like. ${details.description}`,
+		title: `User Search - ${details.name}`,
+		description: `Search all the registered users on ${details.name}. ${details.description}`,
 	};
 };
 

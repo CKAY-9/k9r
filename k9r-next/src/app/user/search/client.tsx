@@ -7,6 +7,7 @@ import { User } from "@/api/users/models";
 import { searchUsers } from "@/api/users/api";
 import UserIcon from "@/components/user/user-icon/user-icon";
 import Link from "next/link";
+import UserPreview from "@/components/user/user-preview/user-preview";
 
 const SearchUsersClient = () => {
 	const [search, setSearch] = useState<string>("");
@@ -44,14 +45,7 @@ const SearchUsersClient = () => {
 							key={index + Math.random()}
 							className={style.user}
 						>
-							<section className={style.info}>
-								<UserIcon user={user} size_rems={5} />
-								<h3>{user.display_name}</h3>
-								<span style={{ opacity: "0.5" }}>
-									({user.username})
-								</span>
-							</section>
-							<span>{user.description}</span>
+							<UserPreview user={user} />
 						</Link>
 					);
 				})}
