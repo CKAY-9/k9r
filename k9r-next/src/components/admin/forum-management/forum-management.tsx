@@ -173,8 +173,10 @@ const Topics = (props: TopicsProps) => {
 		]);
 	};
 
-	const updateTopics = async (e: BaseSyntheticEvent) => {
-		e.preventDefault();
+	const updateTopics = async (e?: BaseSyntheticEvent) => {
+		if (e) {
+			e.preventDefault();
+		}
 
 		const update = await updateAllTopics(topics, getCookie("token") || "");
 		props.set_topics(update);
@@ -240,7 +242,17 @@ const Topics = (props: TopicsProps) => {
 							</section>
 							<section className={style.field}>
 								<label>Icon</label>
-								<span>TODO: Add file uploading</span>
+								<ImageUpload
+									on_remove={() => {
+										topics[index].icon = "";
+										updateTopics();
+									}}
+									on_upload={(new_url: string) => {
+										topics[index].icon = new_url;
+										updateTopics();
+									}}
+									default_image_url={topics[index].icon}
+								/>
 							</section>
 							<section className={style.field}>
 								<label>Section</label>

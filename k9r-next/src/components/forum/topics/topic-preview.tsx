@@ -47,6 +47,13 @@ const TopicPreview = (props: TopicPreviewProps) => {
 	return (
 		<div className={style.topic_preview}>
 			<div className={style.info}>
+				{props.forum_topic.icon.length >= 1 && (
+					<MaterialIcon
+						src={props.forum_topic.icon}
+						alt="Topic Icon"
+						size_rems={2}
+					/>
+				)}
 				<h4 style={{ color: `${props.forum_topic.color}` }}>
 					{props.forum_topic.name}
 				</h4>
@@ -58,7 +65,7 @@ const TopicPreview = (props: TopicPreviewProps) => {
 						<UserTab user={latest_thread_author} />
 					)}
 					<span>{latest_thread.title}</span>
-					<span style={{"opacity": "0.5"}}>
+					<span style={{ opacity: "0.5" }}>
 						{" "}
 						{calcTimeSinceMillis(
 							new Date(latest_thread.created).getTime(),
