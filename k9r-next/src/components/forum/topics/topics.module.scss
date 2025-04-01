@@ -77,3 +77,9 @@
     gap: 1rem;
     align-items: center;
 }
+
+@media only screen and (max-width: 900px) {
+    .stats {
+        align-items: flex-start;
+    }
+}

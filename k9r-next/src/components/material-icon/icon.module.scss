@@ -3,3 +3,9 @@
     height: 2rem;
     object-fit: cover;
 }
+
+@media only screen and (max-width: 900px) {
+    .material_icon {
+        object-fit: contain;
+    }
+}
