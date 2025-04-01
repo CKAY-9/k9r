@@ -50,3 +50,15 @@
         }
     }
 }
+
+@media only screen and (max-width: 600px) {
+    .dropdown_container {
+        width: 100%;
+        flex: 1;
+
+        .action, .menu {
+            width: auto;
+            flex: 1;
+        }
+    }
+}

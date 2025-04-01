@@ -4,3 +4,9 @@
     padding: 5rem 10rem;
     gap: 1rem;
 }
+
+@media only screen and (max-width: 600px) {
+	.forum_container {
+		padding: 1rem;
+	}
+}

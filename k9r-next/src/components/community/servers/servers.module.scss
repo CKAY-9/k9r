@@ -44,6 +44,7 @@
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
+			text-align: center;
 			gap: 1rem;
 			backdrop-filter: blur(5px);
 			background-color: rgb(0, 0, 0, 0.5);
@@ -121,5 +122,13 @@
 				background-color: transparent;
 			}
 		}
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	.servers {
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 	}
 }

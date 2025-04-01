@@ -23,3 +23,13 @@
         flex-direction: column;
     }
 }
+
+@media only screen and (max-width: 600px) {
+    .footer {
+        padding: 1rem;
+    }
+
+    .footer_nav {
+        flex-direction: column;
+    }
+}

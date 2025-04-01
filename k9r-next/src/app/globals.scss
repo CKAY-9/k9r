@@ -123,3 +123,9 @@ select {
 	background-color: var(--background);
 	height: fit-content;
 }
+
+@media only screen and (max-width: 600px) {
+	.container {
+		padding: 1rem;
+	}
+}

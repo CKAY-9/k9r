@@ -24,7 +24,23 @@
 
 .forum_nav {
     display: flex;
-    flex-direction: row;
     gap: 1rem;
     flex-wrap: wrap;
+}
+
+@media only screen and (max-width: 600px) {
+    .forum_nav {
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+
+    .forum_information {
+        .content {
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+    }
 }
