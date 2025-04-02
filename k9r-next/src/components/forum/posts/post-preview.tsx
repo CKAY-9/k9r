@@ -7,9 +7,11 @@ import { useEffect, useState } from "react";
 import style from "./post.module.scss";
 import UserTab from "@/components/user/user-tab/user-tab";
 import { getForumThreadFromID } from "@/api/forum/api";
+import { calcTimeSinceMillis } from "@/utils/time-ago";
 
 type PostPreviewProps = {
 	forum_post: ForumPost;
+	compact: boolean;
 };
 
 const PostPreview = (props: PostPreviewProps) => {
@@ -38,6 +40,25 @@ const PostPreview = (props: PostPreviewProps) => {
 		props.forum_post.thread,
 		props.forum_post.updated,
 	]);
+
+	if (props.compact) {
+		return (
+			<div className={style.compact_preview}>
+				{thread && (
+					<section>
+						<span>Posted to {thread.title}</span>
+					</section>
+				)}
+				<p>{props.forum_post.content}</p>
+				{author && (
+					<section>
+						<UserTab user={author} />
+					</section>
+				)}
+				<span>{calcTimeSinceMillis((new Date(props.forum_post.created)).getTime(), (new Date()).getTime())} ago</span>
+			</div>
+		);
+	}
 
 	return (
 		<div className={style.post_preview}>

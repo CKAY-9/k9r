@@ -59,7 +59,7 @@ export const getFileURL = async (
 ): Promise<ImageResponse | null> => {
 	try {
 		const request = await axios({
-			url: `${K9R_API}/storage/file-url/${filename}`,
+			url: `${K9R_API}/storage/file_url/${filename}`,
 			method: "GET"
 		});
         return request.data;

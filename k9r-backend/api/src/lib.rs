@@ -11,9 +11,7 @@ use community::{get::get_community_details, put::update_community_details};
 use forum::{
     delete::{delete_post, delete_thread},
     get::{
-        all_forum_sections, all_section_topics, all_topics, get_latest_thread_in_topic, get_post,
-        get_posts_in_thread, get_section, get_thread, get_topic, get_topic_threads,
-        get_total_post_count, get_total_thread_count, thread_search,
+        all_forum_sections, all_section_topics, all_topics, get_latest_thread_in_topic, get_post, get_posts_in_thread, get_recent_posts, get_section, get_thread, get_topic, get_topic_threads, get_total_post_count, get_total_thread_count, thread_search
     },
     post::{
         like_post, like_thread, new_forum_post, new_forum_section, new_forum_thread,
@@ -112,13 +110,14 @@ fn configure_storage_routes(cfg: &mut web::ServiceConfig) {
                     .guard(guard::Delete()),
             )
             .service(web::resource("/files/{filename}").route(web::get().to(get_file)))
-            .service(web::resource("/file-url/{filename}").route(web::get().to(get_file_url))),
+            .service(web::resource("/file_url/{filename}").route(web::get().to(get_file_url))),
     );
 }
 
 fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/forum")
+            .service(get_recent_posts)
             .service(get_total_thread_count)
             .service(get_total_post_count)
             .service(all_forum_sections)

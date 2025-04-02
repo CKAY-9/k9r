@@ -1,8 +1,7 @@
 use std::vec;
 
 use diesel::{
-    query_dsl::methods::{FilterDsl, FindDsl},
-    ExpressionMethods, RunQueryDsl,
+    ExpressionMethods, QueryDsl, RunQueryDsl
 };
 
 use crate::{
@@ -30,6 +29,18 @@ pub fn get_forum_post_from_id(id: i32) -> Option<ForumPost> {
     match find {
         Ok(result) => Some(result),
         Err(_e) => None,
+    }
+}
+
+pub fn get_latest_forum_posts() -> Vec<ForumPost> {
+    let connection = &mut create_connection();
+    match forum_posts::table
+        .order_by(forum_posts::created.desc())
+        .limit(10)
+        .load(connection)
+    {
+        Ok(posts) => posts,
+        Err(_e) => vec![],
     }
 }
 

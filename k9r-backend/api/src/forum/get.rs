@@ -1,6 +1,6 @@
 use actix_web::{get, web, HttpRequest, HttpResponse};
 use k9r_db::crud::{
-    forum_posts::{get_all_forum_posts, get_forum_post_from_id, get_forum_posts_in_forum_thread},
+    forum_posts::{get_all_forum_posts, get_forum_post_from_id, get_forum_posts_in_forum_thread, get_latest_forum_posts},
     forum_sections::{get_all_forum_sections, get_forum_section_from_id},
     forum_threads::{
         get_all_forum_threads, get_forum_thread_from_id, get_threads_in_forum_topic,
@@ -28,6 +28,14 @@ pub async fn all_topics(
 ) -> HttpResponse {
     let topics = get_all_forum_topics();
     HttpResponse::Ok().json(topics)
+}
+
+#[get("/recent_posts")]
+pub async fn get_recent_posts(
+    _request: HttpRequest
+) -> HttpResponse {
+    let posts = get_latest_forum_posts();
+    HttpResponse::Ok().json(posts)
 }
 
 #[get("/section/{id}")]

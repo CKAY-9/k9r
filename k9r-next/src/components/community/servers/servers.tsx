@@ -64,6 +64,9 @@ const CommunityServers = () => {
 							</Link>
 						);
 					})}
+					{servers.length <= 0 && (
+						<span>No servers found...</span>
+					)}
 				</div>
 			)}
 		</>

@@ -80,6 +80,18 @@ export const getLatestForumThreadInForumTopic = async (topic_id: number): Promis
 	}
 };
 
+export const getLatestForumPosts = async (): Promise<ForumPost[]> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/forum/recent_posts`,
+			method: "GET"
+		});
+		return request.data;
+	} catch {
+		return [];
+	}
+}
+
 export const getForumSectionFromID = async (
 	section_id: number
 ): Promise<ForumSection | null> => {
