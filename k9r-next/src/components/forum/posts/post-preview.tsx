@@ -11,7 +11,7 @@ import { calcTimeSinceMillis } from "@/utils/time-ago";
 
 type PostPreviewProps = {
 	forum_post: ForumPost;
-	compact: boolean;
+	compact?: boolean;
 };
 
 const PostPreview = (props: PostPreviewProps) => {
