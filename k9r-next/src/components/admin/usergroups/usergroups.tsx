@@ -56,7 +56,15 @@ const UsergroupsAdmin = () => {
 		setUsergroups((old) => [...old, new_group]);
 	};
 
-	const togglePermission = (flag: number) => {};
+	const togglePermission = (flag: number) => {
+		if (usergroups[usergroup_index].permissions % flag) {
+			usergroups[usergroup_index].permissions =
+				usergroups[usergroup_index].permissions & ~flag;
+		} else {
+			usergroups[usergroup_index].permissions =
+				usergroups[usergroup_index].permissions | flag;
+		}
+	};
 
 	const updateUsergroup = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
