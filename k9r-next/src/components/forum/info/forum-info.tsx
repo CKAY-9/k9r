@@ -102,7 +102,7 @@ const ForumInfo = (props: ForumInfoProps) => {
 						size_rems={2}
 						alt="Total Users"
 					/>
-					<span>{total_users}</span>
+					<span>{total_users} Registered Users</span>
 				</div>
 				<div className={style.stat}>
 					<MaterialIcon
@@ -110,7 +110,7 @@ const ForumInfo = (props: ForumInfoProps) => {
 						size_rems={2}
 						alt="Online Users"
 					/>
-					<span>{active_users}</span>
+					<span>{active_users} Active Users</span>
 				</div>
 				<div className={style.stat}>
 					<MaterialIcon
@@ -118,7 +118,7 @@ const ForumInfo = (props: ForumInfoProps) => {
 						size_rems={2}
 						alt="Forum Posts"
 					/>
-					<span>{total_threads}</span>
+					<span>{total_threads} Threads</span>
 				</div>
 				<div className={style.stat}>
 					<MaterialIcon
@@ -126,7 +126,7 @@ const ForumInfo = (props: ForumInfoProps) => {
 						size_rems={2}
 						alt="Forum Comments"
 					/>
-					<span>{total_posts}</span>
+					<span>{total_posts} Posts</span>
 				</div>
 			</section>
 		</div>
