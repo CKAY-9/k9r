@@ -11,6 +11,7 @@ import MaterialIcon from "@/components/material-icon/material-icon";
 import { getCookie } from "@/utils/cookies";
 import UserIcon from "@/components/user/user-icon/user-icon";
 import { getUserFromID } from "@/api/users/api";
+import NavigateBack from "@/components/nav-back/nav-back";
 
 type GameServerProps = {
 	game_server: GameServer;
@@ -187,6 +188,7 @@ const GameServerView = (props: GameServerProps) => {
 				</div>
 			</div>
 			<div className="container" style={{ gap: "1rem" }}>
+				<NavigateBack />
 				<h2>Information</h2>
 				<section className={style.info}>
 					<div className={style.info_block}>

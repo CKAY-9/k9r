@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { getForumThreadsInForumTopicFromID, getLatestForumThreadInForumTopic } from "@/api/forum/api";
 import LoadingAlert from "@/components/loading/loading-alert";
 import ThreadPreview from "../threads/thread-preview";
+import NavigateBack from "@/components/nav-back/nav-back";
 
 type TopicProps = {
 	personal_user: User | null;
@@ -29,6 +30,7 @@ const Topic = (props: TopicProps) => {
 
 	return (
 		<div className={style.topic_container}>
+			<NavigateBack />
 			<header className={style.header}>
 				<section className={style.content}>
 					<section>

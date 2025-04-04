@@ -8,6 +8,7 @@ import { searchUsers } from "@/api/users/api";
 import UserIcon from "@/components/user/user-icon/user-icon";
 import Link from "next/link";
 import UserPreview from "@/components/user/user-preview/user-preview";
+import NavigateBack from "@/components/nav-back/nav-back";
 
 const SearchUsersClient = () => {
 	const [search, setSearch] = useState<string>("");
@@ -25,6 +26,7 @@ const SearchUsersClient = () => {
 
 	return (
 		<>
+			<NavigateBack />
 			<div className={style.content}>
 				<h1>Search Users</h1>
 				<SearchBar

@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import NewForumThreadClient from "./client";
 import ForumContainer from "@/components/forum/container/forum-container";
 import ForumHeader from "@/components/forum/header/forum-header";
+import NavigateBack from "@/components/nav-back/nav-back";
 
 export const generateMetadata = async ({
 	params,
@@ -49,6 +50,7 @@ const NewForumThreadPage = async ({
 			<Header community_details={details} personal_user={personal_user} />
             <ForumContainer>
                 <ForumHeader community_details={details} />
+				<NavigateBack />
 				<NewForumThreadClient
 					personal_user={personal_user}
 					community_details={details}

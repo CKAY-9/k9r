@@ -8,6 +8,7 @@ import { eraseCookie, getCookie } from "@/utils/cookies";
 import { deleteAllUserPosts, deleteAllUserThreads } from "@/api/forum/api";
 import ImageUpload from "@/components/image-upload/image-upload";
 import { EDIT_PROFILE_BANNER, usergroupsPermissionFlagCheck } from "@/api/permissions";
+import NavigateBack from "@/components/nav-back/nav-back";
 
 type UserSettingsPageClientProps = {
 	personal_user: User;
@@ -83,6 +84,7 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 
 	return (
 		<>
+			<NavigateBack />
 			<h1>Settings</h1>
 			<section className={style.settings_section}>
 				<h2>Account</h2>

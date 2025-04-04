@@ -11,6 +11,7 @@ import UsergroupsAdmin from "@/components/admin/usergroups/usergroups";
 import { CommunityDetails } from "@/api/community-details/models";
 import UsersAdmin from "@/components/admin/users/users";
 import GameServersAdmin from "@/components/admin/game-servers/game-servers";
+import NavigateBack from "@/components/nav-back/nav-back";
 
 type AdminHomeClientProps = {
 	personal_user: User;
@@ -24,6 +25,7 @@ const AdminHomeClient = (props: AdminHomeClientProps) => {
 	return (
 		<>
 			<div className={style.container}>
+				<NavigateBack />
 				<AdminHeader
 					community_details={props.community_details}
 					set_view={setView}

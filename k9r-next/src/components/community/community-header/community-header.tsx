@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { getUserCount } from "@/api/users/api";
 import { K9R_WEBSOCKET_HOST } from "@/api/resources";
 import io from "socket.io-client";
+import NavigateBack from "@/components/nav-back/nav-back";
 
 type CommunityHeaderProps = {
 	community_details: CommunityDetails;

@@ -29,6 +29,7 @@ import { getCookie } from "@/utils/cookies";
 import { Usergroup } from "@/api/usergroups/models";
 import { MANAGE_POSTS, usergroupsPermissionFlagCheck } from "@/api/permissions";
 import LikeDislike from "../like-dislike/like-dislike";
+import NavigateBack from "@/components/nav-back/nav-back";
 
 type ThreadProps = {
 	community_details: CommunityDetails;
@@ -149,6 +150,7 @@ const Thread = (props: ThreadProps) => {
 
 	return (
 		<>
+			<NavigateBack />
 			<header className={style.header}>
 				<section className={style.section}>
 					<div className={style.section}>
