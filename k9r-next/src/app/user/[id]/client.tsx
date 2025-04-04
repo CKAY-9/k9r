@@ -24,8 +24,7 @@ const UserProfileClient = (props: UserProfileClientProps) => {
         }
 
         if (props.user.banner.length >= 1) {
-            body.style.backgroundColor = "white";
-            console.log(body);
+            body.style.backgroundColor = "var(--background)";
         }
     });
 
