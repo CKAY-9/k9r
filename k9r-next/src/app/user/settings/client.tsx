@@ -2,11 +2,12 @@
 
 import { User } from "@/api/users/models";
 import style from "./settings.module.scss";
-import { BaseSyntheticEvent, useState } from "react";
-import { deleteUser, updateUserByToken } from "@/api/users/api";
+import { BaseSyntheticEvent, useEffect, useState } from "react";
+import { deleteUser, getUserUserGroupsFromID, updateUserByToken } from "@/api/users/api";
 import { eraseCookie, getCookie } from "@/utils/cookies";
 import { deleteAllUserPosts, deleteAllUserThreads } from "@/api/forum/api";
 import ImageUpload from "@/components/image-upload/image-upload";
+import { EDIT_PROFILE_BANNER, usergroupsPermissionFlagCheck } from "@/api/permissions";
 
 type UserSettingsPageClientProps = {
 	personal_user: User;
@@ -25,6 +26,7 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 	const [banner_url, setBannerURL] = useState<string>(
 		props.personal_user.banner || ""
 	)
+	const [banner_access, setBannerAccess] = useState<boolean>(false);
 
     const updateAccount = async (e?: BaseSyntheticEvent) => {
 		if (e) {
@@ -72,6 +74,13 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 		updateAccount();
 	}
 
+	useEffect(() => {
+		(async () => {
+			const usergroups = await getUserUserGroupsFromID(props.personal_user.id, getCookie("token") || "");
+			setBannerAccess(usergroupsPermissionFlagCheck(usergroups, EDIT_PROFILE_BANNER));
+		})();
+	}, [props.personal_user.id])
+
 	return (
 		<>
 			<h1>Settings</h1>
@@ -104,11 +113,15 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 				</section>
                 <section className={style.setting}>
 					<label>Avatar</label>
-					<ImageUpload on_upload={avatarUpdate} default_image_url={props.personal_user.avatar} />
+					<ImageUpload on_upload={avatarUpdate} default_image_url={avatar_url} />
 				</section>
 				<section className={style.setting}>
 					<label>Banner</label>
-					<ImageUpload on_upload={bannerUpdate} default_image_url={props.personal_user.banner} />
+					{banner_access ? (
+						<ImageUpload on_upload={bannerUpdate} default_image_url={banner_url} />
+					) : (
+						<span>Requires special access.</span>
+					)}
 				</section>
                 <button onClick={updateAccount}>Update</button>
 			</section>

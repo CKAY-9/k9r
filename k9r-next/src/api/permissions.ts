@@ -6,6 +6,7 @@ export const EDIT_POSTS: number = 0x4;
 export const EDIT_PROFILE: number = 0x8;
 export const DEFAULT_COMMUNITY_ACCESS: number = 0x10;
 export const EDIT_THREADS: number = 0x20;
+export const EDIT_PROFILE_BANNER: number = 0x40;
 export const SITE_SETTINGS: number = 0x10000;
 export const MANAGE_USERS: number = 0x20000;
 export const MANAGE_POSTS: number = 0x40000;

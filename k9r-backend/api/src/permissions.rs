@@ -4,6 +4,7 @@ pub const EDIT_POSTS: i32 = 0x4;
 pub const EDIT_PROFILE: i32 = 0x8;
 pub const DEFAULT_COMMUNITY_ACCESS: i32 = 0x10;
 pub const EDIT_THREADS: i32 = 0x20;
+pub const EDIT_PROFILE_BANNER: i32 = 0x40;
 pub const SITE_SETTINGS: i32 = 0x10000;
 pub const MANAGE_USERS: i32 = 0x20000;
 pub const MANAGE_POSTS: i32 = 0x40000;

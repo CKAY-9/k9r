@@ -1,7 +1,7 @@
 use actix_web::{web, HttpMessage, HttpRequest, HttpResponse};
 use k9r_db::{crud::users::update_user_from_id, models::{NewUser, User}};
 
-use crate::models::Message;
+use crate::{middleware::permissions::usergroups_match_permission, models::Message, permissions::EDIT_PROFILE_BANNER};
 
 pub async fn update_user((request, body): (HttpRequest, web::Json<User>)) -> HttpResponse {
     let mut user = match request.extensions().get::<User>().cloned() {
@@ -16,7 +16,11 @@ pub async fn update_user((request, body): (HttpRequest, web::Json<User>)) -> Htt
     user.display_name = body.display_name.clone();
     user.description = body.description.clone();
     user.avatar = body.avatar.clone();
-    user.banner = body.banner.clone();
+    if usergroups_match_permission(user.usergroups.clone(), EDIT_PROFILE_BANNER) {
+        user.banner = body.banner.clone();
+    } else {
+        user.banner = "".to_string();
+    }
 
     let update =
         serde_json::from_str::<NewUser>(serde_json::to_string(&user).unwrap().as_str()).unwrap();

@@ -15,6 +15,7 @@ import {
 	DEFAULT_COMMUNITY_ACCESS,
 	EDIT_POSTS,
 	EDIT_PROFILE,
+	EDIT_PROFILE_BANNER,
 	EDIT_THREADS,
 	MANAGE_DETAILS,
 	MANAGE_FORUMS,
@@ -41,7 +42,7 @@ const UsergroupsAdmin = () => {
 	}, []);
 
 	const generateNewUsergroup = async (e: BaseSyntheticEvent) => {
-		e.preventDefault()
+		e.preventDefault();
 
 		const new_group: Usergroup = {
 			id: -1,
@@ -75,7 +76,7 @@ const UsergroupsAdmin = () => {
 			getCookie("token") || ""
 		);
 		if (update !== null) {
-			setUsergroups(usergroups.filter(v => v.id !== update.id));
+			setUsergroups(usergroups.filter((v) => v.id !== update.id));
 			setLoadingUsergroups(true);
 			setUsergroups((old) => [...old, update]);
 			setUsergroupIndex(usergroups.length - 1);
@@ -95,10 +96,7 @@ const UsergroupsAdmin = () => {
 			return;
 		}
 
-		await deleteUsergroupFromID(
-			current.id,
-			getCookie("token") || ""
-		);
+		await deleteUsergroupFromID(current.id, getCookie("token") || "");
 	};
 
 	if (loading_usergroups) {
@@ -131,7 +129,9 @@ const UsergroupsAdmin = () => {
 				{usergroup_index === -1 && (
 					<>
 						<h2>Usergroups</h2>
-						<span>Select a usergroup to edit it, or create a new one.</span>
+						<span>
+							Select a usergroup to edit it, or create a new one.
+						</span>
 					</>
 				)}
 				{usergroups
@@ -309,6 +309,25 @@ const UsergroupsAdmin = () => {
 											/>
 										</section>
 										<section className={style.permission}>
+											<label>Edit Profile Banner</label>
+											<input
+												defaultChecked={
+													(usergroups[usergroup_index]
+														.permissions &
+														EDIT_PROFILE_BANNER) !==
+													0
+												}
+												type="checkbox"
+												onChange={(
+													_e: BaseSyntheticEvent
+												) => {
+													togglePermission(
+														EDIT_PROFILE_BANNER
+													);
+												}}
+											/>
+										</section>
+										<section className={style.permission}>
 											<label>Site Settings</label>
 											<input
 												defaultChecked={
@@ -454,7 +473,7 @@ const UsergroupsAdmin = () => {
 										<button onClick={deleteUsergroup}>
 											Delete
 										</button>
-								)}
+									)}
 							</div>
 						);
 					})}
