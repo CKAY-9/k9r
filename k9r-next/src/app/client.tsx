@@ -35,7 +35,7 @@ const IndexClient = (props: IndexClientProps) => {
 			const us = await getUserUserGroupsFromID(props.personal_user.id);
 			setUsergroups(us);
 		})();
-	}, [props.personal_user?.id]);
+	}, [props.personal_user]);
 
 	return (
 		<>

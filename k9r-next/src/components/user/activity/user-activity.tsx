@@ -98,6 +98,11 @@ const UserActivity = (props: UserActivityProps) => {
 							</Link>
 						);
 					})}
+					{threads.length <= 0 && (
+						<span>
+							{props.user.display_name} has no public threads...
+						</span>
+					)}
 				</div>
 				<div
 					style={{ display: view === 1 ? "flex" : "none" }}
@@ -107,6 +112,11 @@ const UserActivity = (props: UserActivityProps) => {
 					{posts.map((post, index) => {
 						return <Post post={post} key={index} />;
 					})}
+					{posts.length <= 0 && (
+						<span>
+							{props.user.display_name} has no public posts...
+						</span>
+					)}
 				</div>
 			</div>
 		</div>

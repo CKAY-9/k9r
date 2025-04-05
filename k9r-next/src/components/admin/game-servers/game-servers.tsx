@@ -266,8 +266,8 @@ const GameServersAdmin = () => {
 											}}
 										/>
 										<span>
-											Don't worry about the warning. You
-											just haven't setup your server
+											Don&apos;t worry about the warning. You
+											just haven&apos;t setup your server
 											key/configuration.
 										</span>
 									</section>
@@ -295,7 +295,7 @@ const GameServersAdmin = () => {
 										</span>
 										<span>
 											Upon restart, your server should
-											connect to K9R. If it doesn't,
+											connect to K9R. If it doesn&apos;t,
 											something may be wrong with your
 											server key or websocket/API host.
 										</span>
