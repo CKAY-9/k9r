@@ -55,3 +55,31 @@
         gap: 0.5rem;
     }
 }
+
+@media only screen and (max-width: 900px) {
+    .container {
+        flex-direction: column;
+
+        nav {
+            border-right: none;
+            border-bottom: 1px solid var(--text);
+
+            display: grid;
+            grid-template-columns: 1fr;
+
+            button {
+                text-align: center;
+            }
+        }
+    }
+
+    .content {
+        padding: 0.5rem;
+    }
+
+    .sections, .topics {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}

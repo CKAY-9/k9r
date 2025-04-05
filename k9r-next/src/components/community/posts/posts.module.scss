@@ -3,3 +3,11 @@
     grid-template-columns: repeat(auto-fit, 250px);
     gap: 1rem;
 }
+
+@media only screen and (max-width: 900px) {
+    .posts {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}

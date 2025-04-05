@@ -52,3 +52,11 @@
         max-width: 50rem;
     }
 }
+
+@media only screen and (max-width: 900px) {
+    .servers {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}

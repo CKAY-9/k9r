@@ -19,7 +19,7 @@ const MaterialIcon = (props: MaterialIconProps) => {
                 className={style.material_icon}
                 style={{
                     "width": props.size_rems ? `${props.size_rems}rem !important` : "2rem",
-                    "height": props.size_rems ? `${props.size_rems}rem !important` : "2rem"
+                    "height": props.size_rems ? `${props.size_rems}rem !important` : "2rem",
                 }}
             />
         </>

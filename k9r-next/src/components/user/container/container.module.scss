@@ -8,3 +8,9 @@
     box-shadow: var(--shdw2);
     backdrop-filter: blur(10px);
 }
+
+@media only screen and (max-width: 900px) {
+    .user_container {
+        flex-direction: column;
+    }
+}

@@ -22,3 +22,10 @@
 .username {
     opacity: 0.5;
 }
+
+@media only screen and (max-width: 900px) {
+    .user_info {
+        border-right: none;
+        margin: auto auto;
+    }
+}
