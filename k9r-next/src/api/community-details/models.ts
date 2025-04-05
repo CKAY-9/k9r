@@ -4,4 +4,5 @@ export type CommunityDetails = {
     description: string;
     icon?: string;
     banner?: string;
+    features: boolean[];
 };

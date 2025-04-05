@@ -3,5 +3,6 @@ CREATE TABLE community_details (
     name TEXT NOT NULL,
     description TEXT NOT NULL,
     icon TEXT NOT NULL,
-    banner TEXT NOT NULL
+    banner TEXT NOT NULL,
+    features boolean[] DEFAULT ARRAY[true, true, true] NOT NULL
 );

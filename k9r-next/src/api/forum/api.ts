@@ -1,6 +1,8 @@
 import axios from "axios";
 import { K9R_API } from "../resources";
 import { ForumPost, ForumSection, ForumThread, ForumTopic } from "./models";
+import { getStoredCookie } from "@/utils/stored-cookies";
+import { getCookie } from "@/utils/cookies";
 
 export const createNewForumThread = async (
 	new_thread: ForumThread,
@@ -46,9 +48,16 @@ export const createNewForumPost = async (
 
 export const getAllForumSections = async (): Promise<ForumSection[]> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/section`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data;
 	} catch {
@@ -58,9 +67,16 @@ export const getAllForumSections = async (): Promise<ForumSection[]> => {
 
 export const getAllForumTopics = async (): Promise<ForumTopic[]> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/topic`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data;
 	} catch {
@@ -68,11 +84,20 @@ export const getAllForumTopics = async (): Promise<ForumTopic[]> => {
 	}
 };
 
-export const getLatestForumThreadInForumTopic = async (topic_id: number): Promise<ForumThread | null> => {
+export const getLatestForumThreadInForumTopic = async (
+	topic_id: number
+): Promise<ForumThread | null> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/topic/${topic_id}/latest_thread`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data;
 	} catch {
@@ -82,23 +107,37 @@ export const getLatestForumThreadInForumTopic = async (topic_id: number): Promis
 
 export const getLatestForumPosts = async (): Promise<ForumPost[]> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/recent_posts`,
-			method: "GET"
+			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data;
 	} catch {
 		return [];
 	}
-}
+};
 
 export const getForumSectionFromID = async (
 	section_id: number
 ): Promise<ForumSection | null> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/section/${section_id}`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data;
 	} catch {
@@ -110,9 +149,16 @@ export const getForumSectionTopicsFromID = async (
 	section_id: number
 ): Promise<ForumTopic[]> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/section/${section_id}/topics`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data;
 	} catch {
@@ -124,9 +170,16 @@ export const getForumTopicFromID = async (
 	topic_id: number
 ): Promise<ForumTopic | null> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/topic/${topic_id}`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data;
 	} catch {
@@ -174,9 +227,16 @@ export const updateAllTopics = async (
 
 export const getForumThreadCount = async (): Promise<number> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/thread/count`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data.threads;
 	} catch {
@@ -186,9 +246,16 @@ export const getForumThreadCount = async (): Promise<number> => {
 
 export const getForumPostCount = async (): Promise<number> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/post/count`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data.posts;
 	} catch {
@@ -200,9 +267,16 @@ export const getForumThreadsInForumTopicFromID = async (
 	topic_id: number
 ): Promise<ForumThread[]> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/topic/${topic_id}/threads`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		console.log(request.data);
 		return request.data;
@@ -215,9 +289,16 @@ export const getForumThreadFromID = async (
 	id: number
 ): Promise<ForumThread | null> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/thread/${id}`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data;
 	} catch (ex) {
@@ -229,9 +310,16 @@ export const getForumPostsFromForumThreadID = async (
 	thread_id: number
 ): Promise<ForumPost[]> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/thread/${thread_id}/posts`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data;
 	} catch {
@@ -243,9 +331,16 @@ export const getForumPostFromID = async (
 	id: number
 ): Promise<ForumPost | null> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/post/${id}`,
 			method: "GET",
+			headers: {
+				Authorization: token,
+			},
 		});
 		return request.data;
 	} catch {
@@ -334,12 +429,19 @@ export const searchThreads = async (
 	page?: number
 ): Promise<ForumThread[]> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/forum/thread/search`,
 			method: "GET",
 			params: {
 				search: search,
 				page: page ? page : 1,
+			},
+			headers: {
+				Authorization: token,
 			},
 		});
 		return request.data;
@@ -428,9 +530,7 @@ export const likeThread = async (
 	}
 };
 
-export const deleteAllUserThreads = async (
-	token: string
-): Promise<boolean> => {
+export const deleteAllUserThreads = async (token: string): Promise<boolean> => {
 	try {
 		const request = await axios({
 			url: `${K9R_API}/user/threads`,
@@ -445,9 +545,7 @@ export const deleteAllUserThreads = async (
 	}
 };
 
-export const deleteAllUserPosts = async (
-	token: string
-): Promise<boolean> => {
+export const deleteAllUserPosts = async (token: string): Promise<boolean> => {
 	try {
 		const request = await axios({
 			url: `${K9R_API}/user/posts`,

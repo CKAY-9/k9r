@@ -13,7 +13,8 @@ pub async fn get_community_details() -> Result<impl Responder, Box<dyn std::erro
                 name: "K9-Revive".to_string(),
                 description: "An absolute overhaul to K9-Forums. The perfect website.".to_string(),
                 icon: "/icon.png".to_string(),
-                banner: "/wikimedia_commons_backgorund.gif".to_string()
+                banner: "/wikimedia_commons_backgorund.gif".to_string(),
+                features: vec![true, true, true]
             };
 
             let insert = create_community_details(initial_details);

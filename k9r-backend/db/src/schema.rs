@@ -16,6 +16,7 @@ diesel::table! {
         description -> Text,
         icon -> Text,
         banner -> Text,
+        features -> Array<Bool>,
     }
 }
 

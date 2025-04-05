@@ -28,13 +28,13 @@ use game_servers::{
     post::new_game_server,
     put::update_game_server,
 };
-use middleware::permissions::{
+use middleware::{features::{community_feature_access, forum_feature_access, store_feature_access}, permissions::{
     authorized_game_server_middleware, community_management_middleware, create_new_post_middleware,
     create_new_thread_middleware, details_management_middleware, edit_post_middleware,
     edit_profile_middleware, edit_thread_middleware, forum_management_middleware,
     thread_management_middleware, user_management_middleware, usergroup_management_middleware,
     valid_user_middleware,
-};
+}};
 use storage::{
     delete::delete_file,
     get::{get_file, get_file_url},
@@ -74,10 +74,18 @@ pub fn configure_api(cfg: &mut web::ServiceConfig) {
         web::scope("/api/v1")
             .configure(configure_community_routes)
             .configure(configure_user_routes)
+            .configure(configure_store_routes)
             .configure(configure_usergroup_routes)
             .configure(configure_forum_routes)
             .configure(configure_storage_routes)
             .configure(configure_game_server_routes),
+    );
+}
+
+fn configure_store_routes(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::scope("/store")
+            .wrap(from_fn(store_feature_access))
     );
 }
 
@@ -117,6 +125,7 @@ fn configure_storage_routes(cfg: &mut web::ServiceConfig) {
 fn configure_forum_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/forum")
+            .wrap(from_fn(forum_feature_access))
             .service(get_recent_posts)
             .service(get_total_thread_count)
             .service(get_total_post_count)
@@ -285,6 +294,7 @@ fn configure_usergroup_routes(cfg: &mut web::ServiceConfig) {
 fn configure_game_server_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/game_server")
+            .wrap(from_fn(community_feature_access))
             .service(
                 web::resource("/auth")
                     .wrap(from_fn(authorized_game_server_middleware))

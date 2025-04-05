@@ -10,6 +10,7 @@ import {
 	updateCommunityDetails,
 } from "@/api/community-details/api";
 import ImageUpload from "@/components/image-upload/image-upload";
+import { COMMUNITY_FEATURE, FORUM_FEATURE, STORE_FEATURE } from "@/api/resources";
 
 const CommunityDetailsAdmin = () => {
 	const [community_details, setCommunityDetails] =
@@ -92,11 +93,55 @@ const CommunityDetailsAdmin = () => {
 			</section>
 			<section className={style.edit}>
 				<label>Icon</label>
-				<ImageUpload default_image_url={`${community_details.icon}`} on_upload={iconUpdate} />
+				<ImageUpload
+					default_image_url={`${community_details.icon}`}
+					on_upload={iconUpdate}
+				/>
 			</section>
 			<section className={style.edit}>
 				<label>Banner</label>
-				<ImageUpload default_image_url={`${community_details.banner}`} on_upload={bannerUpdate} />
+				<ImageUpload
+					default_image_url={`${community_details.banner}`}
+					on_upload={bannerUpdate}
+				/>
+			</section>
+			<h3>Features</h3>
+			<section className={style.features}>
+				<section className={style.feature_input}>
+					<label>Enable Forum</label>
+					<input
+						type="checkbox"
+						defaultChecked={
+							community_details.features[FORUM_FEATURE]
+						}
+						onChange={(e: BaseSyntheticEvent) =>
+							(community_details.features[FORUM_FEATURE] =
+								e.target.checked)
+						}
+					/>
+				</section>
+				<section className={style.feature_input}>
+					<label>Enable Store</label>
+					<input
+						type="checkbox"
+						defaultChecked={community_details.features[STORE_FEATURE]}
+						onChange={(e: BaseSyntheticEvent) =>
+							(community_details.features[STORE_FEATURE] =
+								e.target.checked)
+						}
+					/>
+				</section>
+				<section className={style.feature_input}>
+					<label>Enable Community</label>
+					<input
+						type="checkbox"
+						defaultChecked={community_details.features[COMMUNITY_FEATURE]}
+						onChange={(e: BaseSyntheticEvent) =>
+							(community_details.features[COMMUNITY_FEATURE] =
+								e.target.checked)
+						}
+					/>
+				</section>
 			</section>
 			<button onClick={updateDetails}>Update</button>
 		</div>

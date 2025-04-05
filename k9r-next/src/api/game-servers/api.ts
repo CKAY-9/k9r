@@ -1,14 +1,23 @@
 import axios from "axios";
 import { GameServer } from "./models";
 import { K9R_API } from "../resources";
+import { getStoredCookie } from "@/utils/stored-cookies";
+import { getCookie } from "@/utils/cookies";
 
 export const getGameServerFromID = async (
 	game_server_id: number
 ): Promise<GameServer | null> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/game_server/${game_server_id}`,
 			method: "GET",
+			headers: {
+				Authorization: token
+			}
 		});
 		return request.data;
 	} catch {
@@ -18,9 +27,16 @@ export const getGameServerFromID = async (
 
 export const getAllGameServers = async (): Promise<GameServer[]> => {
 	try {
+		const stored_token = await getStoredCookie("token");
+		const client_token =
+			typeof document !== "undefined" ? getCookie("token") : "";
+		const token = stored_token || client_token;
 		const request = await axios({
 			url: `${K9R_API}/game_server/all`,
 			method: "GET",
+			headers: {
+				Authorization: token
+			}
 		});
 		return request.data;
 	} catch {

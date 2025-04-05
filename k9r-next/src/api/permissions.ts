@@ -14,22 +14,23 @@ export const MANAGE_USERGROUPS: number = 0x80000;
 export const MANAGE_DETAILS: number = 0x100000;
 export const MANAGE_FORUMS: number = 0x200000;
 export const MANAGE_COMMUNITY: number = 0x400000;
+export const MANAGE_STORE: number = 0x800000;
 export const ROOT_ACCESS: number = 0x20000000;
 
 export const usergroupsPermissionFlagCheck = (
-    usergroups: Usergroup[],
-    flag: number
+	usergroups: Usergroup[],
+	flag: number
 ) => {
-    for (let i = 0; i < usergroups.length; i++) {
-        const group = usergroups[i];    
-        if (group.permissions & ROOT_ACCESS) {
-            return true
-        }
+	for (let i = 0; i < usergroups.length; i++) {
+		const group = usergroups[i];
+		if (group.permissions & ROOT_ACCESS) {
+			return true;
+		}
 
-        if (group.permissions & flag) {
-            return true;
-        }
-    }
+		if (group.permissions & flag) {
+			return true;
+		}
+	}
 
-    return false;
-}
+	return false;
+};

@@ -45,7 +45,8 @@ pub struct CommunityDetails {
     pub name: String,
     pub description: String,
     pub icon: String,
-    pub banner: String
+    pub banner: String,
+    pub features: Vec<bool>
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize)]
@@ -54,7 +55,8 @@ pub struct NewCommunityDetails {
     pub name: String,
     pub description: String,
     pub icon: String,
-    pub banner: String
+    pub banner: String,
+    pub features: Vec<bool>
 }
 
 #[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]
