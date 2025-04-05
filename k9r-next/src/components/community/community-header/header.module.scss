@@ -5,6 +5,11 @@
 	background-color: var(--foreground);
 	box-shadow: var(--shdw1);
     border-radius: 1rem;
+
+	background-position: center;
+	background-attachment: fixed !important;
+	background-repeat: no-repeat;
+	background-size: 100% 100% !important;
 }
 
 .content {

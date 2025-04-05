@@ -35,9 +35,9 @@
 		position: relative;
 
 		background-position: center;
-		background-attachment: fixed;
+		background-attachment: fixed !important;
 		background-repeat: no-repeat;
-		background-size: cover;
+		background-size: 100% 100% !important;
 
 		.content {
 			display: flex;
