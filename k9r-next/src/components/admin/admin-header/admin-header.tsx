@@ -80,7 +80,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				props.set_view(4);
 				break;
 		}
-	}, [tab, pathname, props.community_details.name, router, props]);
+	}, [tab, pathname, props.community_details.name, router]);
 
 	return (
 		<>

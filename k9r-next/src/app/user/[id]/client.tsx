@@ -9,6 +9,7 @@ import { useEffect } from "react";
 
 type UserProfileClientProps = {
     user: User;
+    personal_user: User | null;
     community_details: CommunityDetails;
 }
 
@@ -31,7 +32,7 @@ const UserProfileClient = (props: UserProfileClientProps) => {
     return (
         <UserContainer user={props.user}>
             <>
-                <UserInfo user={props.user} />
+                <UserInfo personal_user={props.personal_user} user={props.user} />
                 <UserActivity user={props.user} />
             </>
         </UserContainer>

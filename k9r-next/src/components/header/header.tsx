@@ -19,6 +19,7 @@ import {
 import MaterialIcon from "../material-icon/material-icon";
 import UserTab from "../user/user-tab/user-tab";
 import { COMMUNITY_FEATURE, FORUM_FEATURE, STORE_FEATURE } from "@/api/resources";
+import LogoutButton from "../logout-button/logout";
 
 type HeaderProps = {
 	community_details: CommunityDetails;
@@ -89,6 +90,7 @@ const Header = (props: HeaderProps) => {
 								size_rems={2}
 							/>
 						</Link>
+						<LogoutButton button_type="icon" />
 						<Link
 							href={`/user/${props.personal_user.id}`}
 							className={style.user}

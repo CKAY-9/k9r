@@ -32,6 +32,13 @@
     }
 }
 
+.user_settings {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
 @media only screen and (max-width: 900px) {
     .user_info {
         border-right: none;

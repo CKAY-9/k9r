@@ -63,6 +63,7 @@ const UserPage = async ({
 					<h1>Failed to find user with specified ID</h1>
 				) : (
 					<UserProfileClient
+						personal_user={personal_user}
 						user={user}
 						community_details={details}
 					/>
