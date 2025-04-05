@@ -23,6 +23,15 @@
     opacity: 0.5;
 }
 
+.as_link {
+    border-bottom: none;
+    text-align: center;
+
+    &:hover {
+        border-bottom: none;
+    }
+}
+
 @media only screen and (max-width: 900px) {
     .user_info {
         border-right: none;

@@ -16,6 +16,7 @@ import {
 } from "@/api/forum/api";
 import { getCookie } from "@/utils/cookies";
 import LikeDislike from "../like-dislike/like-dislike";
+import Link from "next/link";
 
 type ForumPostProps = {
 	forum_post: ForumPost;
@@ -86,7 +87,9 @@ const Post = (props: ForumPostProps) => {
 
 	return (
 		<div className={style.forum_post} id={`post-${props.forum_post.id}`}>
-			{author !== null && <UserInfo user={author} />}
+			{author !== null && (
+				<UserInfo user={author} as_link={true} from_post={true} />
+			)}
 			<div className={style.content}>
 				{editing ? (
 					<>

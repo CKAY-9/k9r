@@ -78,3 +78,14 @@
 		}
 	}
 }
+
+@media only screen and (max-width: 900px) {
+	.forum_post {
+		flex-direction: column;
+	}
+
+	.times {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
