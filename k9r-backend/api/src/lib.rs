@@ -11,7 +11,9 @@ use community::{get::get_community_details, put::update_community_details};
 use forum::{
     delete::{delete_post, delete_thread},
     get::{
-        all_forum_sections, all_section_topics, all_topics, get_latest_thread_in_topic, get_post, get_posts_in_thread, get_recent_posts, get_section, get_thread, get_topic, get_topic_threads, get_total_post_count, get_total_thread_count, thread_search
+        all_forum_sections, all_section_topics, all_topics, get_latest_thread_in_topic, get_post,
+        get_posts_in_thread, get_recent_posts, get_section, get_thread, get_topic,
+        get_topic_threads, get_total_post_count, get_total_thread_count, thread_search,
     },
     post::{
         like_post, like_thread, new_forum_post, new_forum_section, new_forum_thread,
@@ -28,17 +30,20 @@ use game_servers::{
     post::new_game_server,
     put::update_game_server,
 };
-use middleware::{features::{community_feature_access, forum_feature_access, store_feature_access}, permissions::{
-    authorized_game_server_middleware, community_management_middleware, create_new_post_middleware,
-    create_new_thread_middleware, details_management_middleware, edit_post_middleware,
-    edit_profile_middleware, edit_thread_middleware, forum_management_middleware,
-    thread_management_middleware, user_management_middleware, usergroup_management_middleware,
-    valid_user_middleware,
-}};
+use middleware::{
+    features::{community_feature_access, forum_feature_access, store_feature_access},
+    permissions::{
+        authorized_game_server_middleware, community_management_middleware, create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_profile_middleware, edit_thread_middleware, forum_management_middleware, general_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware, valid_user_middleware
+    },
+};
 use storage::{
     delete::delete_file,
     get::{get_file, get_file_url},
     post::save_file,
+};
+use support::{
+    get::{all_support_tickets, all_user_associated_support_tickets, get_support_ticket, get_ticket_replies},
+    post::{new_support_ticket, new_support_ticket_reply},
 };
 use user::{
     delete::{
@@ -66,6 +71,7 @@ pub mod middleware;
 pub mod models;
 pub mod permissions;
 pub mod storage;
+pub mod support;
 pub mod user;
 pub mod usergroup;
 
@@ -73,6 +79,7 @@ pub fn configure_api(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/api/v1")
             .configure(configure_community_routes)
+            .configure(configure_support_routes)
             .configure(configure_user_routes)
             .configure(configure_store_routes)
             .configure(configure_usergroup_routes)
@@ -82,11 +89,50 @@ pub fn configure_api(cfg: &mut web::ServiceConfig) {
     );
 }
 
-fn configure_store_routes(cfg: &mut web::ServiceConfig) {
+fn configure_support_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/store")
-            .wrap(from_fn(store_feature_access))
+        web::scope("/support")
+            .service(
+                web::resource("/ticket/all")
+                    .wrap(from_fn(general_management_middleware))
+                    .route(web::get().to(all_support_tickets))
+                    .guard(guard::Get())
+            )
+            .service(
+                web::resource("/ticket/mine")
+                    .wrap(from_fn(valid_user_middleware))
+                    .route(web::get().to(all_user_associated_support_tickets))
+                    .guard(guard::Get())
+            )
+            .service(
+                web::resource("/ticket")
+                    .wrap(from_fn(valid_user_middleware))
+                    .route(web::post().to(new_support_ticket))
+                    .guard(guard::Post()),
+            )
+            .service(
+                web::resource("/ticket/{id}")
+                    .wrap(from_fn(valid_user_middleware))
+                    .route(web::get().to(get_support_ticket))
+                    .guard(guard::Get()),
+            )
+            .service(
+                web::resource("/ticket/{id}/replies")
+                    .wrap(from_fn(valid_user_middleware))
+                    .route(web::get().to(get_ticket_replies))
+                    .guard(guard::Get()),
+            )
+            .service(
+                web::resource("/ticket/{id}/reply")
+                    .wrap(from_fn(valid_user_middleware))
+                    .route(web::post().to(new_support_ticket_reply))
+                    .guard(guard::Post()),
+            ),
     );
+}
+
+fn configure_store_routes(cfg: &mut web::ServiceConfig) {
+    cfg.service(web::scope("/store").wrap(from_fn(store_feature_access)));
 }
 
 fn configure_community_routes(cfg: &mut web::ServiceConfig) {
@@ -109,8 +155,8 @@ fn configure_storage_routes(cfg: &mut web::ServiceConfig) {
                 web::resource("/upload")
                     .wrap(from_fn(valid_user_middleware))
                     .route(web::post().to(save_file))
-                    .guard(guard::Post()),   
-            )        
+                    .guard(guard::Post()),
+            )
             .service(
                 web::resource("/delete/{filename}")
                     .wrap(from_fn(valid_user_middleware))

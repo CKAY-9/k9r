@@ -10,6 +10,7 @@ pub struct User {
     pub username: String,
     pub display_name: String,
     pub description: String,
+    pub banned: bool,
     pub joined: String,
     pub oauth_type: String,
     pub followers: Vec<i32>,
@@ -27,6 +28,7 @@ pub struct NewUser {
     pub username: String,
     pub display_name: String,
     pub description: String,
+    pub banned: bool,
     pub joined: String,
     pub oauth_type: String,
     pub followers: Vec<i32>,
@@ -229,4 +231,56 @@ pub struct NewGameServer {
     pub server_key: String,
     pub host_address: String,
     pub latest_state: String
+}
+
+#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
+#[diesel(table_name = crate::schema::support_tickets)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct SupportTicket {
+    pub id: i32,
+    pub status: i32,
+    pub created: String,
+    pub updated: String,
+    pub creator: i32,
+    pub issue_title: String,
+    pub issue_topic: String,
+    pub issue_description: String,
+    pub involved_users: Vec<i32>,
+    pub file_attachments: Vec<String>
+}
+
+#[derive(Insertable, AsChangeset, Deserialize, Serialize)]
+#[diesel(table_name = crate::schema::support_tickets)]
+pub struct NewSupportTicket {
+    pub status: i32,
+    pub created: String,
+    pub updated: String,
+    pub creator: i32,
+    pub issue_title: String,
+    pub issue_topic: String,
+    pub issue_description: String,
+    pub involved_users: Vec<i32>,
+    pub file_attachments: Vec<String>
+}
+
+#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
+#[diesel(table_name = crate::schema::support_ticket_replies)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct SupportTicketReply {
+    pub id: i32,
+    pub created: String,
+    pub support_ticket: i32,
+    pub user_id: i32,
+    pub message: String,
+    pub file_attachments: Vec<String>
+}
+
+#[derive(Insertable, AsChangeset, Deserialize, Serialize)]
+#[diesel(table_name = crate::schema::support_ticket_replies)]
+pub struct NewSupportTicketReply {
+    pub created: String,
+    pub support_ticket: i32,
+    pub user_id: i32,
+    pub message: String,
+    pub file_attachments: Vec<String>
 }

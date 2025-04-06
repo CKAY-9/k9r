@@ -88,6 +88,32 @@ diesel::table! {
 }
 
 diesel::table! {
+    support_ticket_replies (id) {
+        id -> Int4,
+        created -> Text,
+        support_ticket -> Int4,
+        user_id -> Int4,
+        message -> Text,
+        file_attachments -> Array<Text>,
+    }
+}
+
+diesel::table! {
+    support_tickets (id) {
+        id -> Int4,
+        status -> Int4,
+        created -> Text,
+        updated -> Text,
+        creator -> Int4,
+        issue_title -> Text,
+        issue_topic -> Text,
+        issue_description -> Text,
+        involved_users -> Array<Int4>,
+        file_attachments -> Array<Text>,
+    }
+}
+
+diesel::table! {
     usergroups (id) {
         id -> Int4,
         name -> Text,
@@ -104,6 +130,7 @@ diesel::table! {
         username -> Text,
         display_name -> Text,
         description -> Text,
+        banned -> Bool,
         joined -> Text,
         oauth_type -> Text,
         followers -> Array<Int4>,
@@ -123,6 +150,8 @@ diesel::allow_tables_to_appear_in_same_query!(
     forum_threads,
     forum_topics,
     game_servers,
+    support_ticket_replies,
+    support_tickets,
     usergroups,
     users,
 );

@@ -4,6 +4,7 @@ CREATE TABLE users (
     username TEXT NOT NULL,
     display_name TEXT NOT NULL,
     description TEXT NOT NULL,
+    banned BOOLEAN NOT NULL DEFAULT FALSE,
     joined TEXT NOT NULL,
     oauth_type TEXT NOT NULL,
     followers INTEGER[] NOT NULL,

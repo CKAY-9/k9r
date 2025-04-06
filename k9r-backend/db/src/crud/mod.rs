@@ -7,3 +7,5 @@ pub mod forum_threads;
 pub mod forum_posts;
 pub mod admin_keys;
 pub mod game_servers;
+pub mod support_tickets;
+pub mod support_ticket_replies;
