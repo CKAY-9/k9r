@@ -24,7 +24,7 @@ const CommunityPageClient = (props: CommunityPageClientProps) => {
 
             setLoading(false);
         })();
-    })
+    }, [])
 
     if (loading) {
         return (
