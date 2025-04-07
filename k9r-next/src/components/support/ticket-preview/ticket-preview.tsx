@@ -26,24 +26,21 @@ const SupportTicketPreview = (props: SupportTicketPreviewProps) => {
 
 	return (
 		<div className={style.preview}>
-			<h3>{props.support_ticket.issue_title}</h3>
+			<section className={style.title}>
+				<h3>{props.support_ticket.issue_title}</h3>
+				<SupportTicketStatus
+					support_ticket_status={props.support_ticket.status}
+				/>
+			</section>
 			<span style={{ textTransform: "capitalize" }}>
 				Topic: {props.support_ticket.issue_topic}
 			</span>
 			<span>{props.support_ticket.issue_description.slice(0, 100)}</span>
-			<div className={style.info}>
-				{creator && (
-					<Link
-						className={style.user_link}
-						href={`/user/${creator.id}`}
-					>
-						<UserTab user={creator} />
-					</Link>
-				)}
-				<SupportTicketStatus
-					support_ticket_status={props.support_ticket.status}
-				/>
-			</div>
+			{creator && (
+				<Link className={style.user_link} href={`/user/${creator.id}`}>
+					<UserTab user={creator} />
+				</Link>
+			)}
 		</div>
 	);
 };

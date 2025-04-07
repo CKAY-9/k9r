@@ -61,7 +61,7 @@ const NewSupportTicket = (props: NewSupportTicketClientProps) => {
 					}
 				/>
 			</section>
-			{title.length >= 1 && (
+			{title.length >= 10 && (
 				<section className={style.field}>
 					<label>Topic</label>
 					<select
@@ -98,11 +98,16 @@ const NewSupportTicket = (props: NewSupportTicketClientProps) => {
 							}
 						></textarea>
 					</section>
+					{description.length >= 50 && (
+						<button
+							onClick={submitTicket}
+							style={{ width: "fit-content" }}
+						>
+							Submit
+						</button>
+					)}
 				</>
 			)}
-			<button onClick={submitTicket} style={{ width: "fit-content" }}>
-				Submit
-			</button>
 		</>
 	);
 };

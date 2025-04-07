@@ -6,7 +6,7 @@ import { BaseSyntheticEvent, useEffect, useState } from "react";
 import { deleteUser, getUserUserGroupsFromID, updateUserByToken } from "@/api/users/api";
 import { eraseCookie } from "@/utils/cookies";
 import { deleteAllUserPosts, deleteAllUserThreads } from "@/api/forum/api";
-import ImageUpload from "@/components/image-upload/image-upload";
+import ImageUpload from "@/components/file-upload/file-upload";
 import { EDIT_PROFILE_BANNER, usergroupsPermissionFlagCheck } from "@/api/permissions";
 import NavigateBack from "@/components/nav-back/nav-back";
 import { getAnyToken } from "@/utils/token";

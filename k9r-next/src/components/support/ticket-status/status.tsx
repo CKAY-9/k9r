@@ -14,7 +14,7 @@ const SupportTicketStatus = (props: SupportTicketStatusProps) => {
                 setBGColor("rgb(255, 255, 0)");
                 break;
             case 1:
-                setBGColor("rgb(255, 255, 255)");
+                setBGColor("rgb(63, 164, 56)");
                 break;
             case 2:
                 setBGColor("rgb(150, 150, 150)");

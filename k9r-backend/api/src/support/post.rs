@@ -4,7 +4,7 @@ use actix_web::{web, HttpMessage, HttpRequest, HttpResponse};
 use k9r_db::{
     crud::{
         support_ticket_replies::create_support_ticket_reply,
-        support_tickets::{create_support_ticket, get_support_ticket_from_id},
+        support_tickets::{create_support_ticket, get_support_ticket_from_id, update_support_ticket_from_id},
     },
     models::{NewSupportTicket, NewSupportTicketReply, User},
 };
@@ -26,13 +26,13 @@ pub async fn new_support_ticket(
         }
     };
 
-    if body.issue_title.len() <= 10 {
+    if body.issue_title.len() < 10 {
         return HttpResponse::BadRequest().json(Message {
             message: "Issue title too short!".to_string(),
         });
     }
 
-    if body.issue_description.len() <= 50 {
+    if body.issue_description.len() < 50 {
         return HttpResponse::BadRequest().json(Message {
             message: "Issue description too short!".to_string(),
         });
@@ -67,6 +67,7 @@ pub async fn new_support_ticket(
     }
 
     body.creator = user.id;
+    body.status = 0;
     let iso_string: String = iso8601(&SystemTime::now());
     body.created = iso_string.clone();
     body.updated = iso_string;
@@ -102,14 +103,14 @@ pub async fn new_support_ticket_reply(
         });
     }
 
-    let support_ticket = support_ticket_option.unwrap();
+    let mut support_ticket = support_ticket_option.unwrap();
     if !has_support_ticket_access(&user, &support_ticket) {
         return HttpResponse::Unauthorized().json(Message {
             message: "Can't access support ticket".to_string(),
         });
     }
 
-    if body.message.len() <= 10 {
+    if body.message.len() < 10 {
         return HttpResponse::BadRequest().json(Message {
             message: "Reply message too short".to_string(),
         });
@@ -119,7 +120,21 @@ pub async fn new_support_ticket_reply(
     body.user_id = user.id;
 
     match create_support_ticket_reply(body.into_inner()) {
-        Some(reply) => HttpResponse::Ok().json(reply),
+        Some(reply) => {
+            support_ticket.updated = iso8601(&SystemTime::now());
+            if support_ticket.status == 0 {
+                support_ticket.status = 1;
+            }
+
+            let updated_ticket = serde_json::from_str::<NewSupportTicket>(
+                serde_json::to_string(&support_ticket).unwrap().as_str(),
+            )
+            .unwrap();
+
+            update_support_ticket_from_id(support_ticket.id, updated_ticket);
+
+            HttpResponse::Ok().json(reply)
+        }
         None => HttpResponse::BadRequest().json(Message {
             message: "Failed to create ticket reply".to_string(),
         }),

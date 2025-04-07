@@ -10,7 +10,7 @@ import { ForumSection, ForumTopic } from "@/api/forum/models";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./forum.module.scss";
 import LoadingAlert from "@/components/loading/loading-alert";
-import ImageUpload from "@/components/image-upload/image-upload";
+import ImageUpload from "@/components/file-upload/file-upload";
 import { getAnyToken } from "@/utils/token";
 
 type SectionsProps = {

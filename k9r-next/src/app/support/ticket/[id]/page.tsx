@@ -33,8 +33,18 @@ export const generateMetadata = async ({
     };
 }
 
-const SupportTicketPage = async () => {
+const SupportTicketPage = async ({
+	params,
+}: {
+	params: Promise<{
+		id: string;
+	}>;
+}) => {
     const details = await getCommunityDetails();
+
+    const { id } = await params;
+    const token = await getAnyToken();
+    const ticket = await getSupportTicket(Number.parseInt(id), token);
 
 	const user_token = await getAnyToken();
 	const personal_user = await getPersonalUser(user_token);
@@ -50,7 +60,11 @@ const SupportTicketPage = async () => {
                     </>
                 ) : (
                     <>
-                        <SupportTicketClient community_details={details} personal_user={personal_user} />
+                        {ticket ? (
+                            <SupportTicketClient support_ticket={ticket} community_details={details} personal_user={personal_user} />
+                        ) : (
+                            <span>Failed to get support ticket.</span>
+                        )}
                     </>
                 )}
             </main>

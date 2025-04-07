@@ -8,7 +8,7 @@ import {
 	getCommunityDetails,
 	updateCommunityDetails,
 } from "@/api/community-details/api";
-import ImageUpload from "@/components/image-upload/image-upload";
+import ImageUpload from "@/components/file-upload/file-upload";
 import { COMMUNITY_FEATURE, FORUM_FEATURE, STORE_FEATURE } from "@/api/resources";
 import { getAnyToken } from "@/utils/token";
 

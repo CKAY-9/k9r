@@ -85,7 +85,18 @@ const AdminTickets = (props: AdminSupportProps) => {
 			setAllTickets(
 				tickets
 					.reverse()
-					.sort((a, b) => (a.status <= b.status ? 1 : -1))
+					.sort((a, b) => {
+						switch (a.status) {
+							case 0:
+								return b.status >= 0 ? 1 : -1;
+							case 1:
+								return -1;
+							case 2:
+								return 1;
+						}
+
+						return -1;
+					})
 			);
 			setLoading(false);
 		})();
