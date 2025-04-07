@@ -4,7 +4,6 @@ import { Usergroup } from "@/api/usergroups/models";
 import { getUserUserGroupsFromID } from "@/api/users/api";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import style from "./usergroups.module.scss";
 
 type UserUsergroupsProps = {
     user_id: number
@@ -22,7 +21,7 @@ const UserUsergroups = (props: UserUsergroupsProps) => {
 
 	return (
 		<>
-			<section className={style.usergroups}>
+			<section className={`flex row wrap gap-1`}>
 				{usergroups.map((usergroup, index) => {
 					return (
 						<div key={index}>

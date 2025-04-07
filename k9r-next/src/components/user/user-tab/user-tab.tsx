@@ -8,7 +8,7 @@ type UserTabProps = {
 
 const UserTab = (props: UserTabProps) => {
     return (
-        <div className={style.user_tab}>
+        <div className={`${style.user_tab} flex row gap-1 align`}>
             <UserIcon 
                 size_rems={2}
                 user={props.user}

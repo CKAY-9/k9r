@@ -13,7 +13,7 @@ const Popup = (props: PopupProps) => {
 		<>
 			<div className={style.popup}>
 				<div
-					className={style.content}
+					className={`${style.content} flex col gap-1`}
 					style={{ padding: props.remove_padding ? "0" : "initial" }}
 				>
 					{props.close && <button onClick={props.close}>X</button>}

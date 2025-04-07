@@ -25,8 +25,8 @@ const SupportTicketPreview = (props: SupportTicketPreviewProps) => {
 	}, [props.support_ticket.creator]);
 
 	return (
-		<div className={style.preview}>
-			<section className={style.title}>
+		<div className={`${style.preview} flex col gap-1`}>
+			<section className={`${style.title} flex row align gap-2`}>
 				<h3>{props.support_ticket.issue_title}</h3>
 				<SupportTicketStatus
 					support_ticket_status={props.support_ticket.status}

@@ -3,7 +3,6 @@
 import { K9R_API } from "@/api/resources";
 import { deleteFile, uploadFile } from "@/api/storage/api";
 import { BaseSyntheticEvent, useState } from "react";
-import style from "./upload.module.scss";
 import { getAnyToken } from "@/utils/token";
 
 type FileUploadProps = {
@@ -60,7 +59,7 @@ const FileUpload = (props: FileUploadProps) => {
 	};
 
 	return (
-		<div className={style.container}>
+		<div className={`flex col gap-half`}>
 			{file_url && (
 				<>
 					{props.on_remove && (

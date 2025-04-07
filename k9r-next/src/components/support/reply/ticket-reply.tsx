@@ -19,7 +19,7 @@ const TicketReply = (props: TicketReplyProps) => {
 	}, [props.support_ticket_reply.user_id]);
 
 	return (
-		<div className={style.reply}>
+		<div className={`${style.reply} flex col gap-1`}>
 			<p>{props.support_ticket_reply.message}</p>
 			<section className={`flex row gap-1 align`}>
                 {user && <UserTab user={user} />}

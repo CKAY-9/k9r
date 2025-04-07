@@ -8,8 +8,8 @@ type UserPreviewProps = {
 
 const UserPreview = (props: UserPreviewProps) => {
 	return (
-		<div className={style.user_preview}>
-			<section className={style.info}>
+		<div className={`${style.user_preview} flex col gap-1`}>
+			<section className={`${style.info} flex row gap-1 align`}>
 				<UserIcon user={props.user} size_rems={5} />
 				<h3>{props.user.display_name}</h3>
 				<span style={{ opacity: "0.5" }}>({props.user.username})</span>

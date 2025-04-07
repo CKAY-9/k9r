@@ -98,7 +98,7 @@ const UserActivity = (props: UserActivityProps) => {
 			<div className={style.activity}>
 				<div
 					style={{ display: view === 0 ? "flex" : "none" }}
-					className={style.list}
+					className={`${style.list} flex col gap-1`}
 				>
 					<h4>Threads</h4>
 					{threads.map((thread, index) => {
@@ -120,7 +120,7 @@ const UserActivity = (props: UserActivityProps) => {
 				</div>
 				<div
 					style={{ display: view === 1 ? "flex" : "none" }}
-					className={style.list}
+					className={`${style.list} flex col gap-1`}
 				>
 					<h4>Posts</h4>
 					{posts.map((post, index) => {

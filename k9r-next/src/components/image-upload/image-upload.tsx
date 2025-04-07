@@ -4,7 +4,6 @@ import { K9R_API } from "@/api/resources";
 import { deleteFile, uploadFile } from "@/api/storage/api";
 import Image from "next/image";
 import { BaseSyntheticEvent, useState } from "react";
-import style from "./upload.module.scss";
 import { getAnyToken } from "@/utils/token";
 
 type ImageUploadProps = {
@@ -64,7 +63,7 @@ const ImageUpload = (props: ImageUploadProps) => {
 	};
 
 	return (
-		<div className={style.container}>
+		<div className={`flex col gap-half`}>
 			{image_url && (
 				<>
 					{props.on_remove && (

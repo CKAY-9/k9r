@@ -1,9 +1,9 @@
 .forum_post {
 	border-radius: 1rem;
-	padding: 1rem;
 	background-color: var(--foreground);
 	box-shadow: var(--shdw1);
 	min-height: 500px;
+	overflow: hidden;
 
 	.content {
 		padding: 1rem;

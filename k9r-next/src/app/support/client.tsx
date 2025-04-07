@@ -141,19 +141,19 @@ const SupportClient = (props: SupportClientProps) => {
 				community_details={props.community_details}
 			/>
 			<div
-				className={style.support_section}
+				className={`${style.support_section} flex col gap-1`}
 				style={{ display: view === 0 ? "flex" : "none" }}
 			>
 				<MySupport personal_user={props.personal_user} />
 			</div>
 			<div
-				className={style.support_section}
+				className={`${style.support_section} flex col gap-1`}
 				style={{ display: view === 1 ? "flex" : "none" }}
 			>
 				<NewSupportTicket personal_user={props.personal_user} />
 			</div>
 			<div
-				className={style.support_section}
+				className={`${style.support_section} flex col gap-1`}
 				style={{ display: view === 2 ? "flex" : "none" }}
 			>
 				<AdminTickets personal_user={props.personal_user} />

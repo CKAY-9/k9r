@@ -24,7 +24,7 @@ const SupportPage = async () => {
 	return (
 		<>
 			<Header community_details={details} personal_user={personal_user} />
-			<main className="container" style={{ gap: "1rem" }}>
+			<main className="container flex gap-1">
 				{personal_user === null ? (
 					<>
 						<h1>Support</h1>

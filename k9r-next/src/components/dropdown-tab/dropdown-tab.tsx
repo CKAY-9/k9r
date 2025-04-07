@@ -13,14 +13,14 @@ const DropdownTab = (props: DropdownTabProps) => {
 
     return (
         <>
-            <div className={style.dropdown_container} onMouseLeave={() => setHover(false)}>
+            <div className={`${style.dropdown_container} flex col`} onMouseLeave={() => setHover(false)}>
                 <span onMouseEnter={() => setHover(true)} className={style.action} style={{
                     "backgroundColor": hover ? "var(--foreground)" : "var(--foreground)",
                     "borderBottomLeftRadius": hover ? "0" : "1rem",
                     "borderBottomRightRadius": hover ? "0" : "1rem",
                     "boxShadow": hover ? "none" : "var(--shdw1)"
                 }}>{props.title}</span>
-                <div id="postNav" className={style.menu} style={{ 
+                <div id="postNav" className={`${style.menu} flex col gap-1`} style={{ 
                     "opacity": hover ? "1" : "0",
                     "display": hover ? "flex" : "none"
                 }}>
