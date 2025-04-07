@@ -21,3 +21,9 @@
         width: fit-content;
     }
 }
+
+@media only screen and (max-width: 900px) {
+	.container {
+        flex-direction: column !important;
+	}
+}

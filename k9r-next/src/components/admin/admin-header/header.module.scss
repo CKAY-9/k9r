@@ -14,3 +14,11 @@
         background-color: var(--foreground);
     }
 }
+
+@media only screen and (max-width: 900px) {
+    .admin_header {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}

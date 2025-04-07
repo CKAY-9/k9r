@@ -332,7 +332,7 @@ const GameServersAdmin = () => {
 					</button>
 					<button onClick={generateNewGameServer}>New Server</button>
 				</section>
-				<div className={`flex row gap-1 wrap`}>
+				<div className={`${style.servers} flex row gap-1 wrap`}>
 					{game_servers.map((game_server, index) => {
 						return (
 							<GameServerEdit
