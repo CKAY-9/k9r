@@ -145,6 +145,7 @@ fn generate_admin_user() {
                 username: "Root".to_string(),
                 display_name: "Root".to_string(),
                 description: "No description provided.".to_string(),
+                banned: false,
                 joined: iso8601(&SystemTime::now()),
                 oauth_type: "root-root-user".to_string(),
                 followers: vec![],
