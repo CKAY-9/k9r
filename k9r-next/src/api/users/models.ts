@@ -4,6 +4,7 @@ export type User = {
     username: string;
     display_name: string;
     description: string;
+    banned: boolean;
     joined: string;
     oauth_type: string;
     followers: number[];

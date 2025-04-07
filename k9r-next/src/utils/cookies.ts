@@ -1,5 +1,3 @@
-"use client";
-
 // https://stackoverflow.com/questions/14573223/set-cookie-and-get-cookie-with-javascript
 export const setCookie = (name: string, value: string, days: number) => {
     if (typeof (document) === undefined) return;

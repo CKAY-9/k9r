@@ -1,4 +1,3 @@
-use k9r_db::models::User;
 use crate::{
     middleware::permissions::usergroups_match_permission,
     permissions::{
@@ -6,17 +5,21 @@ use crate::{
         MANAGE_USERGROUPS, MANAGE_USERS, SITE_SETTINGS,
     },
 };
+use k9r_db::models::User;
 
-pub mod permissions;
 pub mod features;
+pub mod permissions;
 
 pub fn has_general_management_permissions(user: &User) -> bool {
-    usergroups_match_permission(user.usergroups.clone(), MANAGE_COMMUNITY)
-    || usergroups_match_permission(user.usergroups.clone(), MANAGE_FORUMS)
-    || usergroups_match_permission(user.usergroups.clone(), MANAGE_DETAILS)
-    || usergroups_match_permission(user.usergroups.clone(), MANAGE_STORE)
-    || usergroups_match_permission(user.usergroups.clone(), MANAGE_USERS)
-    || usergroups_match_permission(user.usergroups.clone(), MANAGE_USERGROUPS)
-    || usergroups_match_permission(user.usergroups.clone(), MANAGE_POSTS)
-    || usergroups_match_permission(user.usergroups.clone(), SITE_SETTINGS)
+    usergroups_match_permission(
+        user.usergroups.clone(),
+        MANAGE_COMMUNITY
+            | MANAGE_FORUMS
+            | MANAGE_STORE
+            | MANAGE_DETAILS
+            | MANAGE_USERS
+            | MANAGE_USERGROUPS
+            | MANAGE_POSTS
+            | SITE_SETTINGS,
+    )
 }

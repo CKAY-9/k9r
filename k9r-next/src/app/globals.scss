@@ -15,6 +15,7 @@
 * {
 	font-family: "Open Sans", sans-serif;
 	font-optical-sizing: auto;
+	font-size: 16px;
 }
 
 body {
@@ -22,7 +23,6 @@ body {
 	color: var(--text);
 	padding: 0;
 	margin: 0;
-	font-size: 18px;
 }
 
 h1,
@@ -34,22 +34,22 @@ h4 {
 
 h1 {
 	font-weight: 900;
-	font-size: 3rem;
+	font-size: 2.5rem;
 }
 
 h2 {
 	font-weight: 800;
-	font-size: 2.5rem;
+	font-size: 2rem;
 }
 
 h3 {
 	font-weight: 700;
-	font-size: 2rem;
+	font-size: 1.5rem;
 }
 
 h4 {
 	font-weight: 600;
-	font-size: 1.5rem;
+	font-size: 1.25rem;
 }
 
 p {
@@ -111,9 +111,14 @@ input, textarea {
 select {
 	padding: 0.5rem 1rem;
 	background-color: var(--background);
-	border: 1px solid var(--text);
+	border: 1px solid rgb(255, 255, 255, 0.5);
 	color: var(--text);
 	border-radius: 1rem;
+	transition: 0.35s ease all;
+
+	&:hover {
+		border: 1px solid rgb(255, 255, 255, 1);
+	}
 }
 
 .container {

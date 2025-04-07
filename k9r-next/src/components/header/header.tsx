@@ -18,7 +18,11 @@ import {
 } from "@/api/permissions";
 import MaterialIcon from "../material-icon/material-icon";
 import UserTab from "../user/user-tab/user-tab";
-import { COMMUNITY_FEATURE, FORUM_FEATURE, STORE_FEATURE } from "@/api/resources";
+import {
+	COMMUNITY_FEATURE,
+	FORUM_FEATURE,
+	STORE_FEATURE,
+} from "@/api/resources";
 import LogoutButton from "../logout-button/logout";
 
 type HeaderProps = {
@@ -51,21 +55,36 @@ const Header = (props: HeaderProps) => {
 						size_rems={3}
 					/>
 				</Link>
-				{(props.community_details.features[FORUM_FEATURE] || usergroupsPermissionFlagCheck(usergroups, MANAGE_FORUMS)) && (
+				{(props.community_details.features[FORUM_FEATURE] ||
+					usergroupsPermissionFlagCheck(
+						usergroups,
+						MANAGE_FORUMS
+					)) && (
 					<Link href={"/forum"}>
 						<span>{"Forum"}</span>
 					</Link>
 				)}
-                {(props.community_details.features[STORE_FEATURE] || usergroupsPermissionFlagCheck(usergroups, MANAGE_STORE)) && (
-                    <Link href={"/store"}>
-                        <span>{"Store"}</span>
-                    </Link>
-                )}
-                {(props.community_details.features[COMMUNITY_FEATURE] || usergroupsPermissionFlagCheck(usergroups, MANAGE_COMMUNITY)) && (
-                    <Link href={"/community"}>
-                        <span>{"Community"}</span>
-                    </Link>
-                )}
+				{(props.community_details.features[STORE_FEATURE] ||
+					usergroupsPermissionFlagCheck(
+						usergroups,
+						MANAGE_STORE
+					)) && (
+					<Link href={"/store"}>
+						<span>{"Store"}</span>
+					</Link>
+				)}
+				{(props.community_details.features[COMMUNITY_FEATURE] ||
+					usergroupsPermissionFlagCheck(
+						usergroups,
+						MANAGE_COMMUNITY
+					)) && (
+					<Link href={"/community"}>
+						<span>{"Community"}</span>
+					</Link>
+				)}
+				<Link href={"/support"}>
+					<span>{"Support"}</span>
+				</Link>
 			</nav>
 			<nav>
 				{props.personal_user !== null ? (

@@ -25,6 +25,7 @@ const Footer = (props: FooterProps) => {
 					<strong>General</strong>
 					<Link href={"/"}>Home</Link>
 					<Link href={"/#about"}>About</Link>
+					<Link href={"/support"}>Support</Link>
 				</section>
 				{props.community_details.features[0] && (
 					<section>
@@ -35,16 +36,16 @@ const Footer = (props: FooterProps) => {
 						</Link>
 					</section>
 				)}
-                {props.community_details.features[1] && (
-                    <section>
-                        <strong>Store</strong>
-                    </section>
-                )}
-                {props.community_details.features[2] && (
-				    <section>
-				    	<strong>Community</strong>
-                    </section>
-                )}
+				{props.community_details.features[1] && (
+					<section>
+						<strong>Store</strong>
+					</section>
+				)}
+				{props.community_details.features[2] && (
+					<section>
+						<strong>Community</strong>
+					</section>
+				)}
 				<section>
 					<strong>Users</strong>
 					<Link href={"/user/login"}>Login/Register</Link>

@@ -17,6 +17,20 @@ export const MANAGE_COMMUNITY: number = 0x400000;
 export const MANAGE_STORE: number = 0x800000;
 export const ROOT_ACCESS: number = 0x20000000;
 
+export const generalManagementPermissionCheck = (usergroups: Usergroup[]) => {
+	return usergroupsPermissionFlagCheck(
+		usergroups,
+		MANAGE_COMMUNITY |
+			MANAGE_FORUMS |
+			MANAGE_STORE |
+			MANAGE_DETAILS |
+			MANAGE_USERS |
+			MANAGE_USERGROUPS |
+			MANAGE_POSTS |
+			SITE_SETTINGS
+	);
+};
+
 export const usergroupsPermissionFlagCheck = (
 	usergroups: Usergroup[],
 	flag: number
