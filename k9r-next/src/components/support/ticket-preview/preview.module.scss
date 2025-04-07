@@ -1,0 +1,24 @@
+.preview {
+    background-color: var(--accent);
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: var(--shdw1);
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.user_link {
+    border: none;
+    &:hover {
+        border: none;
+    }
+}
+
+.info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+}

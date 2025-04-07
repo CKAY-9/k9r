@@ -50,7 +50,7 @@ const SupportTicketPage = async () => {
                     </>
                 ) : (
                     <>
-                        <SupportTicketClient personal_user={personal_user} />
+                        <SupportTicketClient community_details={details} personal_user={personal_user} />
                     </>
                 )}
             </main>

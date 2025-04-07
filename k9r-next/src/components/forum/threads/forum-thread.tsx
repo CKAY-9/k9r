@@ -62,8 +62,8 @@ const Thread = (props: ThreadProps) => {
 				setIsAuthor(a.id === (props.personal_user?.id || -1));
 			}
 
-			setCreated(new Date(props.thread.created).toLocaleString());
-			setUpdated(new Date(props.thread.updated).toLocaleString());
+			setCreated(new Date(props.thread.created).toLocaleString("en-us"));
+			setUpdated(new Date(props.thread.updated).toLocaleString("en-us"));
 
 			const p = await getForumPostFromID(props.thread.primary_post);
 			setPrimaryPost(p);

@@ -8,12 +8,12 @@ import SupportClient from "./client";
 import Link from "next/link";
 
 export const generateMetadata = async (): Promise<Metadata> => {
-    const details = await getCommunityDetails();
-    return {
-        title: `Support - ${details.name}`,
-        description: `Create new support tickets or view and reply to existing ones on ${details.name}. ${details.description}`,
-    };
-}
+	const details = await getCommunityDetails();
+	return {
+		title: `Support - ${details.name}`,
+		description: `Create new support tickets or view and reply to existing ones on ${details.name}. ${details.description}`,
+	};
+};
 
 const SupportPage = async () => {
 	const details = await getCommunityDetails();
@@ -24,19 +24,25 @@ const SupportPage = async () => {
 	return (
 		<>
 			<Header community_details={details} personal_user={personal_user} />
-            <main className="container" style={{"gap": "1rem"}}>
-                {personal_user === null ? (
-                    <>
-                        <h1>Support</h1>
-                        <span>Support is only available to logged in users. Login <Link href="/user/login">here</Link></span>
-                    </>
-                ) : (
-                    <SupportClient personal_user={personal_user} />
-                )}
-            </main>
-            <Footer community_details={details} />
-        </>
+			<main className="container" style={{ gap: "1rem" }}>
+				{personal_user === null ? (
+					<>
+						<h1>Support</h1>
+						<span>
+							Support is only available to logged in users. Login{" "}
+							<Link href="/user/login">here</Link>
+						</span>
+					</>
+				) : (
+					<SupportClient
+						community_details={details}
+						personal_user={personal_user}
+					/>
+				)}
+			</main>
+			<Footer community_details={details} />
+		</>
 	);
-}
+};
 
 export default SupportPage;

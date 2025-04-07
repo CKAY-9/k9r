@@ -35,8 +35,8 @@ const Post = (props: ForumPostProps) => {
 	const [editing, setEditing] = useState<boolean>(false);
 
 	useEffect(() => {
-		setCreated(new Date(props.forum_post.created).toLocaleString());
-		setUpdated(new Date(props.forum_post.updated).toLocaleString());
+		setCreated(new Date(props.forum_post.created).toLocaleString("en-us"));
+		setUpdated(new Date(props.forum_post.updated).toLocaleString("en-us"));
 
 		(async () => {
 			const a = await getUserFromID(props.forum_post.author);
@@ -102,6 +102,7 @@ const Post = (props: ForumPostProps) => {
 							onChange={(value: string | undefined) =>
 								setPostContentEdit(value || "")
 							}
+							autoCapitalize="off"
 						/>
 					</>
 				) : (

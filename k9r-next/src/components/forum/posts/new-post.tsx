@@ -20,14 +20,13 @@ const NewForumPost = (props: NewForumPostProps) => {
     const create = async (e: BaseSyntheticEvent) => {
         e.preventDefault();
     
-        const date = new Date();
         const new_post: ForumPost = {
             id: -1,
             author: props.personal_user.id,
             content: content,
             json_content: "",
-            created: date.toISOString(),
-            updated: date.toISOString(),
+            created: "",
+            updated: "",
             likes: [],
             dislikes: [],
             thread: props.forum_thread.id
@@ -54,6 +53,7 @@ const NewForumPost = (props: NewForumPostProps) => {
 					onChange={(value: string | undefined) =>
 						setContent(value || "")
 					}
+                    autoCapitalize="off"
 				/>
                 <button onClick={create}>Create Post</button>
 			</div>

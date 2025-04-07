@@ -13,3 +13,10 @@
     grid-template-columns: 1fr;
     gap: 1rem;
 }
+
+.ticket_link {
+    border-bottom: none;
+    &:hover {
+        border-bottom: none;
+    }
+}
