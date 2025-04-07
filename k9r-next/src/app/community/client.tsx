@@ -26,12 +26,6 @@ const CommunityPageClient = (props: CommunityPageClientProps) => {
         })();
     }, [])
 
-    if (loading) {
-        return (
-            <LoadingAlert message="Loading servers..." />
-        )
-    }
-
     return (
         <>
             <CommunityHeader game_servers={game_servers} community_details={props.community_details} />

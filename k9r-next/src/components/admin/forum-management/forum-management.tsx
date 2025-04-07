@@ -146,9 +146,13 @@ const Sections = (props: SectionsProps) => {
 						</div>
 					);
 				})}
-				{sections.length <= 0 && <span>No sections setup!</span>}
 			</div>
-			<button onClick={updateSections}>Update</button>
+			{sections.length > 0 && (
+				<>
+					<span>Some changes won't be reflected until updated.</span>
+					<button onClick={updateSections}>Update</button>
+				</>
+			)}
 		</div>
 	);
 };
@@ -290,9 +294,13 @@ const Topics = (props: TopicsProps) => {
 						</div>
 					);
 				})}
-				{topics.length <= 0 && <span>No topics setup!</span>}
 			</div>
-			<button onClick={updateTopics}>Update</button>
+			{topics.length > 0 && (
+				<>
+					<span>Some changes won't be reflected until updated.</span>
+					<button onClick={updateTopics}>Update</button>
+				</>
+			)}
 		</div>
 	);
 };
