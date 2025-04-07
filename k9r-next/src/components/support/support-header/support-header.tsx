@@ -29,13 +29,13 @@ const SupportHeader = (props: SupportHeaderProps) => {
 		if (props.redirect_on_tab) {
 			switch (view) {
 				case 0:
-					window.location.href = `/support/ticket?tab=yourtickets`;
+					window.location.href = `/support?tab=yourtickets`;
 					break;
 				case 1:
-					window.location.href = `/support/ticket?tab=newticket`;
+					window.location.href = `/support?tab=newticket`;
 					break;
 				case 2:
-					window.location.href = `/support/ticket?tab=admintickets`;
+					window.location.href = `/support?tab=admintickets`;
 					break;
 			}
 			
