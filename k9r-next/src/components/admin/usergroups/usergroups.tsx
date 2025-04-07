@@ -80,8 +80,6 @@ const UsergroupsAdmin = () => {
 			return;
 		}
 
-		console.log(current);
-
 		const update = await updateUsergroupFromID(
 			current.id,
 			current,
