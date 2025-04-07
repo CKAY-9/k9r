@@ -20,9 +20,9 @@ const ForumSections = () => {
     }, []);
 
     return (
-        <div className={style.forum_sections}>
+        <div className={`${style.forum_sections} flex col gap-1 flex-1`}>
             {loading ? (
-                <div className={style.forum_section}>
+                <div className={`${style.forum_section} flex col gap-1`}>
                     <LoadingAlert message="Loading sections..." />
                 </div>
             ) : (
@@ -33,7 +33,7 @@ const ForumSections = () => {
                         )
                     })}
                     {sections.length <= 0 && (
-                        <div className={style.forum_section}>
+                        <div className={`${style.forum_section} flex col gap-1`}>
                             <span>No forum sections exist!</span>
                         </div>
                     )}

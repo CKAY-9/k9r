@@ -1,13 +1,7 @@
-.forum_content {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-}
-
 @media only screen and (max-width: 900px) {
 	.forum_content {
-		flex-direction: column-reverse;
-        align-items: center;
-        justify-content: center;
+		flex-direction: column-reverse !important;
+        align-items: center !important;
+        justify-content: center !important;
 	}
 }

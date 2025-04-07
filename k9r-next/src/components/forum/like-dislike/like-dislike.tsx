@@ -80,9 +80,9 @@ const LikeDislike = (props: LikeDislikeProps) => {
 	};
 
 	return (
-		<div className={style.likes} style={{"opacity": props.personal_user === null ? "0.5" : "1", "pointerEvents": props.personal_user === null ? "none" : "initial"}}>
+		<div className={`${style.likes} flex gap-1 row align`} style={{"opacity": props.personal_user === null ? "0.5" : "1", "pointerEvents": props.personal_user === null ? "none" : "initial"}}>
 			<button
-				className={style.like}
+				className={`${style.like} no-border`}
 				style={{
 					opacity: likes.includes(props.personal_user?.id || -1)
 						? "1"
@@ -98,7 +98,7 @@ const LikeDislike = (props: LikeDislikeProps) => {
 			</button>
 			<span>{likes.length - dislikes.length}</span>
 			<button
-				className={style.like}
+				className={`${style.like} no-border`}
 				style={{
 					opacity: dislikes.includes(props.personal_user?.id || -1)
 						? "1"

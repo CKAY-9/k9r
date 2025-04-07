@@ -27,7 +27,7 @@ const CommunityServer = (props: CommunityServerProps) => {
 
 	return (
 		<div className={style.server} style={{ background: background }}>
-			<div className={style.content}>
+			<div className={`${style.content} flex col align justify gap-1`}>
 				<h3>{props.server.name}</h3>
 				<span>{props.server.description}</span>
 
@@ -56,7 +56,7 @@ const CommunityServers = () => {
 			{loading ? (
 				<LoadingAlert message="Loading servers..." />
 			) : (
-				<div className={style.servers}>
+				<div className={`flex row gap-1`}>
 					{servers.map((server, index) => {
 						return (
 							<Link style={{"borderBottom": "0"}} href={`/community/server/${server.id}`} key={index}>

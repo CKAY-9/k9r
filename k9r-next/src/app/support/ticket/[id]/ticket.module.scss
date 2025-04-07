@@ -8,13 +8,6 @@
     background-color: var(--foreground);
 }
 
-.title {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 2rem;
-}
-
 .replies_container, .new_reply {
     display: flex;
     flex-direction: column;

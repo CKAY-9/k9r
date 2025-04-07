@@ -76,8 +76,8 @@ const ForumInfo = (props: ForumInfoProps) => {
 	};
 
 	return (
-		<div className={style.forum_info}>
-			<section className={style.info}>
+		<div className={`${style.forum_info} flex col gap-1`}>
+			<section className={`${style.info} flex col gap-1 align justify`}>
 				<CommunityIcon
 					size_rems={5}
 					community_details={props.community_details}
@@ -85,10 +85,10 @@ const ForumInfo = (props: ForumInfoProps) => {
 				<h3>{props.community_details.name}</h3>
 			</section>
 			<section
-				className={style.info}
+				className={`${style.info} flex col gap-1 align justify`}
 				style={{ alignItems: "flex-start" }}
 			>
-				<div className={style.stat} style={{ marginBottom: "1rem" }}>
+				<div className={`flex align gap-1`} style={{ marginBottom: "1rem" }}>
 					<MaterialIcon
 						src="/icons/query_stats.svg"
 						size_rems={2}
@@ -96,7 +96,7 @@ const ForumInfo = (props: ForumInfoProps) => {
 					/>
 					<h4>Statistics</h4>
 				</div>
-				<div className={style.stat}>
+				<div className={`flex align gap-1`}>
 					<MaterialIcon
 						src="/icons/groups.svg"
 						size_rems={2}
@@ -104,7 +104,7 @@ const ForumInfo = (props: ForumInfoProps) => {
 					/>
 					<span>{total_users} Registered Users</span>
 				</div>
-				<div className={style.stat}>
+				<div className={`flex align gap-1`}>
 					<MaterialIcon
 						src="/icons/internet.svg"
 						size_rems={2}
@@ -112,7 +112,7 @@ const ForumInfo = (props: ForumInfoProps) => {
 					/>
 					<span>{active_users} Active Users</span>
 				</div>
-				<div className={style.stat}>
+				<div className={`flex align gap-1`}>
 					<MaterialIcon
 						src="/icons/thread.svg"
 						size_rems={2}
@@ -120,7 +120,7 @@ const ForumInfo = (props: ForumInfoProps) => {
 					/>
 					<span>{total_threads} Threads</span>
 				</div>
-				<div className={style.stat}>
+				<div className={`flex align gap-1`}>
 					<MaterialIcon
 						src="/icons/forum.svg"
 						size_rems={2}

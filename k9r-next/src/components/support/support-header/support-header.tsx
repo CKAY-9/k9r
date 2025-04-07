@@ -88,9 +88,9 @@ const SupportHeader = (props: SupportHeaderProps) => {
 	]);
 
 	return (
-		<header className={style.support_header}>
+		<header className={`${style.support_header} flex col gap-1`}>
 			<h1>Support</h1>
-			<nav>
+			<nav className={`flex row`}>
 				<button onClick={() => changeView(0)}>Your Tickets</button>
 				<button onClick={() => changeView(1)}>New Ticket</button>
 				{generalManagementPermissionCheck(usergroups) && (

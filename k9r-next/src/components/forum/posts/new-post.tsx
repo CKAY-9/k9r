@@ -40,8 +40,8 @@ const NewForumPost = (props: NewForumPostProps) => {
     }
 
 	return (
-		<div className={style.forum_post}>
-			<div className={style.content}>
+		<div className={`${style.forum_post} flex col gap-1`}>
+			<div className={`${style.content} flex col gap-1`}>
                 <h4>Reply to the thread: {props.forum_thread.title}</h4>
 				<MDEditor
 					height="25rem"

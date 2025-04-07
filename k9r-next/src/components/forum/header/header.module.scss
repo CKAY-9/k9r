@@ -1,9 +1,3 @@
-.forum_header {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
 .forum_information {
     background-position: 50% 50% !important;
     background-size: cover !important;
@@ -11,28 +5,18 @@
     box-shadow: var(--shdw2);
 
     .content {
-        display: flex;
         border-radius: 1rem;
-        flex-direction: row;
-        align-items: center;
         padding: 1rem;
         backdrop-filter: blur(5px);
         background-color: rgb(0, 0, 0, 0.5);
-        gap: 1rem;
     }
-}
-
-.forum_nav {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
 }
 
 @media only screen and (max-width: 900px) {
     .forum_nav {
         align-items: center;
         justify-content: center;
-        flex-direction: column;
+        flex-direction: column !important;
         flex-wrap: nowrap;
     }
 

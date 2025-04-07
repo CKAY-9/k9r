@@ -1,8 +1,5 @@
 .thread_preview {
-	display: flex;
-	flex-direction: row;
 	justify-content: space-between;
-	gap: 1rem;
 	padding: 1rem;
 	background-color: var(--accent);
 	border-radius: 1rem;
@@ -14,12 +11,6 @@
 			border-bottom: none;
 		}
 	}
-
-	.section {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
 }
 
 .header {
@@ -27,16 +18,7 @@
 	border-radius: 1rem;
 	background-color: var(--foreground);
 	box-shadow: var(--shdw1);
-
-	display: flex;
-	flex-direction: row;
 	justify-content: space-between;
-
-	.section {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
 
 	.user_tab {
 		border-bottom: none;
@@ -47,29 +29,14 @@
 	}
 }
 
-.posts {
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-}
-
 .times {
-	display: flex;
-	flex-direction: row;
-	gap: 1rem;
-	align-items: center;
-
 	.time {
 		opacity: 0.5;
 	}
 }
 
 .options {
-	display: flex;
-	flex-direction: row;
-	gap: 1rem;
 	align-items: flex-start;
-
 	.option {
 		padding: 0;
 		background-color: var(--foreground);

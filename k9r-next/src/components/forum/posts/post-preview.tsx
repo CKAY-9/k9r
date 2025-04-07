@@ -43,7 +43,7 @@ const PostPreview = (props: PostPreviewProps) => {
 
 	if (props.compact) {
 		return (
-			<div className={style.compact_preview}>
+			<div className={`${style.compact_preview} flex col gap-1`}>
 				{thread && (
 					<section>
 						<span>Posted to {thread.title}</span>
@@ -61,12 +61,12 @@ const PostPreview = (props: PostPreviewProps) => {
 	}
 
 	return (
-		<div className={style.post_preview}>
+		<div className={`${style.post_preview} flex col gap-1`}>
 			<span>{props.forum_post.content}</span>
 			{thread !== null && (
 				<span style={{ opacity: "0.5" }}>Posted to {thread.title}</span>
 			)}
-			<section className={style.times}>
+			<section className={`${style.times} flex row gap-1 align`}>
 				{author !== null && <UserTab user={author} />}
 				<span className={style.time}>Posted: {created}</span>
 				{created !== updated && (

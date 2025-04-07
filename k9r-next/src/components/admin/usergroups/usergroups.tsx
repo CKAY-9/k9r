@@ -110,15 +110,15 @@ const UsergroupsAdmin = () => {
 
 	if (loading_usergroups) {
 		return (
-			<div className={style.container}>
+			<div className={`${style.container} flex row gap-1`}>
 				<LoadingAlert />
 			</div>
 		);
 	}
 
 	return (
-		<div className={style.container}>
-			<nav>
+		<div className={`${style.container} flex row gap-1`}>
+			<nav className="flex col">
 				{usergroups.map((usergroup, index) => {
 					return (
 						<button
@@ -126,15 +126,18 @@ const UsergroupsAdmin = () => {
 								setUsergroupIndex(index);
 							}}
 							key={index}
+							className="no-border"
 							style={{ color: `${usergroup.color}` }}
 						>
 							{usergroup.name}
 						</button>
 					);
 				})}
-				<button onClick={generateNewUsergroup}>Create New</button>
+				<button className="no-border" onClick={generateNewUsergroup}>
+					Create New
+				</button>
 			</nav>
-			<div className={style.content}>
+			<div className={`flex col gap-1 flex-1`} style={{"padding": "1rem"}}>
 				{usergroup_index === -1 && (
 					<>
 						<h2>Usergroups</h2>
@@ -148,7 +151,7 @@ const UsergroupsAdmin = () => {
 					.map(() => {
 						return (
 							<div
-								className={style.usergroup}
+								className={`flex col gap-1`}
 								key={usergroup_index}
 							>
 								<section>
@@ -168,7 +171,7 @@ const UsergroupsAdmin = () => {
 										</span>
 									)}
 								</section>
-								<section className={style.field}>
+								<section className={`flex col gap-half`}>
 									<label>Name</label>
 									<input
 										id={`${usergroup_index}`}
@@ -185,7 +188,7 @@ const UsergroupsAdmin = () => {
 										}}
 									/>
 								</section>
-								<section className={style.field}>
+								<section className={`flex col gap-half`}>
 									<label>Color</label>
 									<input
 										type="color"
@@ -200,7 +203,7 @@ const UsergroupsAdmin = () => {
 								</section>
 								<section>
 									<label>Permissions</label>
-									<div className={style.permissions}>
+									<div className={`flex col gap-half`} style={{"flexWrap": "wrap"}}>
 										<section className={style.permission}>
 											<label>Create New Thread</label>
 											<input

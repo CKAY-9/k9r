@@ -26,12 +26,12 @@ const Section = (props: ForumSectionProps) => {
 	}, [props.forum_section]);
 
 	return (
-		<div className={style.forum_section}>
+		<div className={`${style.forum_section} flex col gap-1`}>
 			<section
-				className={style.header}
+				className={`${style.header} flex col gap-1`}
 				style={{ borderBottomColor: `${props.forum_section.color}` }}
 			>
-				<section className={style.title}>
+				<section className={`flex row gap-1 align`}>
 					{props.forum_section.icon.length >= 1 && (
 						<MaterialIcon src={props.forum_section.icon} alt="Section Icon" size_rems={2} />
 					)}

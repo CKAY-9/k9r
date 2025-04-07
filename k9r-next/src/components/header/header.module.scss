@@ -1,33 +1,16 @@
 .header {
-    display: flex;
-    flex-direction: row;
     justify-content: space-between;
     padding: 1rem;
     background-color: var(--foreground);
 
-    nav {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 2rem;
-    }
-}
-
-.user {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    align-items: center;
-    font-weight: bold;
-
-    &:hover {
-        border-bottom: 1px solid transparent;
+    * > a {
+        border: none;
     }
 }
 
 @media only screen and (max-width: 900px) {
     .header {
-        flex-direction: column;
+        flex-direction: column !important;
 
         nav {
             flex-direction: row;

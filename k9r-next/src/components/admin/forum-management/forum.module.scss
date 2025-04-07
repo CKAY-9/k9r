@@ -1,27 +1,23 @@
 .container {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
     border-radius: 1rem;
+    overflow: hidden;
     background-color: var(--foreground);
     box-shadow: var(--shdw1);
 
     nav {
-        display: flex;
-        flex-direction: column;
-        border-right: 1px solid var(--text);
+        background-color: var(--accent);
 
         button {
             text-align: left;
+            &:hover {
+                background-color: var(--foreground);
+            }
         }
     }
 }
 
 .content {
-    display: flex;
-    flex-direction: column;
     padding: 1rem;
-    gap: 1rem;
     flex: 1;
 
     button {
@@ -30,9 +26,6 @@
 }
 
 .sections, .topics {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
     flex-wrap: wrap;
     
     button {
@@ -41,19 +34,10 @@
 }
 
 .edit {
-    display: flex;
-    flex-direction: column;
     padding: 1rem;
     border-radius: 1rem;
-    gap: 1rem;
     background-color: var(--accent);
     box-shadow: var(--shdw1);
-    
-    .field {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
 }
 
 @media only screen and (max-width: 900px) {

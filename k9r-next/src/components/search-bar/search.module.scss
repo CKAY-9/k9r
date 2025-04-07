@@ -3,15 +3,15 @@
     border-radius: 1rem;
     background-color: var(--foreground);
     position: relative;
-
-    display: flex;
-    flex-direction: row;
     overflow: hidden;
 }
 
 .search_bar {
     flex: 1;
-    border-bottom: none;
+    border: none;
+    &:hover, &:active, &:focus {
+        border: none;
+    }
 }
 
 .search_button {

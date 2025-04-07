@@ -121,9 +121,9 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 	}
 
 	return (
-		<div className={style.new_thread}>
+		<div className={`${style.new_thread} flex col gap-1`}>
 			<h1>New Thread</h1>
-			<section className={style.field}>
+			<section className={`flex col gap-1`}>
 				<label>Section</label>
 				<select
 					defaultValue={
@@ -142,7 +142,7 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 				</select>
 			</section>
 			{parent_section !== null && (
-				<section className={style.field}>
+				<section className={`flex col gap-1`}>
 					<label>Topic</label>
 					<select
 						defaultValue={
@@ -168,7 +168,7 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 			)}
 			{parent_section !== null && parent_topic !== null && (
 				<>
-					<section className={style.field}>
+					<section className={`flex col gap-1`}>
 						<label>Thread Title</label>
 						<input
 							onChange={(e: BaseSyntheticEvent) =>
@@ -178,7 +178,7 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 							placeholder="Thread Title"
 						/>
 					</section>
-					<section className={style.field}>
+					<section className={`flex col gap-1`}>
 						<label>Thread Content</label>
 						<MDEditor
 							height="25rem"

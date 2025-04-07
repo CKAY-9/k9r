@@ -27,12 +27,12 @@ const UserContainer = (props: UserContainerProps) => {
 				</button>
 			</NavigateBack>
 			<div
-				className={style.user_container}
+				className={`${style.user_container} flex row`}
 				style={{
 					backgroundColor:
 						props.user.banner.length >= 1
 							? "rgb(0, 0, 0, 0.75)"
-							: "initial",
+							: "var(--foreground)",
 					marginTop: "1rem",
 				}}
 			>

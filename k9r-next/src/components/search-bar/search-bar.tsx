@@ -11,13 +11,13 @@ type SearchBarProps = {
 
 const SearchBar = (props: SearchBarProps) => {
 	return (
-		<div className={style.search_container}>
+		<div className={`${style.search_container} flex row`}>
 			<input
 				type="text"
 				placeholder={props.placeholder ? props.placeholder : "Search"}
-				className={style.search_bar}
+				className={`${style.search_bar} flex-1`}
 			/>
-			<button className={style.search_button} onClick={props.search}>
+			<button className={`${style.search_button} no-border`} onClick={props.search}>
 				<MaterialIcon
 					src="/icons/search.svg"
 					alt="Search"

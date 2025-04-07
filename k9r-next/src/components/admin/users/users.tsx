@@ -110,7 +110,7 @@ const UsersAdmin = () => {
 	};
 
 	return (
-		<div className={style.container}>
+		<div className={`${style.container} flex col gap-1`}>
 			{selected_user === null ? (
 				<>
 					<section>
@@ -121,7 +121,7 @@ const UsersAdmin = () => {
 							placeholder="Search users by ID, username, or display name"
 						/>
 					</section>
-					<div className={style.users}>
+					<div className={`flex col gap-1`}>
 						<h2>Results</h2>
 						{user_results.map((user, index) => {
 							if (user.oauth_type === "root-root-user") {
@@ -139,7 +139,8 @@ const UsersAdmin = () => {
 										);
 										setSelectedUser(user);
 									}}
-									style={{"padding": "0"}}
+									style={{ padding: "0" }}
+									className="no-border"
 								>
 									<UserPreview user={user} />
 								</button>
@@ -158,6 +159,8 @@ const UsersAdmin = () => {
 							router.push(pathname + "?" + `tab=users`);
 							setSelectedUser(null);
 						}}
+						className="no-border"
+						style={{"width": "fit-content"}}
 					>
 						Back
 					</button>
@@ -170,9 +173,9 @@ const UsersAdmin = () => {
 						{new Date(selected_user.joined).toLocaleString()}
 					</span>
 					<span>OAuth: {selected_user.oauth_type}</span>
-					<span>Usergroups: </span>
+					<span>Usergroups <span style={{"opacity": "0.5"}}>(click to remove)</span></span>
 					<section>
-						<section className={style.usergroups}>
+						<section className={`flex wrap row gap-1`}>
 							{usergroups
 								.filter((usergroup, _index) =>
 									selected_user.usergroups.includes(
@@ -186,6 +189,7 @@ const UsersAdmin = () => {
 												removeUsergroup(e, usergroup.id)
 											}
 											key={index}
+											className="no-border"
 										>
 											{usergroup.icon !== "" && (
 												<Image
@@ -206,10 +210,11 @@ const UsersAdmin = () => {
 										</button>
 									);
 								})}
-							<div className={style.add_container}>
+							<div className={`flex row align gap-half`}>
 								{usergroups.length !==
 									selected_user.usergroups.length && (
 									<button
+										className="no-border"
 										onClick={() =>
 											setAddUsergroup(!add_usergroup)
 										}

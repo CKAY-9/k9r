@@ -87,13 +87,13 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 		<>
 			<NavigateBack />
 			<h1>Settings</h1>
-			<section className={style.settings_section}>
+			<section className={`${style.settings_section} flex col gap-1`}>
 				<h2>Account</h2>
-                <section className={style.setting}>
+                <section className={`${style.setting} flex col gap-half`}>
 					<label>Username (can&apos;t be changed)</label>
 					<label>{props.personal_user.username}</label>
 				</section>
-				<section className={style.setting}>
+				<section className={`${style.setting} flex col gap-half`}>
 					<label>Display Name</label>
 					<input
 						type="text"
@@ -103,7 +103,7 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 						}
 					/>
 				</section>
-                <section className={style.setting}>
+                <section className={`${style.setting} flex col gap-half`}>
 					<label>Description</label>
 					<textarea
 						rows={5}
@@ -114,11 +114,11 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 						}
 					/>
 				</section>
-                <section className={style.setting}>
+                <section className={`${style.setting} flex col gap-half`}>
 					<label>Avatar</label>
 					<ImageUpload on_upload={avatarUpdate} default_image_url={avatar_url} />
 				</section>
-				<section className={style.setting}>
+				<section className={`${style.setting} flex col gap-half`}>
 					<label>Banner</label>
 					{banner_access ? (
 						<ImageUpload on_upload={bannerUpdate} default_image_url={banner_url} />
@@ -128,7 +128,7 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 				</section>
                 <button onClick={updateAccount}>Update</button>
 			</section>
-            <section className={style.settings_section}>
+            <section className={`${style.settings_section} flex col gap-1`}>
 				<h2>Dangerous</h2>
                 <button onClick={deletePosts}>Delete all posts</button>
                 <button onClick={deleteThreads}>Delete all threads</button>

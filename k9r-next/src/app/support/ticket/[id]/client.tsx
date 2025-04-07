@@ -80,7 +80,7 @@ const SupportTicketClient = (props: TicketClientProps) => {
 			/>
 			<div className={style.ticket_container}>
 				<NavigateBack />
-				<section className={style.title}>
+				<section className={`flex row align gap-2`}>
 					<h2>{props.support_ticket.issue_title}</h2>
 					<SupportTicketStatus support_ticket_status={status} />
 				</section>

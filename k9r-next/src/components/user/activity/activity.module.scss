@@ -1,15 +1,17 @@
 .activity_container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    flex: 1;
-
     .nav {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 1rem;
-        flex-wrap: wrap;
+        background-color: var(--accent);
+    
+        button {
+            border-radius: 0;
+            &:hover {
+                background-color: var(--foreground);
+            }
+        }
+    }
+
+    .activity {
+        padding: 1rem;
     }
 }
 

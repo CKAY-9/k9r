@@ -76,7 +76,7 @@ button {
 	border-radius: 1rem;
 	transition: 0.35s ease all;
 
-	.disable_border {
+	&.no-border {
 		border: none;
 		&:hover {
 			border: none;
@@ -157,6 +157,10 @@ select {
 		justify-content: center;
 	}
 
+	&.gap-half {
+		gap: 0.5rem;
+	}
+
 	&.gap-1 {
 		gap: 1rem;
 	}
@@ -166,6 +170,14 @@ select {
 	}
 	&.gap-3 {
 		gap: 3rem;
+	}
+	
+	&.flex-1 {
+		flex: 1;
+	}
+
+	&.wrap {
+		flex-wrap: wrap;
 	}
 }
 

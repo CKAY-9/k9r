@@ -45,8 +45,8 @@ const TopicPreview = (props: TopicPreviewProps) => {
 	}, [props.forum_topic.id]);
 
 	return (
-		<div className={style.topic_preview}>
-			<div className={style.info}>
+		<div className={`${style.topic_preview} flex col gap-1`}>
+			<div className={`${style.info} flex row gap-1 align`}>
 				{props.forum_topic.icon.length >= 1 && (
 					<MaterialIcon
 						src={props.forum_topic.icon}
@@ -60,7 +60,7 @@ const TopicPreview = (props: TopicPreviewProps) => {
 				<span>{props.forum_topic.description}</span>
 			</div>
 			{latest_thread !== null && (
-				<section className={style.latest_thread}>
+				<section className={`${style.latest_thread} flex row gap-1 align`}>
 					{latest_thread_author !== null && (
 						<UserTab user={latest_thread_author} />
 					)}
@@ -75,7 +75,7 @@ const TopicPreview = (props: TopicPreviewProps) => {
 					</span>
 				</section>
 			)}
-			<div className={style.info} style={{ gap: "0.5rem" }}>
+			<div className={`${style.info} flex row align gap-1`} style={{ gap: "0.5rem" }}>
 				<MaterialIcon
 					size_rems={2}
 					alt="Thread Count"

@@ -167,15 +167,15 @@ const GameServerView = (props: GameServerProps) => {
 	]);
 
 	return (
-		<div className={style.server_container}>
+		<div className={`${style.server_container} flex col gap-1`}>
 			<div
 				className={style.server_splash}
 				style={{ background: background }}
 			>
-				<div className={style.content}>
+				<div className={`${style.content} flex col align justify gap-1`}>
 					<h1>{props.game_server.name}</h1>
 					<span>{props.game_server.description}</span>
-					<section className={style.options}>
+					<section className={`${style.options} flex row gap-1`}>
 						{props.game_server.game === "minecraft" && (
 							<div style={{ textAlign: "center" }}>
 								<span style={{ opacity: "0.5" }}>
@@ -191,8 +191,8 @@ const GameServerView = (props: GameServerProps) => {
 				<NavigateBack />
 				<h2>Information</h2>
 				<section className={style.info}>
-					<div className={style.info_block}>
-						<section className={style.title}>
+					<div className={`${style.info_block} flex col gap-1 align`}>
+						<section className={`flex align gap-1`}>
 							<MaterialIcon
 								src="/icons/internet.svg"
 								alt="Online Players"
@@ -202,8 +202,8 @@ const GameServerView = (props: GameServerProps) => {
 						</section>
 						<span>{server_active ? "Online" : "Offline"}</span>
 					</div>
-					<div className={style.info_block}>
-						<section className={style.title}>
+					<div className={`${style.info_block} flex col gap-1 align`}>
+						<section className={`flex align gap-1`}>
 							<MaterialIcon
 								src="/icons/groups.svg"
 								alt="Online Players"
@@ -215,7 +215,7 @@ const GameServerView = (props: GameServerProps) => {
 					</div>
 				</section>
 				<h2>In-game Chat</h2>
-				<section className={style.game_chat}>
+				<section className={`${style.game_chat} flex col gap-1`}>
 					{chat_messages.length <= 0 && (
 						<span>No chat messages.</span>
 					)}
@@ -226,8 +226,8 @@ const GameServerView = (props: GameServerProps) => {
 						) {
 							const msg = message as MinecraftPlayerChatMessage;
 							return (
-								<div key={index} className={style.chat_message}>
-									<section className={style.user_data}>
+								<div key={index} className={`flex col gap-half`}>
+									<section className={`flex row align gap-1`}>
 										<MaterialIcon
 											src={`https://mc-heads.net/avatar/${msg.uuid}`}
 											alt="Player head"
@@ -255,11 +255,11 @@ const GameServerView = (props: GameServerProps) => {
 						return <></>;
 					})}
 					{props.personal_user !== null && (
-						<div className={style.chat_input}>
+						<div className={`${style.chat_input} flex flex-1`}>
 							<input
 								type="text"
 								placeholder={`Send a message to ${props.game_server.name}`}
-								className={style.input}
+								className="flex flex-1"
 								defaultValue={chat_message}
 								onChange={(e: BaseSyntheticEvent) =>
 									setChatMessage(e.target.value)
@@ -268,7 +268,7 @@ const GameServerView = (props: GameServerProps) => {
 							/>
 							<button
 								onClick={sendChatMessage}
-								className={style.send_button}
+								className={`${style.send_button} no-border`}
 							>
 								<MaterialIcon
 									src="/icons/send.svg"

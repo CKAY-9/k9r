@@ -47,8 +47,8 @@ const Header = (props: HeaderProps) => {
 	}, [props.personal_user]);
 
 	return (
-		<header className={style.header}>
-			<nav>
+		<header className={`${style.header} flex row`}>
+			<nav className={`flex align justify gap-2`}>
 				<Link href={"/"}>
 					<CommunityIcon
 						community_details={props.community_details}
@@ -86,7 +86,7 @@ const Header = (props: HeaderProps) => {
 					<span>{"Support"}</span>
 				</Link>
 			</nav>
-			<nav>
+			<nav className={`flex align justify gap-1`}>
 				{props.personal_user !== null ? (
 					<>
 						{usergroups.length >= 1 &&
@@ -112,7 +112,6 @@ const Header = (props: HeaderProps) => {
 						<LogoutButton button_type="icon" />
 						<Link
 							href={`/user/${props.personal_user.id}`}
-							className={style.user}
 						>
 							<UserTab user={props.personal_user} />
 						</Link>

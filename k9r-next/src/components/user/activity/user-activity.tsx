@@ -72,16 +72,30 @@ const UserActivity = (props: UserActivityProps) => {
 	};
 
 	return (
-		<div className={style.activity_container}>
-			<nav>
-				<button onClick={(e: BaseSyntheticEvent) => changeView(e, 0)}>
+		<div className={`${style.activity_container} flex col gap-1 flex-1`}>
+			<nav
+				className={`${style.nav} flex row align wrap`}
+				style={{
+					backgroundColor:
+						props.user.banner.length >= 1
+							? "rgb(0, 0, 0, 0)"
+							: "var(--accent)",
+				}}
+			>
+				<button
+					className={`no-border`}
+					onClick={(e: BaseSyntheticEvent) => changeView(e, 0)}
+				>
 					Threads ({threads.length})
 				</button>
-				<button onClick={(e: BaseSyntheticEvent) => changeView(e, 1)}>
+				<button
+					className={`no-border`}
+					onClick={(e: BaseSyntheticEvent) => changeView(e, 1)}
+				>
 					Posts ({posts.length})
 				</button>
 			</nav>
-			<div>
+			<div className={style.activity}>
 				<div
 					style={{ display: view === 0 ? "flex" : "none" }}
 					className={style.list}

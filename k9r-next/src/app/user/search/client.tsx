@@ -27,7 +27,7 @@ const SearchUsersClient = () => {
 	return (
 		<>
 			<NavigateBack />
-			<div className={style.content}>
+			<div className={`${style.content} flex col gap-1`}>
 				<h1>Search Users</h1>
 				<SearchBar
 					search={searchUser}
@@ -35,7 +35,7 @@ const SearchUsersClient = () => {
 					placeholder="Search users by ID, username, or display name"
 				/>
 			</div>
-			<div className={style.content}>
+			<div className={`${style.content} flex col gap-1`}>
 				<h2>Results</h2>
 				{user_results.map((user, index) => {
 					if (user.oauth_type === "root-root-user") {
@@ -45,7 +45,7 @@ const SearchUsersClient = () => {
 						<Link
 							href={`/user/${user.id}`}
 							key={index + Math.random()}
-							className={style.user}
+							className={`${style.user} flex col gap-1`}
 						>
 							<UserPreview user={user} />
 						</Link>

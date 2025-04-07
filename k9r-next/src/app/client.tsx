@@ -53,7 +53,7 @@ const IndexClient = (props: IndexClientProps) => {
 					})`,
 				}}
 			>
-				<div className={style.content}>
+				<div className={`${style.content} flex col align justify gap-1`}>
 					<CommunityIcon
 						size_rems={15}
 						community_details={props.community_details}
@@ -63,7 +63,7 @@ const IndexClient = (props: IndexClientProps) => {
 						{props.community_details.description.length >= 100 &&
 							`...`}
 					</span>
-					<nav className={style.nav}>
+					<nav className={`${style.nav} flex row gap-1`}>
 						{(props.community_details.features[FORUM_FEATURE] ||
 							usergroupsPermissionFlagCheck(
 								usergroups,

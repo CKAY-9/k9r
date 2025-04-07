@@ -74,13 +74,13 @@ const AdminHeader = (props: AdminHeaderProps) => {
 
 	return (
 		<>
-			<nav className={style.admin_header}>
+			<nav className={`${style.admin_header} flex row`}>
 				{usergroupsPermissionFlagCheck(
 					props.usergroups,
 					MANAGE_FORUMS
 				) && (
 					<button
-						className={style.link}
+						className={`${style.link} no-border`}
 						onClick={() => changeView(0)}
 					>
 						Manage Forum
@@ -91,7 +91,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 					MANAGE_DETAILS
 				) && (
 					<button
-						className={style.link}
+						className={`${style.link} no-border`}
 						onClick={() => changeView(1)}
 					>
 						Manage Details
@@ -102,7 +102,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 					MANAGE_USERGROUPS
 				) && (
 					<button
-						className={style.link}
+						className={`${style.link} no-border`}
 						onClick={() => changeView(2)}
 					>
 						Usergroups
@@ -113,7 +113,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 					MANAGE_USERS
 				) && (
 					<button
-						className={style.link}
+						className={`${style.link} no-border`}
 						onClick={() => changeView(3)}
 					>
 						Users
@@ -124,7 +124,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 					MANAGE_COMMUNITY
 				) && (
 					<button
-						className={style.link}
+						className={`${style.link} no-border`}
 						onClick={() => changeView(4)}
 					>
 						Game Servers

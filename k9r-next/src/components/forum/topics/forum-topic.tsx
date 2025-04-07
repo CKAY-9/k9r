@@ -6,7 +6,9 @@ import style from "./topics.module.scss";
 import MaterialIcon from "@/components/material-icon/material-icon";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getForumThreadsInForumTopicFromID, getLatestForumThreadInForumTopic } from "@/api/forum/api";
+import {
+	getForumThreadsInForumTopicFromID,
+} from "@/api/forum/api";
 import LoadingAlert from "@/components/loading/loading-alert";
 import ThreadPreview from "../threads/thread-preview";
 import NavigateBack from "@/components/nav-back/nav-back";
@@ -19,28 +21,30 @@ type TopicProps = {
 const Topic = (props: TopicProps) => {
 	const [threads, setThreads] = useState<ForumThread[]>([]);
 	const [loading_threads, setLoadingThreads] = useState<boolean>(true);
-	
+
 	useEffect(() => {
 		(async () => {
-			const ts = await getForumThreadsInForumTopicFromID(props.forum_topic.id);
+			const ts = await getForumThreadsInForumTopicFromID(
+				props.forum_topic.id
+			);
 			setThreads(ts);
 			setLoadingThreads(false);
 		})();
 	}, [props.forum_topic]);
 
 	return (
-		<div className={style.topic_container}>
-			<NavigateBack />
-			<header className={style.header}>
-				<section className={style.content}>
+		<div className={`${style.topic_container} flex col gap-1`}>
+			<header className={`${style.header} flex row gap-1`}>
+				<section className={`${style.content} flex col gap-1`}>
+					<NavigateBack />
 					<section>
 						<h3 style={{ color: `${props.forum_topic.color}` }}>
 							{props.forum_topic.name}
 						</h3>
 					</section>
 					<span>{props.forum_topic.description}</span>
-					<section className={style.stats}>
-						<section className={style.stat}>
+					<section className={`${style.stats} flex row gap-2`}>
+						<section className={`${style.stat} flex row gap-half align`}>
 							<MaterialIcon
 								alt="Threads"
 								size_rems={2}
@@ -48,7 +52,7 @@ const Topic = (props: TopicProps) => {
 							/>
 							<span>{threads.length}</span>
 						</section>
-						<section className={style.stat}>
+						<section className={`${style.stat} flex row gap-half align`}>
 							<MaterialIcon
 								alt="Posts"
 								size_rems={2}
@@ -58,25 +62,37 @@ const Topic = (props: TopicProps) => {
 						</section>
 					</section>
 				</section>
-				<section className={style.content}>
-					<Link className={style.option} href={`/forum/topic/${props.forum_topic.id}/new`}>
-						<MaterialIcon src="/icons/add.svg" alt="New Topic Thread" size_rems={2} />
+				<section>
+					<Link
+						className={style.option}
+						href={`/forum/topic/${props.forum_topic.id}/new`}
+					>
+						<MaterialIcon
+							src="/icons/add.svg"
+							alt="New Topic Thread"
+							size_rems={2}
+						/>
 						<span>New Thread</span>
 					</Link>
 				</section>
 			</header>
-			<div className={style.threads}>
+			<div className={`${style.threads} flex col gap-1`}>
 				{loading_threads ? (
 					<LoadingAlert message="Loading threads..." />
 				) : (
 					<>
-						{threads.sort((a, b) => b.sticky ? 1 : -1 ).map((thread, index) => {
-							return (
-								<Link href={`/forum/topic/${thread.topic}/${thread.id}`} key={index}>
-									<ThreadPreview forum_thread={thread} />
-								</Link>
-							)
-						})}
+						{threads
+							.sort((a, b) => (b.sticky ? 1 : -1))
+							.map((thread, index) => {
+								return (
+									<Link
+										href={`/forum/topic/${thread.topic}/${thread.id}`}
+										key={index}
+									>
+										<ThreadPreview forum_thread={thread} />
+									</Link>
+								);
+							})}
 					</>
 				)}
 			</div>

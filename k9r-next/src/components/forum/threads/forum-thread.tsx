@@ -6,10 +6,7 @@ import { User } from "@/api/users/models";
 import style from "./threads.module.scss";
 import UserTab from "@/components/user/user-tab/user-tab";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
-import {
-	getUserFromID,
-	getUserUserGroupsFromID,
-} from "@/api/users/api";
+import { getUserFromID, getUserUserGroupsFromID } from "@/api/users/api";
 import Link from "next/link";
 import {
 	deleteForumThreadFromID,
@@ -148,10 +145,10 @@ const Thread = (props: ThreadProps) => {
 
 	return (
 		<>
-			<NavigateBack />
-			<header className={style.header}>
-				<section className={style.section}>
-					<div className={style.section}>
+			<header className={`${style.header} flex row`}>
+				<section className={`${style.section} flex col gap-1`}>
+					<NavigateBack />
+					<div className={`${style.section} flex col gap-1`}>
 						{editing ? (
 							<>
 								<input
@@ -175,7 +172,7 @@ const Thread = (props: ThreadProps) => {
 							</Link>
 						)}
 					</div>
-					<div className={style.times}>
+					<div className={`${style.times} flex row gap-1 align`}>
 						<span className={style.time}>Posted: {created}</span>
 						{created !== updated && (
 							<span className={style.time}>
@@ -184,7 +181,7 @@ const Thread = (props: ThreadProps) => {
 						)}
 					</div>
 				</section>
-				<section className={style.options}>
+				<section className={`${style.options} flex row gap-1`}>
 					<LikeDislike
 						target={props.thread}
 						like_endpoint={likeThread}
@@ -194,7 +191,7 @@ const Thread = (props: ThreadProps) => {
 						<>
 							<button
 								onClick={toggleEdit}
-								className={style.option}
+								className={`${style.option} no-border`}
 							>
 								<MaterialIcon
 									src="/icons/edit.svg"
@@ -204,7 +201,7 @@ const Thread = (props: ThreadProps) => {
 							</button>
 							<button
 								onClick={deleteThread}
-								className={style.option}
+								className={`${style.option} no-border`}
 							>
 								<MaterialIcon
 									src="/icons/delete.svg"
@@ -221,7 +218,7 @@ const Thread = (props: ThreadProps) => {
 						<>
 							<button
 								onClick={toggleLocked}
-								className={style.option}
+								className={`${style.option} no-border`}
 								style={{ opacity: locked ? "1" : "0.5" }}
 							>
 								<MaterialIcon
@@ -232,7 +229,7 @@ const Thread = (props: ThreadProps) => {
 							</button>
 							<button
 								onClick={toggleSticky}
-								className={style.option}
+								className={`${style.option} no-border`}
 								style={{ opacity: sticky ? "1" : "0.5" }}
 							>
 								<MaterialIcon
@@ -245,7 +242,7 @@ const Thread = (props: ThreadProps) => {
 					)}
 				</section>
 			</header>
-			<div className={style.posts}>
+			<div className={`${style.posts} flex col gap-1`}>
 				{primary_post !== null && (
 					<Post
 						personal_user={props.personal_user}

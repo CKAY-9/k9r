@@ -21,8 +21,8 @@ type UserInfoProps = {
 
 const UserInfo = (props: UserInfoProps) => {
 	return (
-		<div className={style.user_info}>
-			<section className={style.display}>
+		<div className={`${style.user_info} flex col gap-1 align`}>
+			<section className={`${style.display} flex col align`}>
 				{props.as_link ? (
 					<Link
 						href={`/user/${props.user.id}`}
@@ -57,7 +57,7 @@ const UserInfo = (props: UserInfoProps) => {
 			</section>
 			<UserUsergroups user_id={props.user.id} />
 			{props.personal_user && (props.personal_user.id === props.user.id) && (
-				<section className={style.user_settings}>
+				<section className={`${style.user_settings} flex row wrap gap-1`}>
 					<Link href={"/user/settings"}>
 						<MaterialIcon src="/icons/settings.svg" size_rems={2} alt="Settings" />
 					</Link>

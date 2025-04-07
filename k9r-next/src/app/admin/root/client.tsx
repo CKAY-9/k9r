@@ -26,8 +26,8 @@ const AdminRootLoginClient = () => {
 	};
 
 	return (
-		<div className={style.container}>
-			<div className={style.login}>
+		<div className={`flex col flex-1 align justify`}>
+			<div className={`${style.login} flex col align justify gap-1`}>
 				<h3>Login with Root Token</h3>
 				<input
 					type="password"

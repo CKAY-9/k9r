@@ -9,7 +9,6 @@ import { useEffect, useRef, useState } from "react";
 import { getUserCount } from "@/api/users/api";
 import { K9R_WEBSOCKET_HOST } from "@/api/resources";
 import io from "socket.io-client";
-import NavigateBack from "@/components/nav-back/nav-back";
 
 type CommunityHeaderProps = {
 	community_details: CommunityDetails;
@@ -70,7 +69,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 	return (
 		<>
 			<header
-				className={style.community_header}
+				className={`${style.community_header} flex col gap-1`}
 				style={{
 					background:
 						props.community_details.banner !== ""
@@ -78,18 +77,18 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 							: "var(--foreground)",
 				}}
 			>
-				<div className={style.content}>
-					<section className={style.splash}>
+				<div className={`${style.content} flex col gap-1 align justify flex-1`}>
+					<section className={`flex col gap-1 align justify`}>
 						<CommunityIcon
 							community_details={props.community_details}
 							size_rems={15}
 						/>
 						<h2>{props.community_details.name}</h2>
 					</section>
-					<div className={style.stats_container}>
-						<div className={style.stats}>
-							<div className={style.stat}>
-								<section className={style.heading}>
+					<div className={`${style.stats_container} flex align justify gap-1 col`}>
+						<div className={`${style.stats} flex row gap-1`}>
+							<div className={`${style.stat} flex col gap-half align justify`}>
+								<section className={`flex align gap-1`}>
 									<MaterialIcon
 										src="/icons/groups.svg"
 										alt="All Users"
@@ -99,8 +98,8 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 								</section>
 								<span>{user_count}</span>
 							</div>
-							<div className={style.stat}>
-								<section className={style.heading}>
+							<div className={`${style.stat} flex col gap-half align justify`}>
+								<section className={`flex align gap-1`}>
 									<MaterialIcon
 										src="/icons/internet.svg"
 										alt="Active Users"
@@ -110,8 +109,8 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 								</section>
 								<span>{active_user_count}</span>
 							</div>
-							<div className={style.stat}>
-								<section className={style.heading}>
+							<div className={`${style.stat} flex col gap-half align justify`}>
+								<section className={`flex align gap-1`}>
 									<MaterialIcon
 										src="/icons/controller.svg"
 										alt="Active Users"

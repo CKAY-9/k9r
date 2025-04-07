@@ -23,7 +23,7 @@ const SupportTicketStatus = (props: SupportTicketStatusProps) => {
     }, [props.support_ticket_status]);
 
     return (
-        <div className={style.status_container}>
+        <div className={`flex row align gap-half`}>
             <div className={style.status} style={{backgroundColor: bg_color}}></div>
             <span>
                 {props.support_ticket_status === 0 && "Open"}

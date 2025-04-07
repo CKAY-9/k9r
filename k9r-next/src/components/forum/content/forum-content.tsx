@@ -9,7 +9,7 @@ type ForumContentProps = {
 
 const ForumContent = (props: ForumContentProps) => {
     return (
-        <div className={style.forum_content}>
+        <div className={`${style.forum_content} flex row gap-1`}>
             {props.children}
         </div>
     );

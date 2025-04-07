@@ -41,15 +41,15 @@ const ThreadPreview = (props: ThreadPreviewProps) => {
 	]);
 
 	return (
-		<div className={style.thread_preview}>
-			<section className={style.section}>
+		<div className={`${style.thread_preview} flex row gap-1`}>
+			<section className={`${style.section} flex col gap-1`}>
 				<h4>{props.forum_thread.title}</h4>
 				{primary_post !== null && (
 					<span style={{ opacity: "0.5" }}>
 						{primary_post.content.slice(0, 50)}...
 					</span>
 				)}
-				<section className={style.times}>
+				<section className={`${style.times} flex row align gap-1`}>
 					{author !== null && <UserTab user={author} />}
 					<span className={style.time}>Posted: {created}</span>
 					{created !== updated && (
@@ -57,7 +57,7 @@ const ThreadPreview = (props: ThreadPreviewProps) => {
 					)}
 				</section>
 			</section>
-			<section className={style.section}>
+			<section className={`${style.section} flex row gap-1`}>
 				<div>
 					{props.forum_thread.locked && (
 						<MaterialIcon

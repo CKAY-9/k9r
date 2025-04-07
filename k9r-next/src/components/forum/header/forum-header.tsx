@@ -10,17 +10,17 @@ type ForumHeaderProps = {
 
 const ForumHeader = (props: ForumHeaderProps) => {
     return (
-        <header className={style.forum_header}>
+        <header className={`flex col gap-1`}>
             <div 
                 className={style.forum_information}
                 style={{"background": `url(${props.community_details.banner ? props.community_details.banner : "/wikimedia_commons_backgorund.gif"})`}}
             >
-                <section className={style.content}>
+                <section className={`${style.content} flex row align gap-1`}>
                     <CommunityIcon size_rems={10} community_details={props.community_details} />
                     <h2>{props.community_details.name}&apos;s Forum</h2>
                 </section>
             </div>
-            <nav className={style.forum_nav}>
+            <nav className={`${style.forum_nav} flex gap-1 wrap`}>
                 <DropdownTab title="General">
                     <Link href="/forum">Home</Link>
                     <Link href="/">Site Homepage</Link>

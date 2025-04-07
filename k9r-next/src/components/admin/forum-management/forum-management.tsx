@@ -10,7 +10,7 @@ import { ForumSection, ForumTopic } from "@/api/forum/models";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./forum.module.scss";
 import LoadingAlert from "@/components/loading/loading-alert";
-import ImageUpload from "@/components/file-upload/file-upload";
+import ImageUpload from "@/components/image-upload/image-upload";
 import { getAnyToken } from "@/utils/token";
 
 type SectionsProps = {
@@ -64,14 +64,14 @@ const Sections = (props: SectionsProps) => {
 	};
 
 	return (
-		<div className={style.content}>
+		<div className={`flex col gap-1 ${style.content}`}>
 			<h2>Sections</h2>
 			<button onClick={generateNewSection}>New Section</button>
-			<div className={style.sections}>
+			<div className={`${style.sections} flex row gap-1`}>
 				{sections.map((section: ForumSection, index: number) => {
 					return (
-						<div key={index + Math.random()} className={style.edit}>
-							<section className={style.field}>
+						<div key={index + Math.random()} className={`${style.edit} flex col gap-1`}>
+							<section className={`flex col gap-half`}>
 								<label>Name</label>
 								<input
 									onChange={(e: BaseSyntheticEvent) => {
@@ -83,7 +83,7 @@ const Sections = (props: SectionsProps) => {
 									placeholder="Section Name"
 								/>
 							</section>
-							<section className={style.field}>
+							<section className={`flex col gap-half`}>
 								<label>Description</label>
 								<input
 									onChange={(e: BaseSyntheticEvent) => {
@@ -96,7 +96,7 @@ const Sections = (props: SectionsProps) => {
 									placeholder="Section Description"
 								/>
 							</section>
-							<section className={style.field}>
+							<section className={`flex col gap-half`}>
 								<label>Color</label>
 								<input
 									onChange={(e: BaseSyntheticEvent) => {
@@ -107,7 +107,7 @@ const Sections = (props: SectionsProps) => {
 									value={section.color}
 								/>
 							</section>
-							<section className={style.field}>
+							<section className={`flex col gap-half`}>
 								<label>Icon</label>
 								<ImageUpload
 									on_remove={() => {
@@ -121,7 +121,7 @@ const Sections = (props: SectionsProps) => {
 									default_image_url={sections[index].icon}
 								/>
 							</section>
-							<section className={style.field}>
+							<section className={`flex col gap-half`}>
 								<label>Sort Order</label>
 								<input
 									type="number"
@@ -193,7 +193,7 @@ const Topics = (props: TopicsProps) => {
 
 	if (props.forum_sections.length <= 0) {
 		return (
-			<div className={style.content}>
+			<div className={`flex col gap-1`}>
 				<h2>Topics</h2>
 				<span>A section must exist before you can create a topic!</span>
 			</div>
@@ -201,14 +201,14 @@ const Topics = (props: TopicsProps) => {
 	}
 
 	return (
-		<div className={style.content}>
+		<div className={`flex col gap-1 ${style.content}`}>
 			<h2>Topics</h2>
 			<button onClick={generateNewTopic}>New Topic</button>
-			<div className={style.sections}>
+			<div className={`${style.topics} flex row gap-1`}>
 				{topics.map((topic: ForumTopic, index: number) => {
 					return (
-						<div key={index + Math.random()} className={style.edit}>
-							<section className={style.field}>
+						<div key={index + Math.random()} className={`${style.edit} flex col gap-1`}>
+							<section className={`flex col gap-half`}>
 								<label>Name</label>
 								<input
 									onChange={(e: BaseSyntheticEvent) => {
@@ -220,7 +220,7 @@ const Topics = (props: TopicsProps) => {
 									placeholder="Section Name"
 								/>
 							</section>
-							<section className={style.field}>
+							<section className={`flex col gap-half`}>
 								<label>Description</label>
 								<input
 									onChange={(e: BaseSyntheticEvent) => {
@@ -233,7 +233,7 @@ const Topics = (props: TopicsProps) => {
 									placeholder="Section Description"
 								/>
 							</section>
-							<section className={style.field}>
+							<section className={`flex col gap-half`}>
 								<label>Color</label>
 								<input
 									onChange={(e: BaseSyntheticEvent) => {
@@ -244,7 +244,7 @@ const Topics = (props: TopicsProps) => {
 									value={topic.color}
 								/>
 							</section>
-							<section className={style.field}>
+							<section className={`flex col gap-half`}>
 								<label>Icon</label>
 								<ImageUpload
 									on_remove={() => {
@@ -258,7 +258,7 @@ const Topics = (props: TopicsProps) => {
 									default_image_url={topics[index].icon}
 								/>
 							</section>
-							<section className={style.field}>
+							<section className={`flex col gap-half`}>
 								<label>Section</label>
 								<select
 									defaultValue={topic.section}
@@ -336,13 +336,13 @@ const ForumManagementAdmin = () => {
 	}
 
 	return (
-		<div className={style.container}>
-			<nav>
-				<button onClick={() => changeView(0)}>Sections</button>
-				<button onClick={() => changeView(1)}>Topics</button>
-				<button onClick={() => changeView(2)}>Threads/Posts</button>
+		<div className={`${style.container} flex row gap-1`}>
+			<nav className="flex col">
+				<button className="no-border" style={{"borderRadius": "0"}} onClick={() => changeView(0)}>Sections</button>
+				<button className="no-border" style={{"borderRadius": "0"}} onClick={() => changeView(1)}>Topics</button>
+				<button className="no-border" style={{"borderRadius": "0"}} onClick={() => changeView(2)}>Threads/Posts</button>
 			</nav>
-			<section className={style.content}>
+			<section>
 				<div style={{ display: view === 0 ? "block" : "none" }}>
 					<Sections
 						set_sections={setSections}

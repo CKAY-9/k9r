@@ -33,7 +33,7 @@ const SearchThreadsClient = () => {
 	return (
 		<>
 			<NavigateBack />
-			<div className={style.content}>
+			<div className={`${style.content} flex col gap-1`}>
 				<h1>Search Threads</h1>
 				<SearchBar
 					search={searchPosts}
@@ -41,7 +41,7 @@ const SearchThreadsClient = () => {
 					placeholder="Search threads by ID, title"
 				/>
 			</div>
-			<div className={style.content}>
+			<div className={`${style.content} flex col gap-1`}>
 				<h2>Results</h2>
 				{thread_results.map((thread, index) => {
 					return (

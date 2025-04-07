@@ -85,11 +85,11 @@ const Post = (props: ForumPostProps) => {
 	};
 
 	return (
-		<div className={style.forum_post} id={`post-${props.forum_post.id}`}>
+		<div className={`${style.forum_post} flex row gap-1`} id={`post-${props.forum_post.id}`}>
 			{author !== null && (
 				<UserInfo user={author} as_link={true} from_post={true} />
 			)}
-			<div className={style.content}>
+			<div className={`${style.content} flex col gap-1 flex-1`}>
 				{editing ? (
 					<>
 						<MDEditor
@@ -116,15 +116,15 @@ const Post = (props: ForumPostProps) => {
 					like_endpoint={likePost}
 					personal_user={props.personal_user}
 				/>
-				<div className={style.times}>
+				<div className={`${style.times} flex row gap-1 align`}>
 					<span className={style.time}>Posted: {created}</span>
 					{created !== updated && (
 						<span className={style.time}>Updated: {updated}</span>
 					)}
 				</div>
 				{is_author && (
-					<section className={style.options}>
-						<button onClick={toggleEdit} className={style.option}>
+					<section className={`${style.options} flex row align gap-1`}>
+						<button onClick={toggleEdit} className={`${style.option} no-border`}>
 							<MaterialIcon
 								src={`/icons/edit.svg`}
 								alt="Edit Post"

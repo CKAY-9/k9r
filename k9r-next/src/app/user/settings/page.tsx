@@ -30,7 +30,7 @@ const UserSettingsPage = async () => {
 	return (
 		<>
             <Header personal_user={personal_user} community_details={details} />
-            <main className="container" style={{"gap": "1rem"}}>
+            <main className="container flex gap-1">
                 <UserSettingsPageClient personal_user={personal_user} />
             </main>
             <Footer community_details={details} />

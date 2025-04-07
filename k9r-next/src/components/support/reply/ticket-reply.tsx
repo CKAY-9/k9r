@@ -21,7 +21,7 @@ const TicketReply = (props: TicketReplyProps) => {
 	return (
 		<div className={style.reply}>
 			<p>{props.support_ticket_reply.message}</p>
-			<section className={style.info}>
+			<section className={`flex row gap-1 align`}>
                 {user && <UserTab user={user} />}
                 <span style={{"opacity": "0.5"}}>Posted {new Date(props.support_ticket_reply.created).toLocaleString()}</span>
             </section>

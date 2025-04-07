@@ -24,7 +24,7 @@ const AdminHomeClient = (props: AdminHomeClientProps) => {
 
 	return (
 		<>
-			<div className={style.container}>
+			<div className={`flex col gap-1`}>
 				<NavigateBack />
 				<AdminHeader
 					community_details={props.community_details}
