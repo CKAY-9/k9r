@@ -149,7 +149,7 @@ const Sections = (props: SectionsProps) => {
 			</div>
 			{sections.length > 0 && (
 				<>
-					<span>Some changes won't be reflected until updated.</span>
+					<span>Some changes won&apos;t be reflected until updated.</span>
 					<button onClick={updateSections}>Update</button>
 				</>
 			)}
@@ -297,7 +297,7 @@ const Topics = (props: TopicsProps) => {
 			</div>
 			{topics.length > 0 && (
 				<>
-					<span>Some changes won't be reflected until updated.</span>
+					<span>Some changes won&apos;t be reflected until updated.</span>
 					<button onClick={updateTopics}>Update</button>
 				</>
 			)}
