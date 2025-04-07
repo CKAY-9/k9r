@@ -2,7 +2,6 @@
 
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./details.module.scss";
-import { getCookie } from "@/utils/cookies";
 import LoadingAlert from "@/components/loading/loading-alert";
 import { CommunityDetails } from "@/api/community-details/models";
 import {
@@ -11,6 +10,7 @@ import {
 } from "@/api/community-details/api";
 import ImageUpload from "@/components/image-upload/image-upload";
 import { COMMUNITY_FEATURE, FORUM_FEATURE, STORE_FEATURE } from "@/api/resources";
+import { getAnyToken } from "@/utils/token";
 
 const CommunityDetailsAdmin = () => {
 	const [community_details, setCommunityDetails] =
@@ -36,7 +36,7 @@ const CommunityDetailsAdmin = () => {
 		}
 
 		const response = await updateCommunityDetails(
-			getCookie("token") || "",
+			await getAnyToken(),
 			community_details
 		);
 		if (response !== null) {

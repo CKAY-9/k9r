@@ -9,9 +9,9 @@ import {
 	getAllGameServers,
 	updateGameServerFromID,
 } from "@/api/game-servers/api";
-import { getCookie } from "@/utils/cookies";
 import Popup from "@/components/popup/popup";
 import Image from "next/image";
+import { getAnyToken } from "@/utils/token";
 
 type GameServerEditProps = {
 	game_server: GameServer;
@@ -131,14 +131,14 @@ const GameServersAdmin = () => {
 			return;
 		}
 
-		await deleteGameServerFromID(game_server_id, getCookie("token") || "");
+		await deleteGameServerFromID(game_server_id, await getAnyToken());
 	};
 
 	const updateGameServer = async (game_server: GameServer, index: number) => {
 		const response = await updateGameServerFromID(
 			game_server.id,
 			game_server,
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 		if (response !== null) {
 			const filtered = game_servers.filter(
@@ -151,7 +151,7 @@ const GameServersAdmin = () => {
 	const newGameServer = async (game_server: GameServer, index: number) => {
 		const response = await createGameServer(
 			game_server,
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 		if (response !== null) {
 			const filtered = game_servers.filter(

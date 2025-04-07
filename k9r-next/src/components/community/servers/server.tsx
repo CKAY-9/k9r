@@ -8,10 +8,10 @@ import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
 import { K9R_WEBSOCKET_HOST } from "@/api/resources";
 import io from "socket.io-client";
 import MaterialIcon from "@/components/material-icon/material-icon";
-import { getCookie } from "@/utils/cookies";
 import UserIcon from "@/components/user/user-icon/user-icon";
 import { getUserFromID } from "@/api/users/api";
 import NavigateBack from "@/components/nav-back/nav-back";
+import { getAnyToken } from "@/utils/token";
 
 type GameServerProps = {
 	game_server: GameServer;
@@ -101,7 +101,7 @@ const GameServerView = (props: GameServerProps) => {
 				message: chat_message,
 			},
 			sender: ws.current.id,
-			server_key: getCookie("token") || "",
+			server_key: await getAnyToken(),
 		};
 		ws.current.emit("send_chat_message", JSON.stringify(message_data));
 		setChatMessage("");

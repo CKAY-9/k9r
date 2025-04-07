@@ -6,7 +6,7 @@ import MDEditor from "@uiw/react-md-editor";
 import { ForumPost, ForumThread } from "@/api/forum/models";
 import { createNewForumPost } from "@/api/forum/api";
 import { User } from "@/api/users/models";
-import { getCookie } from "@/utils/cookies";
+import { getAnyToken } from "@/utils/token";
 
 type NewForumPostProps = {
     forum_thread: ForumThread;
@@ -32,7 +32,7 @@ const NewForumPost = (props: NewForumPostProps) => {
             dislikes: [],
             thread: props.forum_thread.id
         }
-        const response = await createNewForumPost(new_post, getCookie("token") || "");
+        const response = await createNewForumPost(new_post, await getAnyToken());
         setContent("");
 
         if (props.on_new_post !== undefined) {

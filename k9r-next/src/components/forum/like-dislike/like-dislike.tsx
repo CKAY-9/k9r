@@ -2,10 +2,10 @@
 
 import { ForumPost, ForumThread } from "@/api/forum/models";
 import { User } from "@/api/users/models";
-import { getCookie } from "@/utils/cookies";
 import style from "./like-dislike.module.scss";
 import { useEffect, useState } from "react";
 import MaterialIcon from "@/components/material-icon/material-icon";
+import { getAnyToken } from "@/utils/token";
 
 type LikeDislikeProps = {
 	target: ForumPost | ForumThread;
@@ -48,7 +48,7 @@ const LikeDislike = (props: LikeDislikeProps) => {
 			const response = await props.like_endpoint(
 				0,
 				props.target.id,
-				getCookie("token") || ""
+				await getAnyToken()
 			);
 			setLikeState(0);
 			if (props.on_neutral) {
@@ -60,7 +60,7 @@ const LikeDislike = (props: LikeDislikeProps) => {
 		const response = await props.like_endpoint(
 			state,
 			props.target.id,
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 
 		setLikeState(state);

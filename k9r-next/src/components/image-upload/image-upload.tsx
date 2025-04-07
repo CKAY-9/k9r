@@ -1,11 +1,11 @@
 "use client";
 
 import { K9R_API } from "@/api/resources";
-import { deleteFile, getFile, getFileURL, uploadFile } from "@/api/storage/api";
-import { getCookie } from "@/utils/cookies";
+import { deleteFile, uploadFile } from "@/api/storage/api";
 import Image from "next/image";
 import { BaseSyntheticEvent, useState } from "react";
 import style from "./upload.module.scss";
+import { getAnyToken } from "@/utils/token";
 
 type ImageUploadProps = {
 	default_image_url?: string;
@@ -30,10 +30,7 @@ const ImageUpload = (props: ImageUploadProps) => {
 		form_data.append("file", file);
 
 		try {
-			const response = await uploadFile(
-				form_data,
-				getCookie("token") || ""
-			);
+			const response = await uploadFile(form_data, await getAnyToken());
 
 			if (response !== null) {
 				setImageUrl(`${K9R_API}/storage${response.url}`);
@@ -56,7 +53,7 @@ const ImageUpload = (props: ImageUploadProps) => {
 		const url_split = image_url.split("files/")[1];
 		if (!url_split) return;
 
-		const response = await deleteFile(url_split, getCookie("token") || "");
+		const response = await deleteFile(url_split, await getAnyToken());
 
 		if (response) {
 			setImageUrl(null);

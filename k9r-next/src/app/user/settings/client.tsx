@@ -4,11 +4,12 @@ import { User } from "@/api/users/models";
 import style from "./settings.module.scss";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import { deleteUser, getUserUserGroupsFromID, updateUserByToken } from "@/api/users/api";
-import { eraseCookie, getCookie } from "@/utils/cookies";
+import { eraseCookie } from "@/utils/cookies";
 import { deleteAllUserPosts, deleteAllUserThreads } from "@/api/forum/api";
 import ImageUpload from "@/components/image-upload/image-upload";
 import { EDIT_PROFILE_BANNER, usergroupsPermissionFlagCheck } from "@/api/permissions";
 import NavigateBack from "@/components/nav-back/nav-back";
+import { getAnyToken } from "@/utils/token";
 
 type UserSettingsPageClientProps = {
 	personal_user: User;
@@ -38,7 +39,7 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 		props.personal_user.description = description;
 		props.personal_user.avatar = avatar_url;
 		props.personal_user.banner = banner_url;
-		const response = await updateUserByToken(props.personal_user, getCookie("token") || "");
+		const response = await updateUserByToken(props.personal_user, await getAnyToken());
 		if (response !== null) {
 
 		}
@@ -47,18 +48,18 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 	const deleteThreads = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
 
-		const _response = await deleteAllUserThreads(getCookie("token") || "");
+		const _response = await deleteAllUserThreads(await getAnyToken());
 	}
 
 	const deletePosts = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
 		
-		const _response = await deleteAllUserPosts(getCookie("token") || "");
+		const _response = await deleteAllUserPosts(await getAnyToken());
 	}
 
 	const deleteAccount = async (e: BaseSyntheticEvent) => {
 		
-		const response = await deleteUser(getCookie("token") || "");
+		const response = await deleteUser(await getAnyToken());
 		if (response) {
 			eraseCookie("token");
 			window.location.href = "/user/login";
@@ -77,7 +78,7 @@ const UserSettingsPageClient = (props: UserSettingsPageClientProps) => {
 
 	useEffect(() => {
 		(async () => {
-			const usergroups = await getUserUserGroupsFromID(props.personal_user.id, getCookie("token") || "");
+			const usergroups = await getUserUserGroupsFromID(props.personal_user.id, await getAnyToken());
 			setBannerAccess(usergroupsPermissionFlagCheck(usergroups, EDIT_PROFILE_BANNER));
 		})();
 	}, [props.personal_user.id])

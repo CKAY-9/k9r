@@ -13,9 +13,9 @@ import {
 	getAllUsergroups,
 	removeUserFromUsergroupFromIDs,
 } from "@/api/usergroups/api";
-import { getCookie } from "@/utils/cookies";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getAnyToken } from "@/utils/token";
 
 const UsersAdmin = () => {
 	const [search, setSearch] = useState<string>("");
@@ -80,7 +80,7 @@ const UsersAdmin = () => {
 		const response = await addUsertoUsergroupFromIDs(
 			selected_user.id,
 			usergroup_id,
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 		if (response !== null) {
 			setSelectedUser(response);
@@ -101,7 +101,7 @@ const UsersAdmin = () => {
 		const response = await removeUserFromUsergroupFromIDs(
 			selected_user.id,
 			usergroup_id,
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 		if (response !== null) {
 			setSelectedUser(response);

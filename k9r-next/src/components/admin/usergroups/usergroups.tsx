@@ -26,7 +26,7 @@ import {
 	ROOT_ACCESS,
 	SITE_SETTINGS,
 } from "@/api/permissions";
-import { getCookie } from "@/utils/cookies";
+import { getAnyToken } from "@/utils/token";
 
 const UsergroupsAdmin = () => {
 	const [usergroups, setUsergroups] = useState<Usergroup[]>([]);
@@ -82,7 +82,7 @@ const UsergroupsAdmin = () => {
 		const update = await updateUsergroupFromID(
 			current.id,
 			current,
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 		if (update !== null) {
 			setUsergroups(usergroups.filter((v) => v.id !== update.id));
@@ -105,7 +105,7 @@ const UsergroupsAdmin = () => {
 			return;
 		}
 
-		await deleteUsergroupFromID(current.id, getCookie("token") || "");
+		await deleteUsergroupFromID(current.id, await getAnyToken());
 	};
 
 	if (loading_usergroups) {

@@ -9,9 +9,9 @@ import {
 import { ForumSection, ForumTopic } from "@/api/forum/models";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import style from "./forum.module.scss";
-import { getCookie } from "@/utils/cookies";
 import LoadingAlert from "@/components/loading/loading-alert";
 import ImageUpload from "@/components/image-upload/image-upload";
+import { getAnyToken } from "@/utils/token";
 
 type SectionsProps = {
 	forum_sections: ForumSection[];
@@ -53,7 +53,7 @@ const Sections = (props: SectionsProps) => {
 
 		const update = await updateAllSections(
 			sections,
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 		props.set_sections(update);
 		setSections(update);
@@ -182,7 +182,7 @@ const Topics = (props: TopicsProps) => {
 			e.preventDefault();
 		}
 
-		const update = await updateAllTopics(topics, getCookie("token") || "");
+		const update = await updateAllTopics(topics, await getAnyToken());
 		props.set_topics(update);
 		setTopics(update);
 	};

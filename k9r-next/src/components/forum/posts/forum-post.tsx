@@ -14,9 +14,8 @@ import {
 	likePost,
 	updateForumPostFromID,
 } from "@/api/forum/api";
-import { getCookie } from "@/utils/cookies";
 import LikeDislike from "../like-dislike/like-dislike";
-import Link from "next/link";
+import { getAnyToken } from "@/utils/token";
 
 type ForumPostProps = {
 	forum_post: ForumPost;
@@ -65,7 +64,7 @@ const Post = (props: ForumPostProps) => {
 			const update = await updateForumPostFromID(
 				props.forum_post.id,
 				post,
-				getCookie("token") || ""
+				await getAnyToken()
 			);
 		}
 
@@ -77,7 +76,7 @@ const Post = (props: ForumPostProps) => {
 
 		const delete_response = await deleteForumPostFromID(
 			props.forum_post.id,
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 
 		if (props.on_post_delete !== undefined) {

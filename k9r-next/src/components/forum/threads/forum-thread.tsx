@@ -7,7 +7,6 @@ import style from "./threads.module.scss";
 import UserTab from "@/components/user/user-tab/user-tab";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import {
-	getPersonalUser,
 	getUserFromID,
 	getUserUserGroupsFromID,
 } from "@/api/users/api";
@@ -16,7 +15,6 @@ import {
 	deleteForumThreadFromID,
 	getForumPostFromID,
 	getForumPostsFromForumThreadID,
-	likePost,
 	likeThread,
 	toggleThreadLock,
 	toggleThreadSticky,
@@ -25,11 +23,11 @@ import {
 import Post from "../posts/forum-post";
 import NewForumPost from "../posts/new-post";
 import MaterialIcon from "@/components/material-icon/material-icon";
-import { getCookie } from "@/utils/cookies";
 import { Usergroup } from "@/api/usergroups/models";
 import { MANAGE_POSTS, usergroupsPermissionFlagCheck } from "@/api/permissions";
 import LikeDislike from "../like-dislike/like-dislike";
 import NavigateBack from "@/components/nav-back/nav-back";
+import { getAnyToken } from "@/utils/token";
 
 type ThreadProps = {
 	community_details: CommunityDetails;
@@ -102,7 +100,7 @@ const Thread = (props: ThreadProps) => {
 
 		const response = await deleteForumThreadFromID(
 			props.thread.id,
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 		if (response) {
 			window.location.href = `/forum/topic/${props.thread.topic}`;
@@ -120,7 +118,7 @@ const Thread = (props: ThreadProps) => {
 			const update = await updateForumThreadFromID(
 				props.thread.id,
 				thread,
-				getCookie("token") || ""
+				await getAnyToken()
 			);
 			setThread(thread);
 		}
@@ -133,7 +131,7 @@ const Thread = (props: ThreadProps) => {
 
 		const response = await toggleThreadLock(
 			props.thread.id,
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 		setLocked(!locked);
 	};
@@ -143,7 +141,7 @@ const Thread = (props: ThreadProps) => {
 
 		const response = await toggleThreadSticky(
 			props.thread.id,
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 		setSticky(!sticky);
 	};

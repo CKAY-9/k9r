@@ -13,7 +13,7 @@ import {
 } from "@/api/forum/api";
 import LoadingAlert from "@/components/loading/loading-alert";
 import MDEditor from "@uiw/react-md-editor";
-import { getCookie } from "@/utils/cookies";
+import { getAnyToken } from "@/utils/token";
 
 type NewForumThreadClientProps = {
 	forum_topic: ForumTopic | null;
@@ -104,7 +104,7 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 				dislikes: [],
 				thread: -1,
 			},
-			getCookie("token") || ""
+			await getAnyToken()
 		);
 
 		if (response !== null) {
