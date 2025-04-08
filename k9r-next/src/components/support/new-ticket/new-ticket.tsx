@@ -7,9 +7,11 @@ import { SupportTicket } from "@/api/support/models";
 import { createNewSupportTicket } from "@/api/support/api";
 import { getAnyToken } from "@/utils/token";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { getUserFromID } from "@/api/users/api";
+import { getUserFromID, searchUsers } from "@/api/users/api";
 import UserTab from "@/components/user/user-tab/user-tab";
 import MaterialIcon from "@/components/material-icon/material-icon";
+import Popup from "@/components/popup/popup";
+import SearchBar from "@/components/search-bar/search-bar";
 
 type NewSupportTicketClientProps = {
 	personal_user: User;
@@ -28,6 +30,10 @@ const NewSupportTicket = (props: NewSupportTicketClientProps) => {
 	const [involved_users_ids, setInvolvedUsersIDs] = useState<number[]>([]);
 	const [involved_users, setInvolvedUsers] = useState<User[]>([]);
 	const [description, setDescription] = useState<string>("");
+	const [show_add_user, setShowAddUsers] = useState<boolean>(false);
+	const [user_search, setUserSearch] = useState<string>("");
+	const [search_results, setSearchResults] = useState<User[]>([]);
+	const [page, setPage] = useState<number>(1);
 
 	useEffect(() => {
 		(async () => {
@@ -48,6 +54,17 @@ const NewSupportTicket = (props: NewSupportTicketClientProps) => {
 			}
 		})();
 	}, [reported_user_id, reported_user_id_param]);
+
+	const searchNewUserToAdd = async () => {
+		const search_results = await searchUsers(user_search, page);
+		setSearchResults(search_results);
+	};
+
+	const addUserToTicket = async (user: User) => {
+		setShowAddUsers(false);
+		setInvolvedUsers((old) => [...old, user]);
+		setInvolvedUsersIDs((old) => [...old, user.id]);
+	}
 
 	const submitTicket = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
@@ -78,6 +95,32 @@ const NewSupportTicket = (props: NewSupportTicketClientProps) => {
 
 	return (
 		<>
+			{show_add_user && (
+				<>
+					<Popup close={() => setShowAddUsers(false)}>
+						<div
+							style={{ padding: "1rem" }}
+							className="flex col gap-1"
+						>
+							<h2>Report User</h2>
+							<SearchBar
+								placeholder="Search users by display name, username, and ID"
+								search={searchNewUserToAdd}
+								set_search={setUserSearch}
+							/>
+							<div className="flex col gap-1" style={{"maxHeight": "500px", "overflowY": "auto"}}>
+								{search_results.map((user, index) => {
+									return (
+										<button key={index} onClick={() => addUserToTicket(user)}>
+											<UserTab user={user} />
+										</button>
+									);
+								})}
+							</div>
+						</div>
+					</Popup>
+				</>
+			)}
 			<h2>New Support Ticket</h2>
 			<section className={style.field}>
 				<label>Title</label>
@@ -124,7 +167,7 @@ const NewSupportTicket = (props: NewSupportTicketClientProps) => {
 										</button>
 									);
 								})}
-								<button>
+								<button onClick={() => setShowAddUsers(true)}>
 									<MaterialIcon
 										src="/icons/add.svg"
 										alt="Add User"

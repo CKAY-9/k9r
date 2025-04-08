@@ -37,6 +37,7 @@ const SupportTicketClient = (props: TicketClientProps) => {
 	const [new_message, setNewMessage] = useState<string>("");
 	const [new_files, setNewFiles] = useState<string[]>([]);
 	const [usergroups, setUsergroups] = useState<Usergroup[]>([]);
+	const [involved_users, setInvolvedUsers] = useState<User[]>([]);
 
 	useEffect(() => {
 		(async () => {
@@ -51,6 +52,13 @@ const SupportTicketClient = (props: TicketClientProps) => {
 
 			const us = await getUserUserGroupsFromID(props.personal_user.id);
 			setUsergroups(us);
+
+			if (props.support_ticket.issue_topic === "users") {
+				const user_promises = props.support_ticket.involved_users.map((id) => getUserFromID(id));
+				const users = await Promise.all(user_promises);
+				const valid_users = users.filter((user) => user !== null);
+				setInvolvedUsers(valid_users);
+			}
 		})();
 	}, [props.support_ticket.id, props.support_ticket.creator]);
 
@@ -113,13 +121,21 @@ const SupportTicketClient = (props: TicketClientProps) => {
 						<UserTab user={creator} />
 					</Link>
 				)}
-				<section>
+				<section className="flex col gap-half">
 					<h4>Topic</h4>
 					<span style={{ textTransform: "capitalize" }}>
 						{props.support_ticket.issue_topic}
 					</span>
 					{props.support_ticket.issue_topic === "users" && (
-						<span>Involved user(s): </span>
+						<div className="flex row align gap-1 wrap">
+							{involved_users.map((user, index) => {
+								return (
+									<Link style={{"border": "none"}} href={`/user/${user.id}`} key={index}>
+										<UserTab user={user} />
+									</Link>
+								)
+							})}
+						</div>
 					)}
 				</section>
 				<section>

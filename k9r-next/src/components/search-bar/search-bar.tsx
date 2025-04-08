@@ -1,11 +1,12 @@
 "use client";
 
+import { BaseSyntheticEvent } from "react";
 import MaterialIcon from "../material-icon/material-icon";
 import style from "./search.module.scss";
 
 type SearchBarProps = {
-	set_search: any;
-	search: any;
+	set_search: (search: string) => void;
+	search: () => void;
 	placeholder?: string;
 };
 
@@ -16,8 +17,14 @@ const SearchBar = (props: SearchBarProps) => {
 				type="text"
 				placeholder={props.placeholder ? props.placeholder : "Search"}
 				className={`${style.search_bar} flex-1`}
+				onChange={(e: BaseSyntheticEvent) =>
+					props.set_search(e.target.value)
+				}
 			/>
-			<button className={`${style.search_button} no-border`} onClick={props.search}>
+			<button
+				className={`${style.search_button} no-border`}
+				onClick={props.search}
+			>
 				<MaterialIcon
 					src="/icons/search.svg"
 					alt="Search"
