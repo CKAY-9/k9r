@@ -11,6 +11,7 @@ import UserUsergroups from "../usergroups/user-usergroups";
 import Link from "next/link";
 import LogoutButton from "@/components/logout-button/logout";
 import MaterialIcon from "@/components/material-icon/material-icon";
+import ReportUserLink from "@/components/support/report-user/report-user";
 
 type UserInfoProps = {
 	user: User;
@@ -56,12 +57,24 @@ const UserInfo = (props: UserInfoProps) => {
 				)}
 			</section>
 			<UserUsergroups user_id={props.user.id} />
-			{props.personal_user && (props.personal_user.id === props.user.id) && (
-				<section className={`${style.user_settings} flex row wrap gap-1`}>
-					<Link href={"/user/settings"}>
-						<MaterialIcon src="/icons/settings.svg" size_rems={2} alt="Settings" />
-					</Link>
-					<LogoutButton button_type="icon" />
+			{props.personal_user && (
+				<section
+					className={`${style.user_settings} flex row wrap gap-1`}
+				>
+					{props.personal_user.id === props.user.id ? (
+						<>
+							<Link href={"/user/settings"}>
+								<MaterialIcon
+									src="/icons/settings.svg"
+									size_rems={2}
+									alt="Settings"
+								/>
+							</Link>
+							<LogoutButton button_type="icon" />
+						</>
+					) : (
+						<ReportUserLink user_id={props.user.id} />
+					)}
 				</section>
 			)}
 		</div>

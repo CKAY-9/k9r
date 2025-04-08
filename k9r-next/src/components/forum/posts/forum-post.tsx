@@ -87,7 +87,7 @@ const Post = (props: ForumPostProps) => {
 	return (
 		<div className={`${style.forum_post} flex row gap-1`} id={`post-${props.forum_post.id}`}>
 			{author !== null && (
-				<UserInfo user={author} as_link={true} from_post={true} />
+				<UserInfo user={author} as_link={true} from_post={true} personal_user={props.personal_user} />
 			)}
 			<div className={`${style.content} flex col gap-1 flex-1`}>
 				{editing ? (

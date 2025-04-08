@@ -1,5 +1,4 @@
 /*
-
     Routes and Middleware are waterfalls.
     Things applied at the top of a service effect ones below it.
     For this reason, structure routes from least to most privileged
@@ -33,7 +32,11 @@ use game_servers::{
 use middleware::{
     features::{community_feature_access, forum_feature_access, store_feature_access},
     permissions::{
-        authorized_game_server_middleware, community_management_middleware, create_new_post_middleware, create_new_thread_middleware, details_management_middleware, edit_post_middleware, edit_profile_middleware, edit_thread_middleware, forum_management_middleware, general_management_middleware, thread_management_middleware, user_management_middleware, usergroup_management_middleware, valid_user_middleware
+        authorized_game_server_middleware, community_management_middleware,
+        create_new_post_middleware, create_new_thread_middleware, details_management_middleware,
+        edit_post_middleware, edit_profile_middleware, edit_thread_middleware,
+        forum_management_middleware, general_management_middleware, thread_management_middleware,
+        user_management_middleware, usergroup_management_middleware, valid_user_middleware,
     },
 };
 use storage::{
@@ -42,8 +45,12 @@ use storage::{
     post::save_file,
 };
 use support::{
-    get::{all_support_tickets, all_user_associated_support_tickets, get_support_ticket, get_ticket_replies},
-    post::{new_support_ticket, new_support_ticket_reply}, put::toggle_ticket_completed,
+    get::{
+        all_support_tickets, all_user_associated_support_tickets, get_support_ticket,
+        get_ticket_replies,
+    },
+    post::{new_support_ticket, new_support_ticket_reply},
+    put::toggle_ticket_completed,
 };
 use user::{
     delete::{
@@ -96,13 +103,13 @@ fn configure_support_routes(cfg: &mut web::ServiceConfig) {
                 web::resource("/ticket/all")
                     .wrap(from_fn(general_management_middleware))
                     .route(web::get().to(all_support_tickets))
-                    .guard(guard::Get())
+                    .guard(guard::Get()),
             )
             .service(
                 web::resource("/ticket/mine")
                     .wrap(from_fn(valid_user_middleware))
                     .route(web::get().to(all_user_associated_support_tickets))
-                    .guard(guard::Get())
+                    .guard(guard::Get()),
             )
             .service(
                 web::resource("/ticket")
@@ -120,7 +127,7 @@ fn configure_support_routes(cfg: &mut web::ServiceConfig) {
                 web::resource("/ticket/{id}/completed")
                     .wrap(from_fn(general_management_middleware))
                     .route(web::put().to(toggle_ticket_completed))
-                    .guard(guard::Put())
+                    .guard(guard::Put()),
             )
             .service(
                 web::resource("/ticket/{id}/replies")
