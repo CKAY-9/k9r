@@ -10,7 +10,7 @@ use k9r_db::{
 };
 use k9r_utils::iso8601;
 
-use crate::models::Message;
+use crate::{middleware::has_general_management_permissions, models::Message};
 
 use super::has_support_ticket_access;
 
@@ -107,6 +107,12 @@ pub async fn new_support_ticket_reply(
     if !has_support_ticket_access(&user, &support_ticket) {
         return HttpResponse::Unauthorized().json(Message {
             message: "Can't access support ticket".to_string(),
+        });
+    }
+
+    if support_ticket.status == 2 && !has_general_management_permissions(&user) {
+        return HttpResponse::Unauthorized().json(Message {
+            message: "Can't reply to closed tickets.".to_string(),
         });
     }
 

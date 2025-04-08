@@ -43,7 +43,7 @@ use storage::{
 };
 use support::{
     get::{all_support_tickets, all_user_associated_support_tickets, get_support_ticket, get_ticket_replies},
-    post::{new_support_ticket, new_support_ticket_reply},
+    post::{new_support_ticket, new_support_ticket_reply}, put::toggle_ticket_completed,
 };
 use user::{
     delete::{
@@ -115,6 +115,12 @@ fn configure_support_routes(cfg: &mut web::ServiceConfig) {
                     .wrap(from_fn(valid_user_middleware))
                     .route(web::get().to(get_support_ticket))
                     .guard(guard::Get()),
+            )
+            .service(
+                web::resource("/ticket/{id}/completed")
+                    .wrap(from_fn(general_management_middleware))
+                    .route(web::put().to(toggle_ticket_completed))
+                    .guard(guard::Put())
             )
             .service(
                 web::resource("/ticket/{id}/replies")

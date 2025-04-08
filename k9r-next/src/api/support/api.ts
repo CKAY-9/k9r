@@ -110,3 +110,21 @@ export const createNewSupportTicketReply = async (
 		return null;
 	}
 };
+
+export const toggleSupportTicketCompleted = async (
+	support_ticket_id: number,
+	token: string
+): Promise<SupportTicket | null> => {
+	try {
+		const request = await axios({
+			url: `${K9R_API}/support/ticket/${support_ticket_id}/completed`,
+			method: "PUT",
+			headers: {
+				Authorization: token
+			}
+		});
+		return request.data;	
+	} catch {
+		return null;
+	}
+} 

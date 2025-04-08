@@ -37,9 +37,7 @@ const SupportTicketPreview = (props: SupportTicketPreviewProps) => {
 			</span>
 			<span>{props.support_ticket.issue_description.slice(0, 100)}</span>
 			{creator && (
-				<Link className={style.user_link} href={`/user/${creator.id}`}>
-					<UserTab user={creator} />
-				</Link>
+				<UserTab user={creator} />
 			)}
 		</div>
 	);
