@@ -164,6 +164,7 @@ textarea {
 	&.gap-2 {
 		gap: 2rem;
 	}
+	
 	&.gap-3 {
 		gap: 3rem;
 	}
@@ -175,6 +176,10 @@ textarea {
 	&.wrap {
 		flex-wrap: wrap;
 	}
+}
+
+p {
+	word-break: break-all;
 }
 
 @media only screen and (max-width: 900px) {

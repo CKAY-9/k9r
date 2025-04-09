@@ -49,8 +49,8 @@ const K9RChatMessage = (props: K9RMinecraftMessageProps) => {
 	}, [props.message.id]);
 
 	return (
-		<div className={style.chat_message}>
-			<section className={style.user_data}>
+		<div className={`flex col gap-1`}>
+			<section className={`flex row align gap-half`}>
 				{sender !== null && <UserIcon user={sender} size_rems={2} />}
 				<span>{props.message.display_name}</span>
 				<span style={{"opacity": "0.5"}}>[K9R]</span>
@@ -226,8 +226,8 @@ const GameServerView = (props: GameServerProps) => {
 						) {
 							const msg = message as MinecraftPlayerChatMessage;
 							return (
-								<div key={index} className={`flex col gap-half`}>
-									<section className={`flex row align gap-1`}>
+								<div key={index} className={`flex col gap-1`}>
+									<section className={`flex row align gap-half`}>
 										<MaterialIcon
 											src={`https://mc-heads.net/avatar/${msg.uuid}`}
 											alt="Player head"

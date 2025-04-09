@@ -60,11 +60,18 @@ const NewSupportTicket = (props: NewSupportTicketClientProps) => {
 		setSearchResults(search_results);
 	};
 
-	const addUserToTicket = async (user: User) => {
+	const addUserToTicket = (user: User) => {
 		setShowAddUsers(false);
 		setInvolvedUsers((old) => [...old, user]);
 		setInvolvedUsersIDs((old) => [...old, user.id]);
-	}
+	};
+
+	const removeUserFromTicket = (user_id: number) => {
+		setInvolvedUsers(involved_users.filter((user) => user.id !== user_id));
+		setInvolvedUsersIDs(
+			involved_users_ids.filter((user) => user !== user_id)
+		);
+	};
 
 	const submitTicket = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
@@ -108,10 +115,21 @@ const NewSupportTicket = (props: NewSupportTicketClientProps) => {
 								search={searchNewUserToAdd}
 								set_search={setUserSearch}
 							/>
-							<div className="flex col gap-1" style={{"maxHeight": "500px", "overflowY": "auto"}}>
+							<div
+								className="flex col gap-1"
+								style={{
+									maxHeight: "500px",
+									overflowY: "auto",
+								}}
+							>
 								{search_results.map((user, index) => {
 									return (
-										<button key={index} onClick={() => addUserToTicket(user)}>
+										<button
+											key={index}
+											onClick={() =>
+												addUserToTicket(user)
+											}
+										>
 											<UserTab user={user} />
 										</button>
 									);
@@ -156,38 +174,64 @@ const NewSupportTicket = (props: NewSupportTicketClientProps) => {
 			)}
 			{topic !== "" && (
 				<>
-					{topic === "users" && (
-						<section>
-							<span>Involved User(s)</span>
-							<div className="flex row gap-1 align wrap">
-								{involved_users.map((user, index) => {
-									return (
-										<button key={index}>
-											<UserTab user={user} />
-										</button>
-									);
-								})}
-								<button onClick={() => setShowAddUsers(true)}>
-									<MaterialIcon
-										src="/icons/add.svg"
-										alt="Add User"
-										size_rems={2}
-									/>
-								</button>
-							</div>
+					{topic === "users" ? (
+						<>
+							<section>
+								<span>Involved User(s)</span>
+								<div className="flex row gap-1 align wrap">
+									{involved_users.map((user, index) => {
+										return (
+											<button
+												onClick={() =>
+													removeUserFromTicket(
+														user.id
+													)
+												}
+												key={index}
+											>
+												<UserTab user={user} />
+											</button>
+										);
+									})}
+									<button
+										onClick={() => setShowAddUsers(true)}
+									>
+										<MaterialIcon
+											src="/icons/add.svg"
+											alt="Add User"
+											size_rems={2}
+										/>
+									</button>
+								</div>
+							</section>
+
+							{involved_users_ids.length >= 1 && (
+								<section className={style.field}>
+									<label>Description</label>
+									<textarea
+										rows={10}
+										minLength={50}
+										maxLength={10_000}
+										onChange={(e: BaseSyntheticEvent) =>
+											setDescription(e.target.value)
+										}
+									></textarea>
+								</section>
+							)}
+						</>
+					) : (
+						<section className={style.field}>
+							<label>Description</label>
+							<textarea
+								rows={10}
+								minLength={50}
+								maxLength={10_000}
+								onChange={(e: BaseSyntheticEvent) =>
+									setDescription(e.target.value)
+								}
+							></textarea>
 						</section>
 					)}
-					<section className={style.field}>
-						<label>Description</label>
-						<textarea
-							rows={10}
-							minLength={50}
-							maxLength={10_000}
-							onChange={(e: BaseSyntheticEvent) =>
-								setDescription(e.target.value)
-							}
-						></textarea>
-					</section>
 					{description.length >= 50 && (
 						<button
 							onClick={submitTicket}
