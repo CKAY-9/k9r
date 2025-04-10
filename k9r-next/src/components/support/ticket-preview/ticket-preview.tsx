@@ -36,9 +36,13 @@ const SupportTicketPreview = (props: SupportTicketPreviewProps) => {
 				Topic: {props.support_ticket.issue_topic}
 			</span>
 			<span>{props.support_ticket.issue_description.slice(0, 100)}</span>
-			{creator && (
-				<UserTab user={creator} />
-			)}
+			<section className="flex row align gap-1">
+				{creator && <UserTab user={creator} />}
+				<span style={{"opacity": "0.5"}}>Created {(new Date(props.support_ticket.created)).toLocaleString()}</span>
+				{props.support_ticket.created !== props.support_ticket.updated && (
+					<span style={{"opacity": "0.5"}}>Updated {(new Date(props.support_ticket.updated)).toLocaleString()}</span>
+				)}
+			</section>
 		</div>
 	);
 };
