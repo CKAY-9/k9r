@@ -1,12 +1,40 @@
 "use client";
 
-import { getLatestForumPosts } from "@/api/forum/api";
-import { ForumPost } from "@/api/forum/models";
+import { getForumThreadFromID, getLatestForumPosts } from "@/api/forum/api";
+import { ForumPost, ForumThread } from "@/api/forum/models";
 import LoadingAlert from "@/components/loading/loading-alert";
 import { useEffect, useState } from "react";
 import style from "./posts.module.scss";
 import Link from "next/link";
 import PostPreview from "@/components/forum/posts/post-preview";
+
+type PostProps = {
+	post: ForumPost;
+}
+
+const Post = (props: PostProps) => {
+	const [thread, setThread] = useState<ForumThread | null>(null);
+
+	useEffect(() => {
+		(async () => {
+			const t = await getForumThreadFromID(props.post.thread);
+			setThread(t);
+		})();
+	}, [props.post.thread]);
+
+	if (!thread) {
+		return <></>
+	}
+
+	return (
+		<Link
+			style={{ borderBottom: "0" }}
+			href={`/forum/thread/${thread.id}#${props.post.id}`}
+		>
+			<PostPreview forum_post={props.post} compact={true} />
+		</Link>
+	)
+}
 
 const CommunityPosts = () => {
 	const [recent_posts, setRecentPosts] = useState<ForumPost[]>([]);
@@ -30,13 +58,7 @@ const CommunityPosts = () => {
 				<div className={style.posts}>
 					{recent_posts.map((post, index) => {
 						return (
-							<Link
-								style={{ borderBottom: "0" }}
-								href={`/forum/topic/0/0`}
-								key={index}
-							>
-								<PostPreview forum_post={post} compact={true} />
-							</Link>
+							<Post post={post} key={index} />
 						);
 					})}
 					{recent_posts.length <= 0 && <span>No posts found...</span>}
