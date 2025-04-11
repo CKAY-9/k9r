@@ -71,7 +71,7 @@ a {
 button {
 	background-color: var(--background);
 	box-shadow: var(--shdw1);
-	border: 1px solid rgb(255, 255, 255, 0.0);
+	border: 1px solid rgb(255, 255, 255, 0);
 	color: var(--text);
 	padding: 1rem 2rem;
 	border-radius: 1rem;
@@ -96,21 +96,17 @@ button {
 	}
 }
 
-textarea {
-	resize: none;
-}
-
 input,
 select,
 textarea {
 	background-color: var(--background);
-	border: 1px solid rgb(255, 255, 255, 0.0);
+	border: 1px solid rgb(255, 255, 255, 0);
 	padding: 0.5rem 1rem;
 	color: var(--text);
 	box-shadow: var(--shdw1);
-	min-width: 200px;
 	transition: 0.35s ease all;
 	border-radius: 1rem;
+	color: var(--text);
 
 	&:hover {
 		border: 1px solid rgb(255, 255, 255, 0.25);
@@ -123,6 +119,24 @@ textarea {
 		background-color: var(--accent);
 		border: 1px solid rgb(255, 255, 255, 0.5);
 		box-shadow: var(--shdw2);
+	}
+}
+
+textarea {
+	resize: none;
+}
+
+.w-md-editor-text-input {
+	border: none;
+	box-shadow: none;
+	background-color: initial !important;
+
+	&:hover,
+	&:focus,
+	&:active {
+		border: none;
+		box-shadow: none;
+		background-color: initial !important;
 	}
 }
 
@@ -164,11 +178,11 @@ textarea {
 	&.gap-2 {
 		gap: 2rem;
 	}
-	
+
 	&.gap-3 {
 		gap: 3rem;
 	}
-	
+
 	&.flex-1 {
 		flex: 1;
 	}
