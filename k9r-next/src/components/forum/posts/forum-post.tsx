@@ -16,6 +16,7 @@ import {
 } from "@/api/forum/api";
 import LikeDislike from "../like-dislike/like-dislike";
 import { getAnyToken } from "@/utils/token";
+import Link from "next/link";
 
 type ForumPostProps = {
 	forum_post: ForumPost;

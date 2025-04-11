@@ -31,6 +31,7 @@ export type ForumThread = {
     topic: number;
     locked: boolean;
     sticky: boolean;
+    template: boolean;
 };
 
 export type ForumPost = {
@@ -43,4 +44,5 @@ export type ForumPost = {
     likes: number[];
     dislikes: number[];
     thread: number;
+    template: boolean;
 };

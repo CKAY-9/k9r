@@ -144,7 +144,8 @@ pub struct ForumThread {
     pub posts: Vec<i32>,
     pub topic: i32,
     pub locked: bool,
-    pub sticky: bool
+    pub sticky: bool,
+    pub template: bool
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize)]
@@ -160,7 +161,8 @@ pub struct NewForumThread {
     pub posts: Vec<i32>,
     pub topic: i32,
     pub locked: bool,
-    pub sticky: bool
+    pub sticky: bool,
+    pub template: bool
 }
 
 #[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]
@@ -175,7 +177,8 @@ pub struct ForumPost {
     pub updated: String,
     pub likes: Vec<i32>,
     pub dislikes: Vec<i32>,
-    pub thread: i32
+    pub thread: i32,
+    pub template: bool
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize)]
@@ -188,7 +191,8 @@ pub struct NewForumPost {
     pub updated: String,
     pub likes: Vec<i32>,
     pub dislikes: Vec<i32>,
-    pub thread: i32
+    pub thread: i32,
+    pub template: bool
 }
 
 #[derive(Queryable, Selectable, Serialize, Deserialize, Debug)]

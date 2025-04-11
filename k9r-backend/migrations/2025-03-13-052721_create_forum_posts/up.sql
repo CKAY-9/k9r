@@ -7,5 +7,6 @@ CREATE TABLE forum_posts (
     updated TEXT NOT NULL,
     LIKES INTEGER[] NOT NULL,
     DISLIKES INTEGER[] NOT NULL,
-    thread INTEGER NOT NULL
+    thread INTEGER NOT NULL,
+    template BOOLEAN NOT NULL DEFAULT FALSE 
 );

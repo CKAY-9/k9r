@@ -187,6 +187,15 @@ const Thread = (props: ThreadProps) => {
 						like_endpoint={likeThread}
 						personal_user={props.personal_user}
 					/>
+					{props.thread.template && (
+						<Link href={`/forum/thread/new?template=${props.thread.id}`}>
+							<MaterialIcon
+								src="/icons/copy.svg"
+								alt="Create thread from template"
+								size_rems={2}
+							/>
+						</Link>
+					)}
 					{is_author && (
 						<>
 							<button

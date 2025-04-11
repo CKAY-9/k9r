@@ -19,7 +19,10 @@ use k9r_db::{
 };
 use k9r_utils::iso8601;
 
-use crate::{forum::models::NewThread, models::Message};
+use crate::{
+    forum::models::NewThread, middleware::permissions::usergroups_match_permission,
+    models::Message, permissions::MANAGE_POSTS,
+};
 
 use super::models::Like;
 
@@ -114,8 +117,11 @@ pub async fn new_forum_thread(
     new_post.author = user.id;
     new_thread.author = user.id;
 
-    new_thread.locked = false;
-    new_thread.sticky = false;
+    if !usergroups_match_permission(user.usergroups, MANAGE_POSTS) {
+        new_thread.locked = false;
+        new_thread.sticky = false;
+        new_thread.template = false;
+    }
 
     // Inserts and updates
     let thread_insert = create_forum_thread(new_thread);

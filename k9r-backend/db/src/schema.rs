@@ -31,6 +31,7 @@ diesel::table! {
         likes -> Array<Int4>,
         dislikes -> Array<Int4>,
         thread -> Int4,
+        template -> Bool,
     }
 }
 
@@ -60,6 +61,7 @@ diesel::table! {
         topic -> Int4,
         locked -> Bool,
         sticky -> Bool,
+        template -> Bool,
     }
 }
 

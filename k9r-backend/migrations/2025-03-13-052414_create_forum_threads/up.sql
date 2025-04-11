@@ -10,5 +10,6 @@ CREATE TABLE forum_threads (
     posts INTEGER[] NOT NULL,
     topic INTEGER NOT NULL,
     locked BOOLEAN NOT NULL,
-    sticky BOOLEAN NOT NULL
+    sticky BOOLEAN NOT NULL,
+    template BOOLEAN NOT NULL DEFAULT FALSE 
 );
