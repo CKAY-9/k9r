@@ -38,7 +38,7 @@ const SearchThreadsClient = () => {
 				<SearchBar
 					search={searchPosts}
 					set_search={setSearch}
-					placeholder="Search threads by ID, title"
+					placeholder="Search threads by title"
 				/>
 			</div>
 			<div className={`${style.content} flex col gap-1`}>

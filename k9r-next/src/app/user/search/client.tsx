@@ -32,7 +32,7 @@ const SearchUsersClient = () => {
 				<SearchBar
 					search={searchUser}
 					set_search={setSearch}
-					placeholder="Search users by ID, username, or display name"
+					placeholder="Search users by username"
 				/>
 			</div>
 			<div className={`${style.content} flex col gap-1`}>
