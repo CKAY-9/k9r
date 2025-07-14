@@ -7,11 +7,10 @@ import Footer from "@/components/footer/footer";
 import Header from "@/components/header/header";
 import CommunityIcon from "@/components/community-icon/community-icon";
 import { User } from "@/api/users/models";
-import { COMMUNITY_FEATURE, FORUM_FEATURE, STORE_FEATURE } from "@/api/resources";
+import { COMMUNITY_FEATURE, FORUM_FEATURE } from "@/api/resources";
 import {
     MANAGE_COMMUNITY,
 	MANAGE_FORUMS,
-	MANAGE_STORE,
 	usergroupsPermissionFlagCheck,
 } from "@/api/permissions";
 import { useEffect, useState } from "react";
@@ -69,11 +68,6 @@ const IndexClient = (props: IndexClientProps) => {
 								usergroups,
 								MANAGE_FORUMS
 							)) && <Link href="/forum">Forum</Link>}
-						{(props.community_details.features[STORE_FEATURE] ||
-							usergroupsPermissionFlagCheck(
-								usergroups,
-								MANAGE_STORE
-							)) && <Link href="/store">Store</Link>}
 						{(props.community_details.features[COMMUNITY_FEATURE] ||
 							usergroupsPermissionFlagCheck(
 								usergroups,

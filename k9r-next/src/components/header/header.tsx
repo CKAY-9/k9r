@@ -5,14 +5,12 @@ import style from "./header.module.scss";
 import Link from "next/link";
 import CommunityIcon from "../community-icon/community-icon";
 import { User } from "@/api/users/models";
-import UserIcon from "../user/user-icon/user-icon";
 import { useEffect, useState } from "react";
 import { Usergroup } from "@/api/usergroups/models";
 import { getUserUserGroupsFromID } from "@/api/users/api";
 import {
 	MANAGE_COMMUNITY,
 	MANAGE_FORUMS,
-	MANAGE_STORE,
 	SITE_SETTINGS,
 	usergroupsPermissionFlagCheck,
 } from "@/api/permissions";
@@ -21,7 +19,6 @@ import UserTab from "../user/user-tab/user-tab";
 import {
 	COMMUNITY_FEATURE,
 	FORUM_FEATURE,
-	STORE_FEATURE,
 } from "@/api/resources";
 import LogoutButton from "../logout-button/logout";
 
@@ -62,15 +59,6 @@ const Header = (props: HeaderProps) => {
 					)) && (
 					<Link href={"/forum"}>
 						<span>{"Forum"}</span>
-					</Link>
-				)}
-				{(props.community_details.features[STORE_FEATURE] ||
-					usergroupsPermissionFlagCheck(
-						usergroups,
-						MANAGE_STORE
-					)) && (
-					<Link href={"/store"}>
-						<span>{"Store"}</span>
 					</Link>
 				)}
 				{(props.community_details.features[COMMUNITY_FEATURE] ||

@@ -10,8 +10,16 @@ import {
 	usergroupsPermissionFlagCheck,
 } from "@/api/permissions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { CommunityDetails } from "@/api/community-details/models";
+
+export enum View {
+	FORUM,
+	DETAILS,
+	USERGROUPS,
+	USERS,
+	GAME_SERVERS,
+}
 
 type AdminHeaderProps = {
 	community_details: CommunityDetails;
@@ -26,25 +34,25 @@ const AdminHeader = (props: AdminHeaderProps) => {
 	const searchParams = useSearchParams();
 	const tab = searchParams.get("tab");
 
-	const changeView = (view: number) => {
+	const changeView = (view: View) => {
 		switch (view) {
-			case 0:
+			case View.FORUM:
 				router.push(pathname + "?" + "tab=forum");
 				document.title = `Manage Forum - ${props.community_details.name}`;
 				break;
-			case 1:
+			case View.DETAILS:
 				router.push(pathname + "?" + "tab=details");
 				document.title = `Manage Details - ${props.community_details.name}`;
 				break;
-			case 2:
+			case View.USERGROUPS:
 				router.push(pathname + "?" + "tab=usergroups");
 				document.title = `Manage Usergroups - ${props.community_details.name}`;
 				break;
-			case 3:
+			case View.USERS:
 				router.push(pathname + "?" + "tab=users");
 				document.title = `Manage Users - ${props.community_details.name}`;
 				break;
-			case 4:
+			case View.GAME_SERVERS:
 				router.push(pathname + "?" + "tab=servers");
 				document.title = `Manage Game Servers - ${props.community_details.name}`;
 				break;
@@ -55,19 +63,19 @@ const AdminHeader = (props: AdminHeaderProps) => {
 	useEffect(() => {
 		switch (tab) {
 			case "forum":
-				changeView(0);
+				changeView(View.FORUM);
 				break;
 			case "details":
-				changeView(1);
+				changeView(View.DETAILS);
 				break;
 			case "usergroups":
-				changeView(2);
+				changeView(View.USERGROUPS);
 				break;
 			case "users":
-				changeView(3);
+				changeView(View.USERS);
 				break;
 			case "servers":
-				changeView(4);
+				changeView(View.GAME_SERVERS);
 				break;
 		}
 	}, [tab, pathname, props.community_details.name, router]);

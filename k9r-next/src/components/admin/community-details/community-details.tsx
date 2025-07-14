@@ -9,7 +9,7 @@ import {
 	updateCommunityDetails,
 } from "@/api/community-details/api";
 import ImageUpload from "@/components/image-upload/image-upload";
-import { COMMUNITY_FEATURE, FORUM_FEATURE, STORE_FEATURE } from "@/api/resources";
+import { COMMUNITY_FEATURE, FORUM_FEATURE } from "@/api/resources";
 import { getAnyToken } from "@/utils/token";
 
 const CommunityDetailsAdmin = () => {
@@ -116,17 +116,6 @@ const CommunityDetailsAdmin = () => {
 						}
 						onChange={(e: BaseSyntheticEvent) =>
 							(community_details.features[FORUM_FEATURE] =
-								e.target.checked)
-						}
-					/>
-				</section>
-				<section className={`flex row`}>
-					<label>Enable Store</label>
-					<input
-						type="checkbox"
-						defaultChecked={community_details.features[STORE_FEATURE]}
-						onChange={(e: BaseSyntheticEvent) =>
-							(community_details.features[STORE_FEATURE] =
 								e.target.checked)
 						}
 					/>

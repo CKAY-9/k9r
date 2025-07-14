@@ -3,6 +3,7 @@ import style from "./footer.module.scss";
 import Link from "next/link";
 import CommunityIcon from "../community-icon/community-icon";
 import MaterialIcon from "../material-icon/material-icon";
+import { COMMUNITY_FEATURE, FORUM_FEATURE } from "@/api/resources";
 
 type FooterProps = {
 	community_details: CommunityDetails;
@@ -28,7 +29,7 @@ const Footer = (props: FooterProps) => {
 					<Link href={"/#about"}>About</Link>
 					<Link href={"/support"}>Support</Link>
 				</section>
-				{props.community_details.features[0] && (
+				{props.community_details.features[FORUM_FEATURE] && (
 					<section className="flex col">
 						<strong>Forum</strong>
 						<Link href={"/forum"}>Home</Link>
@@ -37,12 +38,7 @@ const Footer = (props: FooterProps) => {
 						</Link>
 					</section>
 				)}
-				{props.community_details.features[1] && (
-					<section className="flex col">
-						<strong>Store</strong>
-					</section>
-				)}
-				{props.community_details.features[2] && (
+				{props.community_details.features[COMMUNITY_FEATURE] && (
 					<section className="flex col">
 						<strong>Community</strong>
 						<Link href={"/community"}>Home</Link>

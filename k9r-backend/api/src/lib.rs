@@ -30,7 +30,7 @@ use game_servers::{
     put::update_game_server,
 };
 use middleware::{
-    features::{community_feature_access, forum_feature_access, store_feature_access},
+    features::{community_feature_access, forum_feature_access},
     permissions::{
         authorized_game_server_middleware, community_management_middleware,
         create_new_post_middleware, create_new_thread_middleware, details_management_middleware,
@@ -82,13 +82,13 @@ pub mod support;
 pub mod user;
 pub mod usergroup;
 
+
 pub fn configure_api(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/api/v1")
             .configure(configure_community_routes)
             .configure(configure_support_routes)
             .configure(configure_user_routes)
-            .configure(configure_store_routes)
             .configure(configure_usergroup_routes)
             .configure(configure_forum_routes)
             .configure(configure_storage_routes)
@@ -142,10 +142,6 @@ fn configure_support_routes(cfg: &mut web::ServiceConfig) {
                     .guard(guard::Post()),
             ),
     );
-}
-
-fn configure_store_routes(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::scope("/store").wrap(from_fn(store_feature_access)));
 }
 
 fn configure_community_routes(cfg: &mut web::ServiceConfig) {

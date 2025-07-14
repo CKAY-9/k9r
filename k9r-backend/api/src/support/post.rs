@@ -41,7 +41,6 @@ pub async fn new_support_ticket(
     let allowed_issue_topics = vec![
         "general",
         "forum",
-        "store",
         "community",
         "game server",
         "users",

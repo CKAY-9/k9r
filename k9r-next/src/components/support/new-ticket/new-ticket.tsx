@@ -165,7 +165,6 @@ const NewSupportTicket = (props: NewSupportTicketClientProps) => {
 						<option value=""></option>
 						<option value="general">General</option>
 						<option value="forum">Forum</option>
-						<option value="store">Store</option>
 						<option value="community">Community</option>
 						<option value="game server">Game Server</option>
 						<option value="users">User(s)</option>

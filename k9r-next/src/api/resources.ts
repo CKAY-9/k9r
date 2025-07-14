@@ -11,5 +11,4 @@ export const DISCORD_OAUTH = process.env.NEXT_PUBLIC_K9R_DISCORD_OAUTH;
 
 // Features
 export const FORUM_FEATURE = 0;
-export const STORE_FEATURE = 1;
-export const COMMUNITY_FEATURE = 2;
+export const COMMUNITY_FEATURE = 1;

@@ -20,7 +20,6 @@ import {
 	MANAGE_DETAILS,
 	MANAGE_FORUMS,
 	MANAGE_POSTS,
-	MANAGE_STORE,
 	MANAGE_USERGROUPS,
 	MANAGE_USERS,
 	ROOT_ACCESS,
@@ -450,25 +449,6 @@ const UsergroupsAdmin = () => {
 												) => {
 													togglePermission(
 														MANAGE_FORUMS
-													);
-												}}
-											/>
-										</section>
-										<section className={style.permission}>
-											<label>Manage Store</label>
-											<input
-												defaultChecked={
-													(usergroups[usergroup_index]
-														.permissions &
-														MANAGE_STORE) !==
-													0
-												}
-												type="checkbox"
-												onChange={(
-													_e: BaseSyntheticEvent
-												) => {
-													togglePermission(
-														MANAGE_STORE
 													);
 												}}
 											/>

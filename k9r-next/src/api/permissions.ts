@@ -14,7 +14,6 @@ export const MANAGE_USERGROUPS: number = 0x80000;
 export const MANAGE_DETAILS: number = 0x100000;
 export const MANAGE_FORUMS: number = 0x200000;
 export const MANAGE_COMMUNITY: number = 0x400000;
-export const MANAGE_STORE: number = 0x800000;
 export const ROOT_ACCESS: number = 0x20000000;
 
 export const generalManagementPermissionCheck = (usergroups: Usergroup[]) => {
@@ -22,7 +21,6 @@ export const generalManagementPermissionCheck = (usergroups: Usergroup[]) => {
 		usergroups,
 		MANAGE_COMMUNITY |
 			MANAGE_FORUMS |
-			MANAGE_STORE |
 			MANAGE_DETAILS |
 			MANAGE_USERS |
 			MANAGE_USERGROUPS |

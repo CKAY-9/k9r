@@ -1,7 +1,7 @@
 use crate::{
     middleware::permissions::usergroups_match_permission,
     permissions::{
-        MANAGE_COMMUNITY, MANAGE_DETAILS, MANAGE_FORUMS, MANAGE_POSTS, MANAGE_STORE,
+        MANAGE_COMMUNITY, MANAGE_DETAILS, MANAGE_FORUMS, MANAGE_POSTS,
         MANAGE_USERGROUPS, MANAGE_USERS, SITE_SETTINGS,
     },
 };
@@ -15,7 +15,6 @@ pub fn has_general_management_permissions(user: &User) -> bool {
         user.usergroups.clone(),
         MANAGE_COMMUNITY
             | MANAGE_FORUMS
-            | MANAGE_STORE
             | MANAGE_DETAILS
             | MANAGE_USERS
             | MANAGE_USERGROUPS

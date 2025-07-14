@@ -2,9 +2,8 @@
 
 import { Usergroup } from "@/api/usergroups/models";
 import { User } from "@/api/users/models";
-import AdminHeader from "@/components/admin/admin-header/admin-header";
+import AdminHeader, { View } from "@/components/admin/admin-header/admin-header";
 import { useState } from "react";
-import style from "./admin.module.scss";
 import ForumManagementAdmin from "@/components/admin/forum-management/forum-management";
 import CommunityDetailsAdmin from "@/components/admin/community-details/community-details";
 import UsergroupsAdmin from "@/components/admin/usergroups/usergroups";
@@ -20,7 +19,7 @@ type AdminHomeClientProps = {
 };
 
 const AdminHomeClient = (props: AdminHomeClientProps) => {
-	const [view, setView] = useState<number>(0);
+	const [view, setView] = useState<View>(View.FORUM);
 
 	return (
 		<>
@@ -32,19 +31,19 @@ const AdminHomeClient = (props: AdminHomeClientProps) => {
 					personal_user={props.personal_user}
 					usergroups={props.usergroups}
 				/>
-				<div style={{ display: view === 0 ? "block" : "none" }}>
+				<div style={{ display: view === View.FORUM ? "block" : "none" }}>
 					<ForumManagementAdmin />
 				</div>
-				<div style={{ display: view === 1 ? "block" : "none" }}>
+				<div style={{ display: view === View.DETAILS ? "block" : "none" }}>
 					<CommunityDetailsAdmin />
 				</div>
-				<div style={{ display: view === 2 ? "block" : "none" }}>
+				<div style={{ display: view === View.USERGROUPS ? "block" : "none" }}>
 					<UsergroupsAdmin />
 				</div>
-				<div style={{ display: view === 3 ? "block" : "none" }}>
+				<div style={{ display: view === View.USERS ? "block" : "none" }}>
 					<UsersAdmin />
 				</div>
-				<div style={{ display: view === 4 ? "block" : "none" }}>
+				<div style={{ display: view === View.GAME_SERVERS ? "block" : "none" }}>
 					<GameServersAdmin />
 				</div>
 			</div>
