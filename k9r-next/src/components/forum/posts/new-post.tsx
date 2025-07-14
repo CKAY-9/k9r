@@ -29,7 +29,8 @@ const NewForumPost = (props: NewForumPostProps) => {
             updated: "",
             likes: [],
             dislikes: [],
-            thread: props.forum_thread.id
+            thread: props.forum_thread.id,
+            template: false
         }
         const response = await createNewForumPost(new_post, await getAnyToken());
         setContent("");
