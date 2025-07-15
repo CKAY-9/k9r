@@ -4,9 +4,8 @@ import { generalManagementPermissionCheck } from "@/api/permissions";
 import { Usergroup } from "@/api/usergroups/models";
 import { getUserUserGroupsFromID } from "@/api/users/api";
 import { User } from "@/api/users/models";
-import { BaseSyntheticEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import style from "./header.module.scss";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CommunityDetails } from "@/api/community-details/models";
 

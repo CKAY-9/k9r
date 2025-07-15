@@ -1,7 +1,12 @@
 "use client";
 
 import { CommunityDetails } from "@/api/community-details/models";
-import { ForumPost, ForumSection, ForumThread, ForumTopic } from "@/api/forum/models";
+import {
+	ForumPost,
+	ForumSection,
+	ForumThread,
+	ForumTopic,
+} from "@/api/forum/models";
 import style from "./new.module.scss";
 import { User } from "@/api/users/models";
 import { BaseSyntheticEvent, useEffect, useState } from "react";
@@ -49,7 +54,9 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 	const [sticky, setSticky] = useState<boolean>(false);
 	const [locked, setLocked] = useState<boolean>(false);
 	const [usergroups, setUsergroups] = useState<Usergroup[]>([]);
-	const [template_thread, setTemplateThread] = useState<ForumThread | null>(null);
+	const [template_thread, setTemplateThread] = useState<ForumThread | null>(
+		null
+	);
 	const [template_post, setTemplatePost] = useState<ForumPost | null>(null);
 
 	useEffect(() => {
@@ -57,11 +64,13 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 			if (template_id >= 1) {
 				const t_thread = await getForumThreadFromID(template_id);
 				if (t_thread !== null) {
-					const t_post = await getForumPostFromID(t_thread.primary_post);
+					const t_post = await getForumPostFromID(
+						t_thread.primary_post
+					);
 					if (t_post !== null) {
 						setContent(t_post.content);
 						setTitle(t_thread.title);
-						setTemplateThread(t_thread);	
+						setTemplateThread(t_thread);
 						setTemplatePost(t_post);
 					}
 				}
@@ -87,7 +96,7 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 
 			setLoading(false);
 		})();
-	}, [props.forum_topic]);
+	}, [props.forum_topic, props.personal_user.id, template_id]);
 
 	const chooseSection = (e: BaseSyntheticEvent) => {
 		e.preventDefault();
@@ -160,7 +169,10 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 
 	return (
 		<div className={`${style.new_thread} flex col gap-1`}>
-			<h1>New Thread {template_thread && `From Template: ${template_thread.title}`}</h1>
+			<h1>
+				New Thread{" "}
+				{template_thread && `From Template: ${template_thread.title}`}
+			</h1>
 			<section className={`flex col gap-1`}>
 				<label>Section</label>
 				<select
@@ -238,7 +250,9 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 								<label>Template</label>
 								<input
 									type="checkbox"
-									onChange={(e: BaseSyntheticEvent) => setAllowTemplate(e.target.checked)}
+									onChange={(e: BaseSyntheticEvent) =>
+										setAllowTemplate(e.target.checked)
+									}
 									defaultChecked={allow_template}
 								/>
 							</section>
@@ -246,7 +260,9 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 								<label>Locked</label>
 								<input
 									type="checkbox"
-									onChange={(e: BaseSyntheticEvent) => setLocked(e.target.checked)}
+									onChange={(e: BaseSyntheticEvent) =>
+										setLocked(e.target.checked)
+									}
 									defaultChecked={locked}
 								/>
 							</section>
@@ -254,7 +270,9 @@ const NewForumThreadClient = (props: NewForumThreadClientProps) => {
 								<label>Sticky</label>
 								<input
 									type="checkbox"
-									onChange={(e: BaseSyntheticEvent) => setSticky(e.target.checked)}
+									onChange={(e: BaseSyntheticEvent) =>
+										setSticky(e.target.checked)
+									}
 									defaultChecked={sticky}
 								/>
 							</section>

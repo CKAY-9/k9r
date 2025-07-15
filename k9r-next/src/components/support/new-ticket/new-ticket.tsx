@@ -53,7 +53,7 @@ const NewSupportTicket = (props: NewSupportTicketClientProps) => {
 				);
 			}
 		})();
-	}, [reported_user_id, reported_user_id_param]);
+	}, [reported_user_id, reported_user_id_param, router, pathname]);
 
 	const searchNewUserToAdd = async () => {
 		const search_results = await searchUsers(user_search, page);

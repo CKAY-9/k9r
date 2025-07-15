@@ -89,7 +89,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				) && (
 					<button
 						className={`${style.link} no-border`}
-						onClick={() => changeView(0)}
+						onClick={() => changeView(View.FORUM)}
 					>
 						Manage Forum
 					</button>
@@ -100,7 +100,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				) && (
 					<button
 						className={`${style.link} no-border`}
-						onClick={() => changeView(1)}
+						onClick={() => changeView(View.DETAILS)}
 					>
 						Manage Details
 					</button>
@@ -111,7 +111,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				) && (
 					<button
 						className={`${style.link} no-border`}
-						onClick={() => changeView(2)}
+						onClick={() => changeView(View.USERGROUPS)}
 					>
 						Usergroups
 					</button>
@@ -122,7 +122,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				) && (
 					<button
 						className={`${style.link} no-border`}
-						onClick={() => changeView(3)}
+						onClick={() => changeView(View.USERS)}
 					>
 						Users
 					</button>
@@ -133,7 +133,7 @@ const AdminHeader = (props: AdminHeaderProps) => {
 				) && (
 					<button
 						className={`${style.link} no-border`}
-						onClick={() => changeView(4)}
+						onClick={() => changeView(View.GAME_SERVERS)}
 					>
 						Game Servers
 					</button>

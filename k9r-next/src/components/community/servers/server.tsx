@@ -53,7 +53,7 @@ const K9RChatMessage = (props: K9RMinecraftMessageProps) => {
 			<section className={`flex row align gap-half`}>
 				{sender !== null && <UserIcon user={sender} size_rems={2} />}
 				<span>{props.message.display_name}</span>
-				<span style={{"opacity": "0.5"}}>[K9R]</span>
+				<span style={{ opacity: "0.5" }}>[K9R]</span>
 			</section>
 			<section className={style.content}>
 				<p>{props.message.message}</p>
@@ -71,19 +71,6 @@ const GameServerView = (props: GameServerProps) => {
 	const [chat_messages, setChatMessages] = useState<
 		K9RChatMessage[] | MinecraftPlayerChatMessage[] | any[]
 	>([]);
-
-	const joinRoom = (room: string) => {
-		if (!ws.current) return;
-		ws.current.emit(
-			"join_room",
-			JSON.stringify({
-				room: room,
-				sender: props.personal_user?.id || -1,
-				server_key: "",
-				content: "join-room",
-			})
-		);
-	};
 
 	const sendChatMessage = async (e: BaseSyntheticEvent) => {
 		if (
@@ -114,6 +101,19 @@ const GameServerView = (props: GameServerProps) => {
 	};
 
 	useEffect(() => {
+		const joinRoom = (room: string) => {
+			if (!ws.current) return;
+			ws.current.emit(
+				"join_room",
+				JSON.stringify({
+					room: room,
+					sender: props.personal_user?.id || -1,
+					server_key: "",
+					content: "join-room",
+				})
+			);
+		};
+
 		const room = `${props.game_server.name}-${props.game_server.id}`;
 		if (props.game_server.game === "minecraft") {
 			setBackground("url(/games/minecraft_default.png)");
@@ -162,8 +162,8 @@ const GameServerView = (props: GameServerProps) => {
 	}, [
 		props.game_server.game,
 		props.game_server.id,
-		joinRoom,
 		props.game_server.name,
+		props.personal_user?.id
 	]);
 
 	return (
@@ -172,7 +172,9 @@ const GameServerView = (props: GameServerProps) => {
 				className={style.server_splash}
 				style={{ background: background }}
 			>
-				<div className={`${style.content} flex col align justify gap-1`}>
+				<div
+					className={`${style.content} flex col align justify gap-1`}
+				>
 					<h1>{props.game_server.name}</h1>
 					<span>{props.game_server.description}</span>
 					<section className={`${style.options} flex row gap-1`}>
@@ -227,7 +229,9 @@ const GameServerView = (props: GameServerProps) => {
 							const msg = message as MinecraftPlayerChatMessage;
 							return (
 								<div key={index} className={`flex col gap-1`}>
-									<section className={`flex row align gap-half`}>
+									<section
+										className={`flex row align gap-half`}
+									>
 										<MaterialIcon
 											src={`https://mc-heads.net/avatar/${msg.uuid}`}
 											alt="Player head"

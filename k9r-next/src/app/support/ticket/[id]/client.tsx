@@ -54,13 +54,21 @@ const SupportTicketClient = (props: TicketClientProps) => {
 			setUsergroups(us);
 
 			if (props.support_ticket.issue_topic === "users") {
-				const user_promises = props.support_ticket.involved_users.map((id) => getUserFromID(id));
+				const user_promises = props.support_ticket.involved_users.map(
+					(id) => getUserFromID(id)
+				);
 				const users = await Promise.all(user_promises);
 				const valid_users = users.filter((user) => user !== null);
 				setInvolvedUsers(valid_users);
 			}
 		})();
-	}, [props.support_ticket.id, props.support_ticket.creator]);
+	}, [
+		props.support_ticket.id,
+		props.support_ticket.creator,
+		props.personal_user.id,
+		props.support_ticket.involved_users,
+		props.support_ticket.issue_topic,
+	]);
 
 	const replyToTicket = async (e: BaseSyntheticEvent) => {
 		e.preventDefault();
@@ -130,10 +138,14 @@ const SupportTicketClient = (props: TicketClientProps) => {
 						<div className="flex row align gap-1 wrap">
 							{involved_users.map((user, index) => {
 								return (
-									<Link style={{"border": "none"}} href={`/user/${user.id}`} key={index}>
+									<Link
+										style={{ border: "none" }}
+										href={`/user/${user.id}`}
+										key={index}
+									>
 										<UserTab user={user} />
 									</Link>
-								)
+								);
 							})}
 						</div>
 					)}
