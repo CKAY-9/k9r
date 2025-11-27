@@ -2,7 +2,7 @@
     <img src="./assets/icon.png" height="200" />
 </div>
 
-An absolute overhaul to K9-Forums. R9-Revive.
+An absolute overhaul to K9-Forums. K9-Revive.
 
 ## What is K9-Revive
 
